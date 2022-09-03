@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>浅析CompletableFuture | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Java 8 强大的函数式异步编程辅助类前言 CompletableFuture join()和 get()方法的区别CompletableFuture 组合处理 allOf 和 anyOf 太赞了！ CompletableFuture 串行回调函数 thenApply thenAccept thenRun当子线程完成后，需要调用一些回调方法，如果是 Java8 以前，我们写的会稍微复杂。Ja">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅析CompletableFuture">
+<meta property="og:url" content="http://example.com/2022/08/31/zkm8sp/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Java 8 强大的函数式异步编程辅助类前言 CompletableFuture join()和 get()方法的区别CompletableFuture 组合处理 allOf 和 anyOf 太赞了！ CompletableFuture 串行回调函数 thenApply thenAccept thenRun当子线程完成后，需要调用一些回调方法，如果是 Java8 以前，我们写的会稍微复杂。Ja">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-08-31T06:03:48.000Z">
+<meta property="article:modified_time" content="2022-09-03T10:57:16.290Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">test</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-zkm8sp" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/08/31/zkm8sp/" class="article-date">
+  <time class="dt-published" datetime="2022-08-31T06:03:48.000Z" itemprop="datePublished">2022-08-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      浅析CompletableFuture
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+</blockquote>
+<h1 id="Java-8-强大的函数式异步编程辅助类"><a href="#Java-8-强大的函数式异步编程辅助类" class="headerlink" title="Java 8 强大的函数式异步编程辅助类"></a>Java 8 强大的函数式异步编程辅助类</h1><p>前言</p>
+<h1 id="CompletableFuture-join-和-get-方法的区别"><a href="#CompletableFuture-join-和-get-方法的区别" class="headerlink" title="CompletableFuture join()和 get()方法的区别"></a>CompletableFuture join()和 get()方法的区别</h1><p>CompletableFuture <strong>组合处理 allOf 和 anyOf 太赞了！</strong></p>
+<h3 id="CompletableFuture-串行回调函数-thenApply-thenAccept-thenRun"><a href="#CompletableFuture-串行回调函数-thenApply-thenAccept-thenRun" class="headerlink" title="CompletableFuture 串行回调函数 thenApply thenAccept thenRun"></a>CompletableFuture 串行<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%9B%9E%E8%B0%83&spm=1001.2101.3001.7020">回调</a>函数 thenApply thenAccept thenRun</h3><p>当子线程完成后，需要调用一些回调方法，如果是 Java8 以前，我们写的会稍微复杂。<br>Java8 的 CompletableFuture 已经为我们实现了几个回调函数，使用非常方便。</p>
+<h1 id="CompletableFuture-runAsync-与-supplyAsync，何时选择一个？"><a href="#CompletableFuture-runAsync-与-supplyAsync，何时选择一个？" class="headerlink" title="CompletableFuture runAsync 与 supplyAsync，何时选择一个？"></a>CompletableFuture runAsync 与 supplyAsync，何时选择一个？</h1><p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html#runAsync-java.lang.Runnable-">runAsync</a>将 Runnable 作为输入参数并返回 CompletableFuture<Void>，这意味着它不返回任何结果。<br>CompletableFuture<Void> run &#x3D; CompletableFuture.runAsync(()-&gt; System.out.println(“hello”));<br>但是<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html#supplyAsync-java.util.function.Supplier-">suppyAsync</a>将 Supplier 作为参数并返回 CompletableFuture<U>with 结果值，这意味着它不接受任何输入参数，而是将 result 作为输出返回。<br>CompletableFuture<String> supply &#x3D; CompletableFuture.supplyAsync(() -&gt; { System.out.println(“Hello”); return “result”; }); System.out.println(supply.get()); &#x2F;&#x2F;result<br><strong>结论：</strong>因此，如果您希望返回结果，则选择，supplyAsync 或者如果您只想运行异步操作，则选择 runAsync。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/08/31/zkm8sp/" data-id="cl7lsjh65000awp5n0ppa7iq2" data-title="浅析CompletableFuture" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/08/31/vrkgwy/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          CompletableFuture异常处理
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/08/30/ym2epx/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">wait与synchronized居然搞了cp？</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/02/qsryik/">Permission denied (publickey)解决办法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/iohty9/">浅析volatile关键字</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/vrkgwy/">CompletableFuture异常处理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/zkm8sp/">浅析CompletableFuture</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/30/ym2epx/">wait与synchronized居然搞了cp？</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

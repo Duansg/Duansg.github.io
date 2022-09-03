@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>【DIY无人机】主控程序[已收录] | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="前言上图是《三傻大闹宝莱坞》中的片段，笔者初中的时候看到这个电影对这个四轴飞行器有着极大的兴趣，但因为当时经费的问题，在开发了一般没有自稳的迷你小四轴以后就不了了知了。 Multiwii CopterMultiwii 是控制多旋翼航模的开源固件，Multiwii 最初由法国航模爱好者 Alex 创立，用于控制他自己做的三轴飞行器。后经全世界各大高手改造扩展，现在 Multiwii 不仅仅支持三轴">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【DIY无人机】主控程序[已收录]">
+<meta property="og:url" content="http://example.com/2022/08/26/xp4tz6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言上图是《三傻大闹宝莱坞》中的片段，笔者初中的时候看到这个电影对这个四轴飞行器有着极大的兴趣，但因为当时经费的问题，在开发了一般没有自稳的迷你小四轴以后就不了了知了。 Multiwii CopterMultiwii 是控制多旋翼航模的开源固件，Multiwii 最初由法国航模爱好者 Alex 创立，用于控制他自己做的三轴飞行器。后经全世界各大高手改造扩展，现在 Multiwii 不仅仅支持三轴">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661481021565-7e97a397-a2b8-48cf-8029-ef2a039a68bc.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=256&id=ud00a1624&margin=%5Bobject%20Object%5D&name=image.png&originHeight=339&originWidth=792&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=424265&status=done&style=none&taskId=ucf94bb43-961b-48ef-8c4c-771ff29f184&title=&width=598">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661481106065-96290550-7a12-466a-b192-c0e60d28b783.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=252&id=u6741f99f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=456&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=472971&status=done&style=none&taskId=u8479c30a-f392-48e3-9f90-c2cf947f5ca&title=&width=598">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661482094247-785c9651-4178-47ba-9701-52aa23ed1bce.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=230&id=u6971b8b6&margin=%5Bobject%20Object%5D&name=image.png&originHeight=459&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=721270&status=done&style=none&taskId=u647d09bb-9445-4e24-b359-4541aa3480d&title=&width=540">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661482196161-4b98a5ad-dcd8-4782-b25d-4513733c4473.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=299&id=uf6042c44&margin=%5Bobject%20Object%5D&name=image.png&originHeight=598&originWidth=903&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=44106&status=done&style=none&taskId=ud157388f-d095-4adb-b527-575300742f0&title=&width=451.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661482222619-344688ae-41a2-4d05-a28f-9fcfc4c88801.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=345&id=u2a259d4b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=689&originWidth=1010&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=589977&status=done&style=none&taskId=ue55e7e9c-0f9e-4743-8335-5283b227d3c&title=&width=505">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661482256563-1af51613-df30-4baa-a149-a60bb9bcdf9f.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=269&id=u38471581&margin=%5Bobject%20Object%5D&name=image.png&originHeight=538&originWidth=505&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=462712&status=done&style=none&taskId=udacbe20c-bf45-4fe5-9b71-c8d91691e72&title=&width=252.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528596694-b750fb08-bda2-4871-a475-aa623b4098f8.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=279&id=u32d1ea7c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=558&originWidth=512&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=619987&status=done&style=none&taskId=u81daf53c-d13b-4a37-9492-712555140b2&title=&width=256">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528655377-c6b59ee4-fedb-433b-8595-0a43a476e944.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=270&id=u7580e9af&margin=%5Bobject%20Object%5D&name=image.png&originHeight=540&originWidth=523&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=637711&status=done&style=none&taskId=u6d4954d9-527b-434a-9137-80aa7da3199&title=&width=261.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528729910-321732bb-57b5-4ce4-8f6e-618d79d45259.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=239&id=uc040ca71&margin=%5Bobject%20Object%5D&name=image.png&originHeight=477&originWidth=521&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=530854&status=done&style=none&taskId=u4326176c-85f4-4525-8684-735cc9d570c&title=&width=260.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528741432-fd87d71d-a281-4e45-965a-fe595dddc723.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=151&id=u5f3b6740&margin=%5Bobject%20Object%5D&name=image.png&originHeight=302&originWidth=731&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=32071&status=done&style=none&taskId=uc3f5d244-5e7d-484f-bbd2-e8d4e39ae86&title=&width=365.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528763639-dcb4fb75-d523-46bd-b235-6d515192c52b.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=204&id=ucabc525d&margin=%5Bobject%20Object%5D&name=image.png&originHeight=407&originWidth=833&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=163032&status=done&style=none&taskId=udf6959fd-2b4d-4fea-a9da-ebbf9fba3dd&title=&width=416.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528788136-281af8ad-610d-4fab-8e70-4d1fce881448.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=326&id=u57939655&margin=%5Bobject%20Object%5D&name=image.png&originHeight=651&originWidth=512&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=631045&status=done&style=none&taskId=ue74453f9-7d6d-4d5b-a095-8794bef2942&title=&width=256">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528818638-62cf49bc-eaa6-4f91-b4db-fed11b8af93d.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=114&id=u8c523c5f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=227&originWidth=721&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=30749&status=done&style=none&taskId=u23639df0-3fba-4b0c-ba23-e8794b920d3&title=&width=360.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528827920-ae3ba668-d7ad-46fb-838b-ac234f64bed2.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=290&id=u98cb7f7a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=580&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=60016&status=done&style=none&taskId=u634b50c3-9a8d-4f7d-9734-87d6f2d9cfe&title=&width=540">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528841719-a94c2c08-1027-4bd9-8b9c-a91dc14090f6.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=363&id=u4b128d75&margin=%5Bobject%20Object%5D&name=image.png&originHeight=725&originWidth=967&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=1444666&status=done&style=none&taskId=u46785e2f-37ca-4a1f-a4a9-0e0c829be16&title=&width=483.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528849874-79189d00-482f-4a96-b2d1-89e50c9c8552.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=357&id=u8ae6d087&margin=%5Bobject%20Object%5D&name=image.png&originHeight=713&originWidth=965&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=1296743&status=done&style=none&taskId=u56dde28b-b207-42f7-b880-a0c273ef41f&title=&width=482.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528860561-3d362374-83f8-428e-8e1e-47b1aecf8ce0.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=356&id=u24c0cde4&margin=%5Bobject%20Object%5D&name=image.png&originHeight=712&originWidth=967&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=1100434&status=done&style=none&taskId=u734d14c7-fa01-4494-a76e-28841e0ef71&title=&width=483.5">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528867672-2bf141b9-2714-4253-b718-565f882c79cd.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=356&id=uecb68c55&margin=%5Bobject%20Object%5D&name=image.png&originHeight=712&originWidth=966&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=1050841&status=done&style=none&taskId=u9bc56887-54ab-4223-98fb-a6b27cc6815&title=&width=483">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529100166-e4b09473-5969-44cd-8fca-f66c260e056e.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=138&id=ud138c1bd&margin=%5Bobject%20Object%5D&name=image.png&originHeight=275&originWidth=614&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=35942&status=done&style=none&taskId=uddeccf87-6e1f-436a-bc07-09db48b1a32&title=&width=307">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529108226-395df7f0-e433-451f-aa1f-a1e24ad4dcd3.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=285&id=uaa249e0b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=569&originWidth=1006&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=56410&status=done&style=none&taskId=ub06497b4-a2fd-426d-a198-c39c96b35a6&title=&width=503">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529116901-6fe3ef52-8ff1-4eab-99ed-fabc331e641d.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=285&id=ued170c0b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=569&originWidth=1006&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=75432&status=done&style=none&taskId=u43c99e69-9fe6-4904-a059-165b3eadcb2&title=&width=503">
+<meta property="article:published_time" content="2022-08-26T02:29:54.000Z">
+<meta property="article:modified_time" content="2022-09-03T10:57:16.290Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661481021565-7e97a397-a2b8-48cf-8029-ef2a039a68bc.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=256&id=ud00a1624&margin=%5Bobject%20Object%5D&name=image.png&originHeight=339&originWidth=792&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=424265&status=done&style=none&taskId=ucf94bb43-961b-48ef-8c4c-771ff29f184&title=&width=598">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">test</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-xp4tz6" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/08/26/xp4tz6/" class="article-date">
+  <time class="dt-published" datetime="2022-08-26T02:29:54.000Z" itemprop="datePublished">2022-08-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      【DIY无人机】主控程序[已收录]
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661481021565-7e97a397-a2b8-48cf-8029-ef2a039a68bc.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=256&id=ud00a1624&margin=%5Bobject%20Object%5D&name=image.png&originHeight=339&originWidth=792&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=424265&status=done&style=none&taskId=ucf94bb43-961b-48ef-8c4c-771ff29f184&title=&width=598" alt="image.png"></p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>上图是《三傻大闹宝莱坞》中的片段，笔者初中的时候看到这个电影对这个四轴飞行器有着极大的兴趣，但因为当时经费的问题，在开发了一般没有自稳的迷你小四轴以后就不了了知了。</p>
+<h3 id="Multiwii-Copter"><a href="#Multiwii-Copter" class="headerlink" title="Multiwii Copter"></a>Multiwii Copter</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661481106065-96290550-7a12-466a-b192-c0e60d28b783.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=252&id=u6741f99f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=456&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=472971&status=done&style=none&taskId=u8479c30a-f392-48e3-9f90-c2cf947f5ca&title=&width=598" alt="image.png"><br>Multiwii 是控制多旋翼航模的开源固件，Multiwii 最初由法国航模爱好者 Alex 创立，用于控制他自己做的三轴飞行器。后经全世界各大高手改造扩展，现在 Multiwii 不仅仅支持三轴飞行器、四轴、六轴等多轴系列，还支持固定翼和直升机等航模。功能强大而且简单易用，其支持的传感器类型极为丰富，而且支持十分广泛的外部设备和飞行模式，这让 Multiwii 飞控固件发展为国外最受欢迎的多轴开源固件之一。同时 Multiwii 也有缺点，与 APM、海盗等其他开源固件相比，Multiwii 最大的不足就是目前还不支持地面站。</p>
+<ul>
+<li>官网地址：<a target="_blank" rel="noopener" href="https://www.multiwii.com/">https://www.multiwii.com/</a></li>
+<li>Multiwii 各版本程序下载地址：<a target="_blank" rel="noopener" href="https://code.google.com/p/multiwii/downloads/list">https://code.google.com/p/multiwii/downloads/list</a></li>
+<li>Arduino 软件下载地址(Arduino 是编辑和烧录 Multiwii 固件的必备软件)<a target="_blank" rel="noopener" href="http://arduino.cc/en/Main/Software">http://arduino.cc/en/Main/Software</a></li>
+</ul>
+<h3 id="四轴飞行器基础知识"><a href="#四轴飞行器基础知识" class="headerlink" title="四轴飞行器基础知识"></a>四轴飞行器基础知识</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661482094247-785c9651-4178-47ba-9701-52aa23ed1bce.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=230&id=u6971b8b6&margin=%5Bobject%20Object%5D&name=image.png&originHeight=459&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=721270&status=done&style=none&taskId=u647d09bb-9445-4e24-b359-4541aa3480d&title=&width=540" alt="image.png"><br>笔者认为关于这些理论的知识，不是本篇文章的重点，关于这些基础的知识，如果有新入门的童鞋，可以先去度娘或者各大论坛等等去了解一下，毕竟掌握了这些基本的知识，才知道一个四轴飞行器是如何组成的，六轴也同理。还有就是虽然现在的飞控都是白菜价了，但是如果通过自己搭建一个四轴飞行器，并让其稳定的飞起来，这是虽然很有难度，而且会耗费大量的时间，但是这种满足感跟这种 DIY 的精神是我非常向往的。</p>
+<h3 id="飞控板的制作"><a href="#飞控板的制作" class="headerlink" title="飞控板的制作"></a>飞控板的制作</h3><p>大家完全可以参照 Multiwii 官网的硬件要求，自行设计制作飞控板，这样你对 MWC 四轴整个系统将会有更深刻的理解。Multiwii 硬件分为 Arduino 328p（ATmega328P）和 Arduino mega（ATmega2560）两种版本。两个版本各有优劣，均支持多种外设，但接口稍有不同。mega 版本只能用串口接 GPS 和声呐，由于两个外设占据了串口，如要用蓝牙或 FTDI 查看飞控状态信息，这就是不可能的了。328p 版本虽然容量小，但可以采用双 328p 的模式，再用一片 ATmega328P 制作一块 I2C-GPS&#x2F;Sonar 导航板，这样就可以用 I2C 来读取 GPS 和声呐的数据，不必占据串口，那这样一来就可以实时的用蓝牙等查看飞行状态信息了。所以笔者采用飞控板是基于 Arduino 328p 版本的。简单来说，MWC 飞控板由 Arduino pro mini + GY-86 组成。</p>
+<blockquote>
+<p>Arduino pro mini 原理图</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661482196161-4b98a5ad-dcd8-4782-b25d-4513733c4473.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=299&id=uf6042c44&margin=%5Bobject%20Object%5D&name=image.png&originHeight=598&originWidth=903&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=44106&status=done&style=none&taskId=ud157388f-d095-4adb-b527-575300742f0&title=&width=451.5" alt="image.png"></p>
+<blockquote>
+<pre><code>   Arduino pro mini 接线图
+</code></pre>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661482222619-344688ae-41a2-4d05-a28f-9fcfc4c88801.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=345&id=u2a259d4b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=689&originWidth=1010&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=589977&status=done&style=none&taskId=ue55e7e9c-0f9e-4743-8335-5283b227d3c&title=&width=505" alt="image.png"></p>
+<blockquote>
+<pre><code>  绘制PCB
+</code></pre>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661482256563-1af51613-df30-4baa-a149-a60bb9bcdf9f.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=269&id=u38471581&margin=%5Bobject%20Object%5D&name=image.png&originHeight=538&originWidth=505&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=462712&status=done&style=none&taskId=udacbe20c-bf45-4fe5-9b71-c8d91691e72&title=&width=252.5" alt="image.png"></p>
+<blockquote>
+<p>制板</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528596694-b750fb08-bda2-4871-a475-aa623b4098f8.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=279&id=u32d1ea7c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=558&originWidth=512&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=619987&status=done&style=none&taskId=u81daf53c-d13b-4a37-9492-712555140b2&title=&width=256" alt="image.png"><br>在某宝上采购 Arduino pro mini 跟 GY-86 ,其实也可以把 GY-86 换成 MPU6050，两个加起来的成本也就不到二十元，而 GY-86 就比较贵了，它在 55 元左右，是因为 GY-86 包含了 MPU6050(三轴加速度计和三轴陀螺仪) +HMC5883L(三轴磁强计) +MS5611(高精度气压计,就是为了这颗气压计)，下面简单说一下它们的作用</p>
+<ol>
+<li>MPU6050：主要四轴的姿态传感器</li>
+<li>HMC5883L：磁强计一个用途是用来锁定航向，另一个用途是 GPS 配合磁强计使用才能实现 GPS HOME（失控返航）等功能，这也就是 MWC 为什么要设置当地地磁偏移量(后续会讲)的原因。</li>
+<li>MS5611：它的测量精度很高，再刷入 Multiwii 2.2 固件，那四轴的定高精度不是一般的好。大家如果自己做飞控的话，还是多花点钱买个 MS5611，定高效果很不错</li>
+</ol>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528655377-c6b59ee4-fedb-433b-8595-0a43a476e944.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=270&id=u7580e9af&margin=%5Bobject%20Object%5D&name=image.png&originHeight=540&originWidth=523&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=637711&status=done&style=none&taskId=u6d4954d9-527b-434a-9137-80aa7da3199&title=&width=261.5" alt="image.png"></p>
+<h3 id="主控程序"><a href="#主控程序" class="headerlink" title="主控程序"></a>主控程序</h3><p>我们首先需要一个 FTDI USB 下载器，用来给 Arduino pro mini 进行上传固件，这个是需要驱动的<br>下载地址：<a target="_blank" rel="noopener" href="https://www.ftdichip.com/Drivers/VCP.htm">https://www.ftdichip.com/Drivers/VCP.htm</a><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528729910-321732bb-57b5-4ce4-8f6e-618d79d45259.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=239&id=uc040ca71&margin=%5Bobject%20Object%5D&name=image.png&originHeight=477&originWidth=521&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=530854&status=done&style=none&taskId=u4326176c-85f4-4525-8684-735cc9d570c&title=&width=260.5" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528741432-fd87d71d-a281-4e45-965a-fe595dddc723.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=151&id=u5f3b6740&margin=%5Bobject%20Object%5D&name=image.png&originHeight=302&originWidth=731&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=32071&status=done&style=none&taskId=uc3f5d244-5e7d-484f-bbd2-e8d4e39ae86&title=&width=365.5" alt="image.png"></p>
+<blockquote>
+<p>一共 6 个针脚从 DTR 依次对接到飞控板上 Pro mini 对应的针脚即可,但是需要注意的一个地方是针脚 VCC 供电。</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528763639-dcb4fb75-d523-46bd-b235-6d515192c52b.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=204&id=ucabc525d&margin=%5Bobject%20Object%5D&name=image.png&originHeight=407&originWidth=833&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=163032&status=done&style=none&taskId=udf6959fd-2b4d-4fea-a9da-ebbf9fba3dd&title=&width=416.5" alt="image.png"><br>从原理图可以看到，RAW 经过 MIC5219 处理后，得到 VCC，度娘了下 MIC5219，它有反向电流保护，所以从 VCC 上接入供电 5V，RAW 是不会输出的。当然这个在烧录的时候没什么问题，但是后期我们需要调试，所以笔者直接把 VCC 的供电，接入到 RAW 上即可，加压供电如下图。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528788136-281af8ad-610d-4fab-8e70-4d1fce881448.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=326&id=u57939655&margin=%5Bobject%20Object%5D&name=image.png&originHeight=651&originWidth=512&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=631045&status=done&style=none&taskId=ue74453f9-7d6d-4d5b-a095-8794bef2942&title=&width=256" alt="image.png"></p>
+<blockquote>
+<p>打开下载好的固件文件夹中的 MultiWii.ino</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528818638-62cf49bc-eaa6-4f91-b4db-fed11b8af93d.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=114&id=u8c523c5f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=227&originWidth=721&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=30749&status=done&style=none&taskId=u23639df0-3fba-4b0c-ba23-e8794b920d3&title=&width=360.5" alt="image.png"><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528827920-ae3ba668-d7ad-46fb-838b-ac234f64bed2.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=290&id=u98cb7f7a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=580&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=60016&status=done&style=none&taskId=u634b50c3-9a8d-4f7d-9734-87d6f2d9cfe&title=&width=540" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528841719-a94c2c08-1027-4bd9-8b9c-a91dc14090f6.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=363&id=u4b128d75&margin=%5Bobject%20Object%5D&name=image.png&originHeight=725&originWidth=967&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=1444666&status=done&style=none&taskId=u46785e2f-37ca-4a1f-a4a9-0e0c829be16&title=&width=483.5" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528849874-79189d00-482f-4a96-b2d1-89e50c9c8552.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=357&id=u8ae6d087&margin=%5Bobject%20Object%5D&name=image.png&originHeight=713&originWidth=965&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=1296743&status=done&style=none&taskId=u56dde28b-b207-42f7-b880-a0c273ef41f&title=&width=482.5" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528860561-3d362374-83f8-428e-8e1e-47b1aecf8ce0.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=356&id=u24c0cde4&margin=%5Bobject%20Object%5D&name=image.png&originHeight=712&originWidth=967&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=1100434&status=done&style=none&taskId=u734d14c7-fa01-4494-a76e-28841e0ef71&title=&width=483.5" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661528867672-2bf141b9-2714-4253-b718-565f882c79cd.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=356&id=uecb68c55&margin=%5Bobject%20Object%5D&name=image.png&originHeight=712&originWidth=966&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=1050841&status=done&style=none&taskId=u9bc56887-54ab-4223-98fb-a6b27cc6815&title=&width=483" alt="image.png"><br>整个飞控程序中，我们需要配置的只有 config.h。具体的配置内容，会在后续的章节中解析。</p>
+<h3 id="MultiWii-GUI"><a href="#MultiWii-GUI" class="headerlink" title="MultiWii GUI"></a>MultiWii GUI</h3><p>MultiWii GUI 就相当于地面站，可以查看 PID 参数传感器数据，姿态，遥控器通道信息以及 GPS 信息等等。往飞控里烧玩程序之后，即 MultiWiiConf 文件夹下的 MultiWiiConf.exe。要想运行 MultiWiiConf.exe，得先安装 JAVA 虚拟机。Multiwii 的 GUI 程序需要 JAVA 虚拟机的支持，需下载安装：<a target="_blank" rel="noopener" href="http://java.com/zh_CN/download/manual.jsp?locale=zh_CN">http://java.com/zh_CN&#x2F;download&#x2F;manual.jsp?locale&#x3D;zh_CN</a><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529100166-e4b09473-5969-44cd-8fca-f66c260e056e.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=138&id=ud138c1bd&margin=%5Bobject%20Object%5D&name=image.png&originHeight=275&originWidth=614&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=35942&status=done&style=none&taskId=uddeccf87-6e1f-436a-bc07-09db48b1a32&title=&width=307" alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529108226-395df7f0-e433-451f-aa1f-a1e24ad4dcd3.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=285&id=uaa249e0b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=569&originWidth=1006&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=56410&status=done&style=none&taskId=ub06497b4-a2fd-426d-a198-c39c96b35a6&title=&width=503" alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529116901-6fe3ef52-8ff1-4eab-99ed-fabc331e641d.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=285&id=ued170c0b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=569&originWidth=1006&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=75432&status=done&style=none&taskId=u43c99e69-9fe6-4904-a059-165b3eadcb2&title=&width=503" alt="image.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/08/26/xp4tz6/" data-id="cl7lsjh640008wp5nabdc95ge" data-title="【DIY无人机】主控程序[已收录]" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/08/26/vot9q2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          【DIY无人机】电调固件升级[已收录]
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/08/25/iz618g/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">【DIY无人机】导航板(I2C-GPS)烧录[已收录]</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/02/qsryik/">Permission denied (publickey)解决办法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/iohty9/">浅析volatile关键字</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/vrkgwy/">CompletableFuture异常处理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/zkm8sp/">浅析CompletableFuture</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/30/ym2epx/">wait与synchronized居然搞了cp？</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

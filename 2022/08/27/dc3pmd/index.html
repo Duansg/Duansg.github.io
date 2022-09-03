@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>如何优雅的关闭线程池？ | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="前言使用自创建的线程跟使用线程池有啥区别?提到线程池是不是脑海中闪现了创建线程池的那几个核心参数、工作流程、线程池的复用、拒绝机制、缓冲机制等，这些理论知识点想必也牢记许久了。虽然线程池支持在虚拟机进程接受到退出命令后可以进行 shutdown。那么 shutdown 跟线程中断又有什么区别？在运行中的线程能否直接 kill 掉？我们能否监听关闭事件进行补偿？ 为什么线程中断不了？回答这个问题之前">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何优雅的关闭线程池？">
+<meta property="og:url" content="http://example.com/2022/08/27/dc3pmd/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言使用自创建的线程跟使用线程池有啥区别?提到线程池是不是脑海中闪现了创建线程池的那几个核心参数、工作流程、线程池的复用、拒绝机制、缓冲机制等，这些理论知识点想必也牢记许久了。虽然线程池支持在虚拟机进程接受到退出命令后可以进行 shutdown。那么 shutdown 跟线程中断又有什么区别？在运行中的线程能否直接 kill 掉？我们能否监听关闭事件进行补偿？ 为什么线程中断不了？回答这个问题之前">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661604849996-a5621b5a-d4d5-48ba-9e1b-db028b963424.png#clientId=u986abd14-26ac-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=258&id=u56a69e37&margin=%5Bobject%20Object%5D&name=image.png&originHeight=374&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=56459&status=done&style=none&taskId=ue456f4db-c505-4e1a-a3ee-92a66158c56&title=&width=744">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661610382700-c2f1c3f8-8515-4fb1-b442-0c701064e71d.png#clientId=u986abd14-26ac-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=250&id=uda405360&margin=%5Bobject%20Object%5D&name=image.png&originHeight=499&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=150629&status=done&style=none&taskId=ucd185fd9-231a-46fb-a20f-e4a20406258&title=&width=540">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661610417697-16249649-a02a-4944-a943-7c10f6d00c20.png#clientId=u986abd14-26ac-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=314&id=uff205d22&margin=%5Bobject%20Object%5D&name=image.png&originHeight=627&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=213369&status=done&style=none&taskId=uf1e8ec43-cfb0-4021-99ee-552e3adf513&title=&width=540">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661610576013-fa4e90cf-a691-4501-90fc-fddd484c1f29.png#clientId=uc3f951bc-24fc-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=183&id=u6c1287be&margin=%5Bobject%20Object%5D&name=image.png&originHeight=366&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=243612&status=done&style=none&taskId=u92ef85c4-e9b3-47f8-848c-c159bce00e5&title=&width=540">
+<meta property="article:published_time" content="2022-08-27T04:08:46.000Z">
+<meta property="article:modified_time" content="2022-09-03T10:57:16.290Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661604849996-a5621b5a-d4d5-48ba-9e1b-db028b963424.png#clientId=u986abd14-26ac-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=258&id=u56a69e37&margin=%5Bobject%20Object%5D&name=image.png&originHeight=374&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=56459&status=done&style=none&taskId=ue456f4db-c505-4e1a-a3ee-92a66158c56&title=&width=744">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">test</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-dc3pmd" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/08/27/dc3pmd/" class="article-date">
+  <time class="dt-published" datetime="2022-08-27T04:08:46.000Z" itemprop="datePublished">2022-08-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      如何优雅的关闭线程池？
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>使用自创建的线程跟使用线程池有啥区别?提到线程池是不是脑海中闪现了创建线程池的那几个核心参数、工作流程、线程池的复用、拒绝机制、缓冲机制等，这些理论知识点想必也牢记许久了。虽然线程池支持在虚拟机进程接受到退出命令后可以进行 shutdown。那么 shutdown 跟线程中断又有什么区别？在运行中的线程能否直接 kill 掉？我们能否监听关闭事件进行补偿？</p>
+<h3 id="为什么线程中断不了？"><a href="#为什么线程中断不了？" class="headerlink" title="为什么线程中断不了？"></a>为什么线程中断不了？</h3><p>回答这个问题之前需要先思考，中断会有什么影响？如果直接 kill 掉，那么这个线程使用的所有资源能被正常释放吗？我们虽然 interrupt()方法是中断线程的没错,但是它也仅仅是将线程的中断位设置为 true,它不会停止线程,而是需要用户自己去监视线程的状态为并做对应的处理。可能你会说 stop()方法,这个方法已经被废弃掉了,这种显示的停止的方法带来的问题会更多,你可以想象一下会有哪些影响？言归正传,如果线程没有对中断进行处理,仅仅是调用 interrupt()是不会停止的,如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(Thread.currentThread().isInterrupted())&#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;Error&quot;</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;Success&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.start();</span><br><span class="line">    <span class="comment">//ps:此代码没有做响应中断处理。</span></span><br><span class="line">    thread.interrupt();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="如何解决任务丢失？"><a href="#如何解决任务丢失？" class="headerlink" title="如何解决任务丢失？"></a>如何解决任务丢失？</h3><p>前面说了这么多,现在看来,抛开直接 KILL 掉程序不说,首先我们要保证程序在正常的重启期间,任务是不能丢失的,你可能先想到是实现 Hook 方法,在程序关闭的时候触发收尾工作,来保证线程池的正常关闭。老师傅说可以交给 Spring 管理即可,思考了一下也是,我们只需要实现 destroy 方法,然后 shutdown 即可。既然想到了 Spring,那 Spring 的线程池是否处理了 shutdown 方法,那我们来探究一下,日常使用 Spring 线程池的时候最常见的一行配置你肯定见过,如下。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;taskExecutor&quot;</span> <span class="attr">class</span>=<span class="string">&quot;org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 线程池维护线程的最少数量 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;corePoolSize&quot;</span> <span class="attr">value</span>=<span class="string">&quot;5&quot;</span> /&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 允许的空闲时间 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;keepAliveSeconds&quot;</span> <span class="attr">value</span>=<span class="string">&quot;200&quot;</span> /&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 线程池维护线程的最大数量 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;maxPoolSize&quot;</span> <span class="attr">value</span>=<span class="string">&quot;10&quot;</span> /&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 缓存队列 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;queueCapacity&quot;</span> <span class="attr">value</span>=<span class="string">&quot;20&quot;</span> /&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 对拒绝task的处理策略 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;rejectedExecutionHandler&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="ThreadPoolTaskExecutor"><a href="#ThreadPoolTaskExecutor" class="headerlink" title="ThreadPoolTaskExecutor"></a>ThreadPoolTaskExecutor</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadPoolTaskExecutor</span> <span class="keyword">extends</span> <span class="title class_">ExecutorConfigurationSupport</span> <span class="keyword">implements</span> <span class="title class_">AsyncListenableTaskExecutor</span>, SchedulingTaskExecutor &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setCorePoolSize</span><span class="params">(<span class="type">int</span> corePoolSize)</span> &#123;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getCorePoolSize</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMaxPoolSize</span><span class="params">(<span class="type">int</span> maxPoolSize)</span> &#123;</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661604849996-a5621b5a-d4d5-48ba-9e1b-db028b963424.png#clientId=u986abd14-26ac-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=258&id=u56a69e37&margin=%5Bobject%20Object%5D&name=image.png&originHeight=374&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=56459&status=done&style=none&taskId=ue456f4db-c505-4e1a-a3ee-92a66158c56&title=&width=744" alt="image.png"><br>InitializingBean 跟 DisposableBean 这不经常见么,是的没错,凡是继承 InitializingBean 跟 DisposableBean 的 Bean，会在 bean 的初始化跟销毁的时候调用对应的 afterPropertiesSet()跟 destory()方法。具体直接上一张图搞定。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661610382700-c2f1c3f8-8515-4fb1-b442-0c701064e71d.png#clientId=u986abd14-26ac-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=250&id=uda405360&margin=%5Bobject%20Object%5D&name=image.png&originHeight=499&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=150629&status=done&style=none&taskId=ucd185fd9-231a-46fb-a20f-e4a20406258&title=&width=540" alt="image.png"></p>
+<h3 id="ExecutorConfigurationSupport"><a href="#ExecutorConfigurationSupport" class="headerlink" title="ExecutorConfigurationSupport"></a>ExecutorConfigurationSupport</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661610417697-16249649-a02a-4944-a943-7c10f6d00c20.png#clientId=u986abd14-26ac-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=314&id=uff205d22&margin=%5Bobject%20Object%5D&name=image.png&originHeight=627&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=213369&status=done&style=none&taskId=uf1e8ec43-cfb0-4021-99ee-552e3adf513&title=&width=540" alt="image.png"></p>
+<blockquote>
+<p>初始化方法暂且抛开不说,因为我们这里探究的是销毁方法。直接上代码。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.shutdown();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">shutdown</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.logger.isInfoEnabled()) &#123;</span><br><span class="line">            <span class="built_in">this</span>.logger.info(<span class="string">&quot;Shutting down ExecutorService&quot;</span> + (<span class="built_in">this</span>.beanName != <span class="literal">null</span> ? <span class="string">&quot; &#x27;&quot;</span> + <span class="built_in">this</span>.beanName + <span class="string">&quot;&#x27;&quot;</span> : <span class="string">&quot;&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.executor != <span class="literal">null</span>) &#123;</span><br><span class="line">           <span class="comment">//waitForTasksToCompleteOnShutdown为被调用时是否等待当前任务完成</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">this</span>.waitForTasksToCompleteOnShutdown) &#123;</span><br><span class="line">            <span class="comment">//如果需要等待任务执行完,就调用shutdown方法</span></span><br><span class="line">                <span class="built_in">this</span>.executor.shutdown();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//如果不需求,就强制关闭,并会返回那些未执行的任务</span></span><br><span class="line">                <span class="type">Iterator</span> <span class="variable">var1</span> <span class="operator">=</span> <span class="built_in">this</span>.executor.shutdownNow().iterator();</span><br><span class="line">                <span class="keyword">while</span>(var1.hasNext()) &#123;</span><br><span class="line">                    <span class="type">Runnable</span> <span class="variable">remainingTask</span> <span class="operator">=</span> (Runnable)var1.next();</span><br><span class="line">                    <span class="comment">//取消所有剩下需要执行的线程</span></span><br><span class="line">                    <span class="built_in">this</span>.cancelRemainingTask(remainingTask);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">      <span class="comment">//如果设置了等待时长,当前线程阻塞直到如下3种情况</span></span><br><span class="line">       <span class="comment">//1:等所有已提交的任务（包括正在运行的和队列中等待的）执行完毕</span></span><br><span class="line">       <span class="comment">//2:超过设置时长</span></span><br><span class="line">       <span class="comment">//3:线程被中断,响应InterruptedException</span></span><br><span class="line">            <span class="built_in">this</span>.awaitTerminationIfNecessary(<span class="built_in">this</span>.executor);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>由此上我们可以看到,使用 Spring 线程池可以最大程度上解决任务丢失的问题,当然我们可以通过实现 DisposableBean 接口来自定义销毁的操作。那么还有更优雅的处理方式吗？</p>
+<h3 id="Guava"><a href="#Guava" class="headerlink" title="Guava"></a>Guava</h3><p>我相信很多童鞋都用过 Guava,Guava 中包含了许多并发类,同时也包含了几个方便的线程池相关的 ExecuorService 的实现,但需要注意的是这些实现类都无法通过直接创建或者子类化来创建实例,但是我们可以通过 MoreExecuors 来创建它们,MoreExecuors 中的方法如下<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661610576013-fa4e90cf-a691-4501-90fc-fddd484c1f29.png#clientId=uc3f951bc-24fc-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=183&id=u6c1287be&margin=%5Bobject%20Object%5D&name=image.png&originHeight=366&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=243612&status=done&style=none&taskId=u92ef85c4-e9b3-47f8-848c-c159bce00e5&title=&width=540" alt="image.png"></p>
+<h4 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.google.guava<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>guava<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>20.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="getExitingExecutorService"><a href="#getExitingExecutorService" class="headerlink" title="getExitingExecutorService"></a>getExitingExecutorService</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获得一个跟随JVM关闭而关闭的线程池</span></span><br><span class="line"><span class="type">ThreadPoolExecutor</span> <span class="variable">threadPoolExecutor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(<span class="number">5</span>, <span class="number">10</span>, <span class="number">5L</span>, TimeUnit.SECONDS,</span><br><span class="line">                                                               <span class="keyword">new</span> <span class="title class_">LinkedBlockingDeque</span>&lt;&gt;(<span class="number">20</span>), <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>.CallerRunsPolicy());</span><br><span class="line"><span class="type">ExecutorService</span> <span class="variable">executorService</span> <span class="operator">=</span> MoreExecutors.getExitingExecutorService(threadPoolExecutor);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>源码分析</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//关键源码</span></span><br><span class="line"><span class="keyword">final</span> ExecutorService <span class="title function_">getExitingExecutorService</span><span class="params">(ThreadPoolExecutor executor)</span> &#123;</span><br><span class="line">            <span class="comment">//120S为关闭等待时长</span></span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>.getExitingExecutorService(executor, <span class="number">120L</span>, TimeUnit.SECONDS);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">final</span> ExecutorService <span class="title function_">getExitingExecutorService</span><span class="params">(ThreadPoolExecutor executor, <span class="type">long</span> terminationTimeout, TimeUnit timeUnit)</span> &#123;</span><br><span class="line">            <span class="comment">//改变ThreadFactory,为它设置守护线程,</span></span><br><span class="line">            MoreExecutors.useDaemonThreadFactory(executor);</span><br><span class="line">            <span class="comment">//封装传入的线程池</span></span><br><span class="line">            <span class="type">ExecutorService</span> <span class="variable">service</span> <span class="operator">=</span> Executors.unconfigurableExecutorService(executor);</span><br><span class="line">            <span class="comment">//设置钩子线程,并设置等待时长</span></span><br><span class="line">            <span class="built_in">this</span>.addDelayedShutdownHook(service, terminationTimeout, timeUnit);</span><br><span class="line">            <span class="keyword">return</span> service;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">addDelayedShutdownHook</span><span class="params">(<span class="keyword">final</span> ExecutorService service, <span class="keyword">final</span> <span class="type">long</span> terminationTimeout, <span class="keyword">final</span> TimeUnit timeUnit)</span> &#123;</span><br><span class="line">     Preconditions.checkNotNull(service);</span><br><span class="line">     Preconditions.checkNotNull(timeUnit);</span><br><span class="line">     <span class="built_in">this</span>.addShutdownHook(MoreExecutors.newThread(<span class="string">&quot;DelayedShutdownHook-for-&quot;</span> + service, <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">         <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">              <span class="keyword">try</span> &#123;</span><br><span class="line">                 <span class="comment">//关闭线程池</span></span><br><span class="line">                 service.shutdown();</span><br><span class="line">                 <span class="comment">//这个需要等到提交的任务全部执行完,这个上文跟Spring的阻塞等待关闭是一个道理</span></span><br><span class="line">                 service.awaitTermination(terminationTimeout, timeUnit);</span><br><span class="line">               &#125; <span class="keyword">catch</span> (InterruptedException var2) &#123;</span><br><span class="line">               &#125;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="addDelayedShutdownHook"><a href="#addDelayedShutdownHook" class="headerlink" title="addDelayedShutdownHook"></a>addDelayedShutdownHook</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//方法使用</span></span><br><span class="line">MoreExecutors.addDelayedShutdownHook(threadPoolExecutor,<span class="number">120L</span>,TimeUnit.SECONDS);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>源码分析</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//关键源码,此处调用的addDelayedShutdownHook跟上面的一样,只不过这里没有改变ThreadFactory,只设置了钩子线程</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">addDelayedShutdownHook</span><span class="params">(ExecutorService service, <span class="type">long</span> terminationTimeout, TimeUnit timeUnit)</span> &#123;</span><br><span class="line">        (<span class="keyword">new</span> <span class="title class_">MoreExecutors</span>.Application()).addDelayedShutdownHook(service, terminationTimeout, timeUnit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="shutdownAndAwaitTermination"><a href="#shutdownAndAwaitTermination" class="headerlink" title="shutdownAndAwaitTermination"></a>shutdownAndAwaitTermination</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用方法</span></span><br><span class="line">MoreExecutors.shutdownAndAwaitTermination(threadPoolExecutor,<span class="number">10L</span>,TimeUnit.SECONDS);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>源码分析</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//关键源码</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">shutdownAndAwaitTermination</span><span class="params">(ExecutorService service, <span class="type">long</span> timeout, TimeUnit unit)</span> &#123;</span><br><span class="line">        <span class="type">long</span> <span class="variable">halfTimeoutNanos</span> <span class="operator">=</span> unit.toNanos(timeout) / <span class="number">2L</span>;</span><br><span class="line">        <span class="comment">//预关闭</span></span><br><span class="line">        service.shutdown();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//判断是否有提交的任务没有执行完。</span></span><br><span class="line">            <span class="keyword">if</span> (!service.awaitTermination(halfTimeoutNanos, TimeUnit.NANOSECONDS)) &#123;</span><br><span class="line">                <span class="comment">//如果没有执行完,继续尝试强行关闭</span></span><br><span class="line">                service.shutdownNow();</span><br><span class="line">                <span class="comment">//然后进行阻塞等待关闭</span></span><br><span class="line">                service.awaitTermination(halfTimeoutNanos, TimeUnit.NANOSECONDS);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException var7) &#123;</span><br><span class="line">            <span class="comment">//如果在关闭过程中如果发生中断,先设置中断恢复。</span></span><br><span class="line">            Thread.currentThread().interrupt();</span><br><span class="line">            <span class="comment">//直接强行关闭</span></span><br><span class="line">            service.shutdownNow();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//返回状态</span></span><br><span class="line">        <span class="keyword">return</span> service.isTerminated();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Example-Demo"><a href="#Example-Demo" class="headerlink" title="Example-Demo"></a>Example-Demo</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadPoolConfiguration</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;executorServiceExiting&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> ExecutorService <span class="title function_">executorService</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">ThreadPoolExecutor</span> <span class="variable">threadPoolExecutor</span> <span class="operator">=</span></span><br><span class="line">          <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(<span class="number">5</span>, <span class="number">10</span>, <span class="number">5L</span>, TimeUnit.SECONDS,</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">LinkedBlockingDeque</span>&lt;&gt;(<span class="number">20</span>), <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>.CallerRunsPolicy());</span><br><span class="line">        <span class="keyword">return</span> MoreExecutors.getExitingExecutorService(threadPoolExecutor);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;executorServiceShutdownHook&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> ExecutorService <span class="title function_">executorServiceShutdownHook</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">ThreadPoolExecutor</span> <span class="variable">threadPoolExecutor</span> <span class="operator">=</span></span><br><span class="line">          <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(<span class="number">5</span>, <span class="number">10</span>, <span class="number">5L</span>, TimeUnit.SECONDS,</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">LinkedBlockingDeque</span>&lt;&gt;(<span class="number">20</span>), <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>.CallerRunsPolicy());</span><br><span class="line">        MoreExecutors.addDelayedShutdownHook(threadPoolExecutor,<span class="number">120L</span>,TimeUnit.SECONDS);</span><br><span class="line">        <span class="keyword">return</span> threadPoolExecutor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//2</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadPoolConfiguration</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@Order(2)</span></span><br><span class="line">    <span class="keyword">public</span> ExecutorService <span class="title function_">executorService</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">ThreadPoolExecutor</span> <span class="variable">threadPoolExecutor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(<span class="number">5</span>, <span class="number">10</span>, <span class="number">5L</span>, TimeUnit.SECONDS,</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">LinkedBlockingDeque</span>&lt;&gt;(<span class="number">20</span>), <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>.CallerRunsPolicy());</span><br><span class="line">        ThreadPoolRegisterCenter.register(threadPoolExecutor);</span><br><span class="line">        <span class="keyword">return</span> threadPoolExecutor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//-------------</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Duansg</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@desc</span> 线程池的注册中心</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2020-04-01 00:23:12</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Order(1)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadPoolRegisterCenter</span> <span class="keyword">implements</span> <span class="title class_">ApplicationRunner</span>, DisposableBean &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@desc</span> 线程池容器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Set&lt;ExecutorService&gt; THREAD_POOL_CONTEXT  = Sets.newConcurrentHashSet();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@desc</span> 添加线程池到容器中</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> executorService</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">register</span><span class="params">(ExecutorService executorService)</span> &#123;</span><br><span class="line">        THREAD_POOL_CONTEXT.add(executorService);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">(ApplicationArguments args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">//设置钩子方法,并使用shutdownAndAwaitTermination方法进行关闭处理</span></span><br><span class="line">        Runtime.getRuntime().addShutdownHook(<span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; THREAD_POOL_CONTEXT.forEach(executorService -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (!ObjectUtils.isEmpty(executorService))&#123;</span><br><span class="line">                shutdownAndAwaitTermination(executorService);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">//防止调用tomcat reload方法,导致的无法感知到关闭事件</span></span><br><span class="line">        THREAD_POOL_CONTEXT.forEach(executorService -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (shutdownAndAwaitTermination(executorService))&#123;</span><br><span class="line">                THREAD_POOL_CONTEXT.remove(executorService);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@desc</span> 关闭方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> executorService</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">shutdownAndAwaitTermination</span><span class="params">(ExecutorService executorService)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> MoreExecutors.shutdownAndAwaitTermination(executorService, <span class="number">10L</span>, TimeUnit.SECONDS);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/08/27/dc3pmd/" data-id="cl7lsjh5x0000wp5n1sqnfh7k" data-title="如何优雅的关闭线程池？" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2022/08/28/qgntka/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          为什么线程中断不了？
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/08/26/vot9q2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">【DIY无人机】电调固件升级[已收录]</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/02/qsryik/">Permission denied (publickey)解决办法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/iohty9/">浅析volatile关键字</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/vrkgwy/">CompletableFuture异常处理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/zkm8sp/">浅析CompletableFuture</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/30/ym2epx/">wait与synchronized居然搞了cp？</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

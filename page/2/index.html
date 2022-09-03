@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">test</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-iz618g" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/08/25/iz618g/" class="article-date">
+  <time class="dt-published" datetime="2022-08-24T16:06:34.000Z" itemprop="datePublished">2022-08-25</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/08/25/iz618g/">【DIY无人机】导航板(I2C-GPS)烧录[已收录]</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/jpeg/617118/1661357274580-14d569f1-7f0d-42a1-9887-d371040ef406.jpeg#clientId=u5eb74671-8cea-4&crop=0&crop=0&crop=1&crop=1&from=ui&height=364&id=ubbe6b0e0&margin=%5Bobject%20Object%5D&name=1.jpg&originHeight=764&originWidth=1280&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=53564&status=done&style=none&taskId=u95f6c673-d6bb-4820-8b5b-2424a8c848e&title=&width=610" alt="1.jpg"><br>GPS，其实应该是指 Global Navigation Satellite System 全球导航卫星系统，即 GNSS，主要是用来定位的系统，目前全球定位系统有下面几种：</p>
+<ul>
+<li>GLONASS 俄罗斯 格洛纳斯</li>
+<li>Galileo-NES 欧洲 伽利略</li>
+<li>BDS 中国 北斗</li>
+<li>GPS 美国 全球定位系统</li>
+<li><strong>关于更多无人机飞控 GPS 知识请移步：</strong><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/37063724"><strong>https://zhuanlan.zhihu.com/p/37063724</strong></a></li>
+</ul>
+<h3 id="Ublox"><a href="#Ublox" class="headerlink" title="Ublox"></a>Ublox</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661357495896-0098f86a-6e59-4de9-99d6-3f7d221690a0.png#clientId=u5eb74671-8cea-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=326&id=uf602c142&margin=%5Bobject%20Object%5D&name=image.png&originHeight=651&originWidth=1024&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=144575&status=done&style=none&taskId=udd7b6a67-ac3a-4556-9f88-3fc181d168e&title=&width=512" alt="image.png"><br>目前，用于多旋翼无人机中的 GPS，常见的是 Ublox 的系列，像常见的 NEO-M8、NEO-M7、NEO-M6 等，笔者这次选购的是 NEO-M6 带陶瓷有缘天线版本的，因为 NEO-M8 模块要 40 元左右，M6 只需要 10 元，为了羞涩的钱包，笔者选择了少一点精度。关于产品的异同，可移步官网：<a target="_blank" rel="noopener" href="https://www.u-blox.com/zh/product-search">https://www.u-blox.com/zh/product-search</a>，连接好以后如下图。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661357630947-2365a304-4c9a-454f-8a83-63bcb1cadd24.png#clientId=u5eb74671-8cea-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=325&id=ud3df79cc&margin=%5Bobject%20Object%5D&name=image.png&originHeight=649&originWidth=535&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=759138&status=done&style=none&taskId=u36e7e3b6-67e9-4f1d-ba7d-284884abebf&title=&width=267.5" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661357640017-a043dbe6-3a42-4aa4-940c-c3c59a637039.png#clientId=u5eb74671-8cea-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=229&id=u753842cf&margin=%5Bobject%20Object%5D&name=image.png&originHeight=457&originWidth=537&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=537186&status=done&style=none&taskId=uea1b3b85-4e11-4494-b1dc-4f3352dd512&title=&width=268.5" alt="image.png"></p>
+<blockquote>
+<p>注意：买这个模块的时候记得要问一句带不带 EEPROM，这个在你修改完模块的数据以后会自动保存的，即使断电它也会恢复你设置的参数，否则买那种只带电池或者不默认保存的，你可能每次都要修改参数，很麻烦的。</p>
+</blockquote>
+<h3 id="导航板"><a href="#导航板" class="headerlink" title="导航板"></a>导航板</h3><p>ATmega328P 的 MWC 飞控板不支持串口的 GPS，只支持 I2C 总线，我们需要另一块 ProMini 作为导航板，通过这块 mini 的串口连接 GPS，再用 I2C 总线将数据发回 MWC 主飞控。这就需要我们自己做一块 I2C-GPS 导航板，这块导航板同时还可以接超声波模块，用来低空定高。因为 I2C-GPS 导航板固件也是开源的，所以我们只需做一块导航板即可。固件下载：<a target="_blank" rel="noopener" href="https://code.google.com/p/i2c-gps-nav/downloads/list">https://code.google.com/p/i2c-gps-nav/downloads/list</a><br>1、PCB 绘制<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661357780108-ed70b29e-893f-4b76-97e3-7398ffe3481c.png#clientId=u5eb74671-8cea-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=268&id=ueefcafd0&margin=%5Bobject%20Object%5D&name=image.png&originHeight=536&originWidth=540&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=474282&status=done&style=none&taskId=ue2d3dfc8-fad3-42e1-9be8-85c0dd213f1&title=&width=270" alt="image.png"><br>2、制板<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661357806040-911f2ac1-47b9-4015-855c-12411e86cf2b.png#clientId=u5eb74671-8cea-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=261&id=u6e0245db&margin=%5Bobject%20Object%5D&name=image.png&originHeight=522&originWidth=542&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=661805&status=done&style=none&taskId=u1688abb0-dabd-4b09-be20-cadd979a4d0&title=&width=271" alt="image.png"><br>3、组装 ProMini<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661357813115-32081761-9ad1-4c8f-a3b4-b9f18f8c01ac.png#clientId=u5eb74671-8cea-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=284&id=ucafd4500&margin=%5Bobject%20Object%5D&name=image.png&originHeight=567&originWidth=534&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=666346&status=done&style=none&taskId=ucb283b29-85af-4e90-b9e7-d49f79c4926&title=&width=267" alt="image.png"></p>
+<h3 id="NEO-M6-上传固件"><a href="#NEO-M6-上传固件" class="headerlink" title="NEO-M6 上传固件"></a>NEO-M6 上传固件</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661358083995-cb557758-02bd-47af-8022-d4169c601ce4.png#clientId=u5eb74671-8cea-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=347&id=u9ac8ef6f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=694&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=259282&status=done&style=none&taskId=u74af7ef1-ba6b-459a-a932-0ff0d3452f8&title=&width=540" alt="image.png"><br>上传固件之前，我们需要下载 U-Blox 的上位机 u-center,地址：<a target="_blank" rel="noopener" href="https://www.u-blox.com/zh/product/u-center">https://www.u-blox.com/zh/product/u-center</a>，<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661358113480-e584c5a7-3755-45fb-b83e-ca74bde652c3.png#clientId=u5eb74671-8cea-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=244&id=ua30a2981&margin=%5Bobject%20Object%5D&name=image.png&originHeight=487&originWidth=538&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=586690&status=done&style=none&taskId=ub5f7a5ac-0cfa-4102-b5d9-4a1da147824&title=&width=269" alt="image.png"></p>
+<table>
+<thead>
+<tr>
+<th><strong>ISP</strong></th>
+<th><strong>U-Blox</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>VCC</td>
+<td>VCC</td>
+</tr>
+<tr>
+<td>TX</td>
+<td>RX</td>
+</tr>
+<tr>
+<td>RX</td>
+<td>TX</td>
+</tr>
+<tr>
+<td>GND</td>
+<td>GND</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>修改 U-BLOX 模块</strong></p>
+</blockquote>
+<p><strong>1、端口选择</strong><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478216306-96348737-af8d-4763-b6e6-7aece350737c.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=281&id=u821b9eaf&margin=%5Bobject%20Object%5D&name=image.png&originHeight=562&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=146927&status=done&style=none&taskId=ua05e099f-b0f1-4fcd-ab79-fd102591798&title=&width=540" alt="image.png"><br><strong>2、波特率选择，初始的应该都是 9600，不知道的可以问卖家</strong><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478285781-4618512a-3e8c-4ac7-9dac-d46921ab758e.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=281&id=u7d9b3317&margin=%5Bobject%20Object%5D&name=image.png&originHeight=562&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=159348&status=done&style=none&taskId=u9d68e0b4-de1c-4a90-b75f-5c6550815e8&title=&width=540" alt="image.png"><br><strong>3、连接完成，查看视图，右下角绿色的连通标志，如果你所处的地方信号不错，右边可以定位你当前的位置</strong><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478326007-af9fcdfe-28bc-4090-8f53-9eb854c0d1af.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=281&id=u734941ff&margin=%5Bobject%20Object%5D&name=image.png&originHeight=562&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=146762&status=done&style=none&taskId=u9dc9c544-a4ec-4126-8bcf-878f542eed9&title=&width=540" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478350477-b846f727-ddfa-45c9-af08-7d3040a5fe12.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=281&id=uee6eac41&margin=%5Bobject%20Object%5D&name=image.png&originHeight=562&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=152526&status=done&style=none&taskId=u4fc112cc-9c1b-4cd2-bb2a-b2d741da075&title=&width=540" alt="image.png"><br><strong>4、固件写入</strong><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478358044-64fde6cd-a274-4c0d-874e-3ae54f47bd22.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=241&id=u9ea5ccc2&margin=%5Bobject%20Object%5D&name=image.png&originHeight=481&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=116616&status=done&style=none&taskId=u1e88a9ef-a1f8-4f2c-ad67-ee470c9f4b3&title=&width=540" alt="image.png"><br><strong>注意：这个时候你的波特率已经变成了 115200，重启 u-center，波特率选择 115200。</strong></p>
+<h3 id="NEO-M6-扩展"><a href="#NEO-M6-扩展" class="headerlink" title="NEO-M6 扩展"></a>NEO-M6 扩展</h3><blockquote>
+<p>由于 M6 并不支持 10hz 刷新，只支持 5hz，还要手动修改下。100-200ms</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478495736-457fb6fc-0fc4-4b2b-9964-66ea05339a0c.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=281&id=u2563061c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=562&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=210669&status=done&style=none&taskId=u5eecad3c-2049-4a4b-b0c8-4ade56ed38f&title=&width=540" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478508027-69bc1997-645b-49a7-925d-a1a30825f148.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=281&id=u60b41f55&margin=%5Bobject%20Object%5D&name=image.png&originHeight=562&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=244213&status=done&style=none&taskId=u90894713-179a-422e-8c40-d7e5094ad4f&title=&width=540" alt="image.png"></p>
+<h3 id="导航版烧录"><a href="#导航版烧录" class="headerlink" title="导航版烧录"></a>导航版烧录</h3><blockquote>
+<p>从 DTR 依次对应 Pro mini 的针脚，VCC 连接 VCC_IN 即可</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478566168-71602a36-778c-4794-8fc3-5d66b192fabf.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=327&id=uf2d98482&margin=%5Bobject%20Object%5D&name=image.png&originHeight=653&originWidth=527&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=739093&status=done&style=none&taskId=ua6cf9bd1-e87f-485f-900d-3754efb20e1&title=&width=263.5" alt="image.png"></p>
+<blockquote>
+<p>打开下载好的开源的 I2C-GPS 导航板固件</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478584976-4aad767b-1623-41d4-9179-ef0a56bdefa0.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=226&id=uaad0951d&margin=%5Bobject%20Object%5D&name=image.png&originHeight=451&originWidth=743&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=52166&status=done&style=none&taskId=u4277c98f-1d61-4cae-8934-8d8958d49c7&title=&width=371.5" alt="image.png"></p>
+<blockquote>
+<p>修改参数，上传固件</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478596585-0c149c17-033f-47fe-8cba-2201e8d03ea5.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=293&id=u1667d913&margin=%5Bobject%20Object%5D&name=image.png&originHeight=586&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=80274&status=done&style=none&taskId=ube13e1f4-01e3-423e-a4b2-beba6e2a16e&title=&width=540" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478611376-3a0a1596-d21c-4a00-9af2-a0832e780c05.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=293&id=ue93afa26&margin=%5Bobject%20Object%5D&name=image.png&originHeight=586&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=85467&status=done&style=none&taskId=u7d6dacbc-4cea-495d-a69d-5bababa11b1&title=&width=540" alt="image.png"></p>
+<blockquote>
+<p>你如果成功的到了这里，说明你飞控两大核心的功能已经完成了，下面我们把所有的模块连接起来。</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478645737-90ed3941-6029-44a8-80ea-5f80f8c1576f.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=320&id=u27840cbc&margin=%5Bobject%20Object%5D&name=image.png&originHeight=639&originWidth=937&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=1145482&status=done&style=none&taskId=ubda9cba6-43d2-4bdc-911a-dea34e464b0&title=&width=468.5" alt="image.png"></p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><blockquote>
+<p>笔者使用的是 MultiWii GUI 测试的</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661478684577-9f0ccca4-5b39-4836-93cb-e5632f507e84.png#clientId=u643024af-0a55-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=282&id=u96703021&margin=%5Bobject%20Object%5D&name=image.png&originHeight=564&originWidth=1000&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=77398&status=done&style=none&taskId=u37f6c5b7-8b78-40ef-ab0f-0598de9bb8d&title=&width=500" alt="image.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/08/25/iz618g/" data-id="cl7lsjh620002wp5n96k13vrk" data-title="【DIY无人机】导航板(I2C-GPS)烧录[已收录]" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/09/02/qsryik/">Permission denied (publickey)解决办法</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/iohty9/">浅析volatile关键字</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/vrkgwy/">CompletableFuture异常处理</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/31/zkm8sp/">浅析CompletableFuture</a>
+          </li>
+        
+          <li>
+            <a href="/2022/08/30/ym2epx/">wait与synchronized居然搞了cp？</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
