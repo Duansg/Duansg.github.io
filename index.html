@@ -757,61 +757,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="电调"><a href="#电调" class="headerlink" title="电调"></a>电调</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529652127-79ef4d7a-6393-428a-8cae-0f9cc59aa4fb.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=196&id=u0e60a56c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=392&originWidth=682&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=179710&status=done&style=none&taskId=u5034dc5d-f373-407f-8042-6be8c2799d6&title=&width=341" alt="image.png"><br>为什么这里要说电调，因为电调对于多旋翼来说肯定是响应越快越好,多轴要的就是快速响应!但快速响应等高性能就意味着价格高,所以我们在价格和性能之间往往是不好选择的(就是因为穷,哈哈哈哈),但 BLHELI 电调开源固件解决了这个问题。我们只需要花 40-50 块钱买一个好盈天行者 20A&#x2F;40A 电调，然后往电调里刷 BLHELI 的电调固件,然后你就得到了一个响应速度可以和 200-300 块钱的高价电调相当的廉价电调!话说回来这 BLHELI 固件也不是非刷不可,不刷就是响应慢了点,照样能飞起来!好盈天行者 20A 和好盈天行者 40A,选哪个都行,看你资金情况和长远考虑,其实好盈天行者 20A 就目前来说就够用了! 电调原固件可以,但响应不快!刷了 BLHeli 固件之后响应速度大大提高,这会让你四轴飞行更加稳定!<br>固件下载：<a target="_blank" rel="noopener" href="http://www.helifreak.com/blog.php?b=2001">http://www.helifreak.com/blog.php?b=2001</a><br>BLHeli-Setup 下载：<a target="_blank" rel="noopener" href="https://app.box.com/s/z32i4rehild8vsbcnr5x">https://app.box.com/s/z32i4rehild8vsbcnr5x</a></p>
-<h4 id="下载器"><a href="#下载器" class="headerlink" title="下载器"></a>下载器</h4><p>要往电调里刷固件,需要先做一个下载器,文档里有相应的引脚连接方法，我们选择 Arduino Nano 来作为中转下载器。Arduino Nano 从某宝上购买即可,几元钱,我买的还是改进版,大家买的时候注意一下即可。这个连接到电脑上打开 IDE 会自动下载驱动,如果没有驱动,可以给店家索取,他们都会提供的。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529741963-ec8a4461-b4a4-48e7-98a4-e4f503a264da.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=177&id=ua5fb16f7&margin=%5Bobject%20Object%5D&name=image.png&originHeight=354&originWidth=529&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=287982&status=done&style=none&taskId=ue1c406b7-e0ce-48dc-8af2-f718d809c16&title=&width=264.5" alt="image.png"></p>
-<blockquote>
-<p>然后打开 BLHeli-Setup</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529766892-ebf2dbba-c881-4fef-9f04-61285c4e9b36.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=233&id=ud03847bf&margin=%5Bobject%20Object%5D&name=image.png&originHeight=465&originWidth=989&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=86877&status=done&style=none&taskId=u09e0c04e-9d07-4eb5-983c-fb2a2d0fd53&title=&width=494.5" alt="image.png"></p>
-<blockquote>
-<p>然后选择 nano,原版的 Baud 请选择 57600,改进版的是 115200</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529785974-e5d408de-410b-4d4c-988f-1d87900afbd4.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=313&id=ucbfce119&margin=%5Bobject%20Object%5D&name=image.png&originHeight=626&originWidth=810&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=71925&status=done&style=none&taskId=u859572b7-c344-4ef1-9db3-81eb2cac945&title=&width=405" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529792056-7bc81ede-3fa9-429a-9b72-47316fe543c7.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=232&id=u964e7413&margin=%5Bobject%20Object%5D&name=image.png&originHeight=464&originWidth=678&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=342966&status=done&style=none&taskId=u165b2c31-390b-4e0a-9ce3-a74c00cf3da&title=&width=339" alt="image.png"></p>
-<blockquote>
-<p>成功之后如下</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529797801-0d97fc97-68bd-4979-8d88-3e39429499f9.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=299&id=uf315e038&margin=%5Bobject%20Object%5D&name=image.png&originHeight=597&originWidth=763&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=67796&status=done&style=none&taskId=uff2e343d-a9e9-4aa5-aa82-506987aad63&title=&width=381.5" alt="image.png"></p>
-<h4 id="电调连接"><a href="#电调连接" class="headerlink" title="电调连接"></a>电调连接</h4><p>这里需要把电调的热缩管拆开,但是你可以开天窗,就是用剪子剪掉一个正方形的洞,但是这样你不好找位置,还容易把贴片元器件损坏,所以就直接全部剪掉热缩管就可以了,刷完最好在用热缩管封起来。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529861247-0dec9c0a-ffcf-4b77-81c7-97a5e38765d1.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=332&id=u48336d46&margin=%5Bobject%20Object%5D&name=image.png&originHeight=663&originWidth=531&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=678206&status=done&style=none&taskId=ucb1ee9fc-e083-48c0-bd98-27d52a1f50d&title=&width=265.5" alt="image.png"></p>
-<blockquote>
-<p>然后找到这个触点</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529886100-3fdc971d-332e-4421-9bc2-df79abe2c062.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=144&id=uc2f6cc9c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=288&originWidth=498&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=294112&status=done&style=none&taskId=ub71876a5-3d04-44b4-b0de-5eda955af43&title=&width=249" alt="image.png"></p>
-<blockquote>
-<p>然后找到 Nano 的引脚示意图</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529936860-fd096588-617a-45e5-9a08-bfef6b6152d0.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=346&id=ud438b71b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=691&originWidth=1065&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=363519&status=done&style=none&taskId=ud458cc53-3f78-41dd-86fd-9d78324be27&title=&width=532.5" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529948416-488c5ec3-f688-481d-88d8-d5993b4f145f.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=81&id=ufeb60706&margin=%5Bobject%20Object%5D&name=image.png&originHeight=162&originWidth=495&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=27556&status=done&style=none&taskId=u3bc6bea8-3fea-4ef6-a79b-08cdfb6cc70&title=&width=247.5" alt="image.png"></p>
-<blockquote>
-<p>然后给电调供电，把上图的连接线连接起来,笔者使用 B6 平衡充进行供电,实际可以使用电池,但是需要注意是,因为触点不要连接,动手能力差一点的可以找两个人配合，笔者因为这里需要一只手连接触点，一只手刷固件，就没有拍照。</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529974593-81e65d51-b903-47bb-baf2-83c7067da634.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=199&id=u7ec5b54c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=398&originWidth=533&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=370673&status=done&style=none&taskId=u713a8ee9-4ddd-4086-adca-ec56d2bf9fc&title=&width=266.5" alt="image.png"></p>
-<h4 id="固件烧录"><a href="#固件烧录" class="headerlink" title="固件烧录"></a>固件烧录</h4><blockquote>
-</blockquote>
-<h4 id="选择-Setup–-gt-Read-Setup-From-Hex-File"><a href="#选择-Setup–-gt-Read-Setup-From-Hex-File" class="headerlink" title="选择 Setup–&gt;Read Setup From Hex File"></a>选择 Setup–&gt;Read Setup From Hex File</h4><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529996738-cbcc2acf-f6e0-45a9-a811-ea1611958d2a.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=313&id=uf468b6de&margin=%5Bobject%20Object%5D&name=image.png&originHeight=626&originWidth=810&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=100978&status=done&style=none&taskId=uf990399a-d4e5-4260-b296-243b9181d4a&title=&width=405" alt="image.png"></p>
-<blockquote>
-<p>选择电调</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661530003364-4fac7ad0-a2d3-4239-bc84-aa72db9017b5.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=313&id=udb710b1a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=626&originWidth=810&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=107439&status=done&style=none&taskId=u9f9b62a1-5ade-4b1c-9ab4-c7808d357cf&title=&width=405" alt="image.png"></p>
-<blockquote>
-<p>选择 Skywalker 20A_MULTI</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661530030497-fd0656ac-bf87-4b86-acfd-639c5438d773.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=310&id=u8babbd1f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=619&originWidth=786&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=55969&status=done&style=none&taskId=u61a345e8-fb27-4e72-8850-5d473045aee&title=&width=393" alt="image.png"></p>
-<blockquote>
-<p>如图设置</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661530037908-4f322275-9a2b-446a-a52b-611f7371a42f.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=194&id=uaa66d933&margin=%5Bobject%20Object%5D&name=image.png&originHeight=388&originWidth=793&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=369829&status=done&style=none&taskId=u176a91ee-20f7-418f-9ab8-4004015c8ed&title=&width=396.5" alt="image.png"></p>
-<blockquote>
-<p>选择刷新</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661530043829-c57a85d8-33c4-4ceb-b8c1-8f068b07ecee.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=273&id=ud5761629&margin=%5Bobject%20Object%5D&name=image.png&originHeight=546&originWidth=796&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=57880&status=done&style=none&taskId=ub9c3838b-6a71-43db-949b-ad84ff687ba&title=&width=398" alt="image.png"></p>
-<blockquote>
-<p>再次选择 Skywalker 20A_MULTI,然后一直点确定就可以了。</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661530052600-ec7defb8-a64b-4f33-a715-9cb6038ff0bf.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=242&id=uaa306fa2&margin=%5Bobject%20Object%5D&name=image.png&originHeight=484&originWidth=616&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=31286&status=done&style=none&taskId=ubdf0cd99-619e-4c97-b8b8-5ab048f4e10&title=&width=308" alt="image.png"></p>
-<blockquote>
-<p>成功之后如下</p>
-</blockquote>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661530071271-af2414a6-7760-4c91-b5ff-7e7c53aeb33e.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=139&id=u7e676a3a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=277&originWidth=590&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=179168&status=done&style=none&taskId=u9d7cc39c-f62c-4627-a2ce-02e3cce5b69&title=&width=295" alt="image.png"><br>刷完之后，连接上电机，通电之后会有一段自检的音乐，反正跟之前的是不一样的,然后可以试下电机的响应速度之类的，你就会发现比之前提升了不少。</p>
-
+        <h3 id="电调"><a href="#电调" class="headerlink" title="电调"></a>电调</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529652127-79ef4d7a-6393-428a-8cae-0f9cc59aa4fb.png#clientId=u16b7bfb7-8251-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=196&id=u0e60a56c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=392&originWidth=682&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=179710&status=done&style=none&taskId=u5034dc5d-f373-407f-8042-6be8c2799d6&title=&width=341" alt="image.png"><br>为什么这里要说电调，因为电调对于多旋翼来说肯定是响应越快越好,多轴要的就是快速响应!但快速响应等高性能就意味着价格高,所以我们在价格和性能之间往往是不好选择的(就是因为穷,哈哈哈哈),但 BLHELI 电调开源固件解决了这个问题。我们只需要花 40-50 块钱买一个好盈天行者 20A&#x2F;40A 电调，然后往电调里刷 BLHELI 的电调固件,然后你就得到了一个响应速度可以和 200-300 块钱的高价电调相当的廉价电调!话说回来这 BLHELI 固件也不是非刷不可,不刷就是响应慢了点,照样能飞起来!好盈天行者 20A 和好盈天行者 40A,选哪个都行,看你资金情况和长远考虑,其实好盈天行者 20A 就目前来说就够用了! 电调原固件可以,但响应不快!刷了 BLHeli 固件之后响应速度大大提高,这会让你四轴飞行更加稳定!</p>
+        
+          <a class="article-more-a" href="/2022/08/26/vot9q2/#more">more >></a>
+        
       
 
       
