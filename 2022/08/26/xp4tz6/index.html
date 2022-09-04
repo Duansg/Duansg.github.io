@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>【DIY无人机】主控程序[已收录] | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言上图是《三傻大闹宝莱坞》中的片段，笔者初中的时候看到这个电影对这个四轴飞行器有着极大的兴趣，但因为当时经费的问题，在开发了一般没有自稳的迷你小四轴以后就不了了知了。 Multiwii CopterMultiwii 是控制多旋翼航模的开源固件，Multiwii 最初由法国航模爱好者 Alex 创立，用于控制他自己做的三轴飞行器。后经全世界各大高手改造扩展，现在 Multiwii 不仅仅支持三轴">
+  <meta name="description" content="前言上图是《三傻大闹宝莱坞》中的片段，笔者初中的时候看到这个电影对这个四轴飞行器有着极大的兴趣，但因为当时经费的问题，在开发了一般没有自稳的迷你小四轴以后就不了了知了。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【DIY无人机】主控程序[已收录]">
 <meta property="og:url" content="http://example.com/2022/08/26/xp4tz6/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="前言上图是《三傻大闹宝莱坞》中的片段，笔者初中的时候看到这个电影对这个四轴飞行器有着极大的兴趣，但因为当时经费的问题，在开发了一般没有自稳的迷你小四轴以后就不了了知了。 Multiwii CopterMultiwii 是控制多旋翼航模的开源固件，Multiwii 最初由法国航模爱好者 Alex 创立，用于控制他自己做的三轴飞行器。后经全世界各大高手改造扩展，现在 Multiwii 不仅仅支持三轴">
+<meta property="og:description" content="前言上图是《三傻大闹宝莱坞》中的片段，笔者初中的时候看到这个电影对这个四轴飞行器有着极大的兴趣，但因为当时经费的问题，在开发了一般没有自稳的迷你小四轴以后就不了了知了。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661481021565-7e97a397-a2b8-48cf-8029-ef2a039a68bc.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=256&id=ud00a1624&margin=%5Bobject%20Object%5D&name=image.png&originHeight=339&originWidth=792&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=424265&status=done&style=none&taskId=ucf94bb43-961b-48ef-8c4c-771ff29f184&title=&width=598">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661481106065-96290550-7a12-466a-b192-c0e60d28b783.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=252&id=u6741f99f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=456&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=472971&status=done&style=none&taskId=u8479c30a-f392-48e3-9f90-c2cf947f5ca&title=&width=598">
@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529108226-395df7f0-e433-451f-aa1f-a1e24ad4dcd3.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=285&id=uaa249e0b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=569&originWidth=1006&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=56410&status=done&style=none&taskId=ub06497b4-a2fd-426d-a198-c39c96b35a6&title=&width=503">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661529116901-6fe3ef52-8ff1-4eab-99ed-fabc331e641d.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=285&id=ued170c0b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=569&originWidth=1006&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=75432&status=done&style=none&taskId=u43c99e69-9fe6-4904-a059-165b3eadcb2&title=&width=503">
 <meta property="article:published_time" content="2022-08-26T02:29:54.000Z">
-<meta property="article:modified_time" content="2022-09-04T06:29:38.579Z">
+<meta property="article:modified_time" content="2022-09-04T06:34:07.090Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661481021565-7e97a397-a2b8-48cf-8029-ef2a039a68bc.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=256&id=ud00a1624&margin=%5Bobject%20Object%5D&name=image.png&originHeight=339&originWidth=792&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=424265&status=done&style=none&taskId=ucf94bb43-961b-48ef-8c4c-771ff29f184&title=&width=598">
@@ -199,6 +199,8 @@
       
         <p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661481021565-7e97a397-a2b8-48cf-8029-ef2a039a68bc.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=256&id=ud00a1624&margin=%5Bobject%20Object%5D&name=image.png&originHeight=339&originWidth=792&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=424265&status=done&style=none&taskId=ucf94bb43-961b-48ef-8c4c-771ff29f184&title=&width=598" alt="image.png"></p>
 <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>上图是《三傻大闹宝莱坞》中的片段，笔者初中的时候看到这个电影对这个四轴飞行器有着极大的兴趣，但因为当时经费的问题，在开发了一般没有自稳的迷你小四轴以后就不了了知了。</p>
+<span id="more"></span>
+
 <h3 id="Multiwii-Copter"><a href="#Multiwii-Copter" class="headerlink" title="Multiwii Copter"></a>Multiwii Copter</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661481106065-96290550-7a12-466a-b192-c0e60d28b783.png#clientId=u507b509e-0704-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=252&id=u6741f99f&margin=%5Bobject%20Object%5D&name=image.png&originHeight=456&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=472971&status=done&style=none&taskId=u8479c30a-f392-48e3-9f90-c2cf947f5ca&title=&width=598" alt="image.png"><br>Multiwii 是控制多旋翼航模的开源固件，Multiwii 最初由法国航模爱好者 Alex 创立，用于控制他自己做的三轴飞行器。后经全世界各大高手改造扩展，现在 Multiwii 不仅仅支持三轴飞行器、四轴、六轴等多轴系列，还支持固定翼和直升机等航模。功能强大而且简单易用，其支持的传感器类型极为丰富，而且支持十分广泛的外部设备和飞行模式，这让 Multiwii 飞控固件发展为国外最受欢迎的多轴开源固件之一。同时 Multiwii 也有缺点，与 APM、海盗等其他开源固件相比，Multiwii 最大的不足就是目前还不支持地面站。</p>
 <ul>
 <li>官网地址：<a target="_blank" rel="noopener" href="https://www.multiwii.com/">https://www.multiwii.com/</a></li>
