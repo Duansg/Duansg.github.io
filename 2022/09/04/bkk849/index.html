@@ -6,19 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Permission denied (publickey)解决办法 | Hexo</title>
+  <title>Git多环境配置 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言这个异常并不陌生，很多情况下，我们总能见到 Permission denied 异常，可能是文件没有权限等等。">
+  <meta name="description" content="前言你是不是曾遇到过这样一个问题，公司仓库往往为了满足公司 git 规范，往往需要全局配置用户名和邮箱，但是我们平时也活跃在男性交友论坛(github)上，这个时候我们个人仓库的用户名和邮箱配置是有区别的，为了能够很好地区分工程上传到不同的远程仓库，我们需要分别处理，保证在不同的工程使用不同的配置信息。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Permission denied (publickey)解决办法">
-<meta property="og:url" content="http://example.com/2022/09/02/qsryik/index.html">
+<meta property="og:title" content="Git多环境配置">
+<meta property="og:url" content="http://example.com/2022/09/04/bkk849/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="前言这个异常并不陌生，很多情况下，我们总能见到 Permission denied 异常，可能是文件没有权限等等。">
+<meta property="og:description" content="前言你是不是曾遇到过这样一个问题，公司仓库往往为了满足公司 git 规范，往往需要全局配置用户名和邮箱，但是我们平时也活跃在男性交友论坛(github)上，这个时候我们个人仓库的用户名和邮箱配置是有区别的，为了能够很好地区分工程上传到不同的远程仓库，我们需要分别处理，保证在不同的工程使用不同的配置信息。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-09-02T01:46:55.000Z">
-<meta property="article:modified_time" content="2022-09-04T13:28:58.246Z">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662275911192-654985fa-ecc0-462d-8ef7-803514f99079.png#clientId=u33e08c81-f615-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=400&id=u4efdb33a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=800&originWidth=1600&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=55711&status=done&style=none&taskId=u4bb0766e-c8b7-483d-ac6b-9a233c818cd&title=&width=800">
+<meta property="article:published_time" content="2022-09-04T07:11:15.000Z">
+<meta property="article:modified_time" content="2022-09-04T13:28:58.247Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662275911192-654985fa-ecc0-462d-8ef7-803514f99079.png#clientId=u33e08c81-f615-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=400&id=u4efdb33a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=800&originWidth=1600&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=55711&status=done&style=none&taskId=u4bb0766e-c8b7-483d-ac6b-9a233c818cd&title=&width=800">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -155,35 +157,57 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-qsryik" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-bkk849" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Permission denied (publickey)解决办法
+      Git多环境配置
     </h1>
   
 
         
-        <a href="/2022/09/02/qsryik/" class="archive-article-date">
-  	<time datetime="2022-09-02T01:46:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-02</time>
+        <a href="/2022/09/04/bkk849/" class="archive-article-date">
+  	<time datetime="2022-09-04T07:11:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-04</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>这个异常并不陌生，很多情况下，我们总能见到 Permission denied 异常，可能是文件没有权限等等。</p>
-<span id="more"></span>
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662275911192-654985fa-ecc0-462d-8ef7-803514f99079.png#clientId=u33e08c81-f615-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=400&id=u4efdb33a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=800&originWidth=1600&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=55711&status=done&style=none&taskId=u4bb0766e-c8b7-483d-ac6b-9a233c818cd&title=&width=800" alt="image.png"><br>你是不是曾遇到过这样一个问题，公司仓库往往为了满足公司 git 规范，往往需要全局配置用户名和邮箱，但是我们平时也活跃在男性交友论坛(github)上，这个时候我们个人仓库的用户名和邮箱配置是有区别的，为了能够很好地区分工程上传到不同的远程仓库，我们需要分别处理，保证在不同的工程使用不同的配置信息。<span id="more"></span></p>
+<h3 id="Git-多层级配置"><a href="#Git-多层级配置" class="headerlink" title="Git 多层级配置"></a>Git 多层级配置</h3><p>多层级配置在 git 支持中，分别是 system(系统级)、global（用户级）、local（项目级）和 worktree（工作区级）</p>
+<ul>
+<li>配置优先级： worktree &gt; local &gt; global &gt; system</li>
+</ul>
+<h4 id="配置解释"><a href="#配置解释" class="headerlink" title="配置解释"></a>配置解释</h4><ul>
+<li>system</li>
+</ul>
+<p>&#x2F;etc&#x2F;gitconfig： 系统级配置文件，对系统中所有用户都适用的配置。使用 git config –system 读写的就是这个文件。</p>
+<ul>
+<li>global</li>
+</ul>
+<p>~&#x2F;.gitconfig： 用户级配置文件，用户目录下的配置文件只适用于该用户。使用 git config –global 读写的就是这个文件。</p>
+<ul>
+<li>local</li>
+</ul>
+<p>$RepoPath&#x2F;.git&#x2F;config： 项目级配置文件，当前项目的 git 仓库目录中的配置文件，也就是工作目录中的 .git&#x2F;config 文件，这里的配置仅仅针对当前项目有效。使用 git config –local 或 省略 local 参数，读写的就是这个文件。</p>
+<ul>
+<li>worktree： 工作区级配置，此配置仅仅针对当前工作区有效。使用 git config –worktree 进行配置。</li>
+</ul>
+<h3 id="Git-动态配置"><a href="#Git-动态配置" class="headerlink" title="Git 动态配置"></a>Git 动态配置</h3><p>假设有 A，B，C 分支，每个分支或许提交使用的用户信息与工作区或者当前用户下的不一样，如果你遇到这样的项目，可以单独进行配置，但是如果有很多这样的项目再单独配置的话就很麻烦，也容易遗漏掉某些配置，我们可以在用户级、系统级配置文件中，通过** includeIf **配置项来有条件地加载指定配置文件，他可以根据当前 git 项目的目录来设置，也可以根据当前 git 项目的当前分支来设置，这样就能实现针对不同的仓库、分支来加载不同的配置。</p>
+<h4 id="指定目录"><a href="#指定目录" class="headerlink" title="指定目录"></a>指定目录</h4><p>根据 git 项目的目录来加载对应的配置文件</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="type">includeIf</span> <span class="string">&quot;gitdir:~/**/指定的目录/**&quot;</span>]</span><br><span class="line">    path = 对应的配置文件的路径</span><br></pre></td></tr></table></figure>
 
-<h3 id="id-rsa"><a href="#id-rsa" class="headerlink" title="id_rsa"></a>id_rsa</h3><p>我们通过本地生成秘钥的情况下，在验证 github 的时候，ssh -T <a href="mailto:git@github.com">git@github.com</a> ，会出现”Permission denied (publickey) “的情况，这是由于您没有将公钥( publickey ) 添加到本地 ssh 环境造成的。</p>
-<h3 id="远程仓库的链接-ssh"><a href="#远程仓库的链接-ssh" class="headerlink" title="远程仓库的链接 ssh"></a>远程仓库的链接 ssh</h3><p>这类情况的原因是由于您没有将公钥( publickey ) 添加到本地 ssh 环境造成的，还有可能是由于多日未进行 ssh 登录操作，本地 publickey 失效造成的。只要 使用 ssh-add 命令再次添加一下公钥即可。</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh<span class="literal">-add</span> /Users/duansg/.ssh/id_rsa</span><br></pre></td></tr></table></figure>
+<h4 id="指定分支"><a href="#指定分支" class="headerlink" title="指定分支"></a>指定分支</h4><p>如果我们位于当前分支名称匹配</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="type">includeIf</span> <span class="string">&quot;onbranch:分支名字&quot;</span>]</span><br><span class="line">    path = 对应的配置文件的路径</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sh<span class="literal">-3</span>.<span class="number">2</span><span class="comment"># ssh -T git@github.com</span></span><br><span class="line">git@github.com: Permission denied (publickey).</span><br><span class="line">sh<span class="literal">-3</span>.<span class="number">2</span><span class="comment"># ssh -T git@github.com</span></span><br><span class="line">Hi DuansgXD! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br></pre></td></tr></table></figure>
+<h4 id="自定义配置写入"><a href="#自定义配置写入" class="headerlink" title="自定义配置写入"></a>自定义配置写入</h4><p>在配置文件对应的配置文件的路径中编写你需要设置，还可以通过带-f(等同于–file)选项的 git config 命令直接将配置项写入指定配置文件中，如下</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config <span class="operator">-f</span> 对应的配置文件的路径 user.email siguoduan@gmail.com</span><br></pre></td></tr></table></figure>
 
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="-1"><a href="#-1" class="headerlink" title=""></a></h4>
       
 
       
@@ -262,7 +286,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/09/02/qsryik/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/09/04/bkk849/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -276,18 +300,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2022/09/04/bkk849/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Git多环境配置
-        
-      </div>
-    </a>
   
-  
-    <a href="/2022/08/31/iohty9/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">浅析volatile关键字</div>
+    <a href="/2022/09/02/qsryik/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Permission denied (publickey)解决办法</div>
       <i class="icon-circle-right"></i>
     </a>
   
