@@ -173,10 +173,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>刚新建了个笔记项目，准备上传却遇到这个问题，更新 key 也不行，找了好久终于找到解决办法。</p>
-<h1 id="远程仓库的链接-SSH"><a href="#远程仓库的链接-SSH" class="headerlink" title="远程仓库的链接 SSH"></a>远程仓库的链接 SSH</h1><p>ssh 准备连接远程服务器却遭提示” Permission denied (publickey) “, 这是由于您没有将公钥( publickey ) 添加到本地 ssh 环境造成的，或者是由于多日未 进行 ssh 登录操作，本地 publickey 失效造成的。只要 使用 ssh-add 命令再次添加一下公钥即可。<br>ssh-add &#x2F;Users&#x2F;duansg&#x2F;.ssh&#x2F;id_rsa</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sh<span class="literal">-3</span>.<span class="number">2</span><span class="comment"># ssh -T git@github.com</span></span><br><span class="line">git@github.com: Permission denied (publickey).</span><br><span class="line">sh<span class="literal">-3</span>.<span class="number">2</span><span class="comment"># ssh -T git@github.com</span></span><br><span class="line">Hi DuansgXD! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br></pre></td></tr></table></figure>
-
+        <h1 id="远程仓库的链接-SSH"><a href="#远程仓库的链接-SSH" class="headerlink" title="远程仓库的链接 SSH"></a>远程仓库的链接 SSH</h1><p>ssh 准备连接远程服务器却遭提示” Permission denied (publickey) “, 这是由于您没有将公钥( publickey ) 添加到本地 ssh 环境造成的，或者是由于多日未 进行 ssh 登录操作，本地 publickey 失效造成的。只要 使用 ssh-add 命令再次添加一下公钥即可。</p>
+        
+          <a class="article-more-a" href="/2022/09/02/qsryik/#more">more >></a>
+        
       
 
       
