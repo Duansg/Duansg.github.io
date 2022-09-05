@@ -17,7 +17,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662275911192-654985fa-ecc0-462d-8ef7-803514f99079.png#clientId=u33e08c81-f615-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=400&id=u4efdb33a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=800&originWidth=1600&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=55711&status=done&style=none&taskId=u4bb0766e-c8b7-483d-ac6b-9a233c818cd&title=&width=800">
 <meta property="article:published_time" content="2022-09-04T07:11:15.000Z">
-<meta property="article:modified_time" content="2022-09-04T13:28:58.247Z">
+<meta property="article:modified_time" content="2022-09-05T15:10:27.837Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662275911192-654985fa-ecc0-462d-8ef7-803514f99079.png#clientId=u33e08c81-f615-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=400&id=u4efdb33a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=800&originWidth=1600&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=55711&status=done&style=none&taskId=u4bb0766e-c8b7-483d-ac6b-9a233c818cd&title=&width=800">
@@ -207,6 +207,7 @@
 <h4 id="自定义配置写入"><a href="#自定义配置写入" class="headerlink" title="自定义配置写入"></a>自定义配置写入</h4><p>在配置文件对应的配置文件的路径中编写你需要设置，还可以通过带-f(等同于–file)选项的 git config 命令直接将配置项写入指定配置文件中，如下</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config <span class="operator">-f</span> 对应的配置文件的路径 user.email siguoduan@gmail.com</span><br></pre></td></tr></table></figure>
 
+<p>对于个人用户来说，可以把通用的设置到 global 层，不通用的设置到具体的某个仓库或者仓库的工作目录中。如果主机会有多个用户用不同的用户名登录使用，那可以把通用的放到 system 层的配置中。</p>
 <h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="-1"><a href="#-1" class="headerlink" title=""></a></h4>
       
 
@@ -299,6 +300,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2022/09/05/ih2183/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          十大Super Javaer，你认识几个?
+        
+      </div>
+    </a>
   
   
     <a href="/2022/09/02/qsryik/" id="article-nav-older" class="article-nav-link-wrap">

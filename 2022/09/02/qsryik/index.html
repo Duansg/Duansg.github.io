@@ -16,7 +16,7 @@
 <meta property="og:description" content="前言这个异常并不陌生，很多情况下，我们总能见到 Permission denied 异常，可能是文件没有权限等等。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-09-02T01:46:55.000Z">
-<meta property="article:modified_time" content="2022-09-04T13:28:58.246Z">
+<meta property="article:modified_time" content="2022-09-05T15:10:27.836Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -179,9 +179,10 @@
 <span id="more"></span>
 
 <h3 id="id-rsa"><a href="#id-rsa" class="headerlink" title="id_rsa"></a>id_rsa</h3><p>我们通过本地生成秘钥的情况下，在验证 github 的时候，ssh -T <a href="mailto:git@github.com">git@github.com</a> ，会出现”Permission denied (publickey) “的情况，这是由于您没有将公钥( publickey ) 添加到本地 ssh 环境造成的。</p>
-<h3 id="远程仓库的链接-ssh"><a href="#远程仓库的链接-ssh" class="headerlink" title="远程仓库的链接 ssh"></a>远程仓库的链接 ssh</h3><p>这类情况的原因是由于您没有将公钥( publickey ) 添加到本地 ssh 环境造成的，还有可能是由于多日未进行 ssh 登录操作，本地 publickey 失效造成的。只要 使用 ssh-add 命令再次添加一下公钥即可。</p>
+<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>Permission denied (publickey)这类情况的原因是由于您没有将公钥( publickey ) 添加到本地 ssh 环境造成的，还有可能是由于许久没有进行 ssh 登录操作，本地的公钥失效导致的。这个时候只需要使用 ssh-add 命令再次添加一下公钥就可以解决。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh<span class="literal">-add</span> /Users/duansg/.ssh/id_rsa</span><br></pre></td></tr></table></figure>
 
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>解决</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sh<span class="literal">-3</span>.<span class="number">2</span><span class="comment"># ssh -T git@github.com</span></span><br><span class="line">git@github.com: Permission denied (publickey).</span><br><span class="line">sh<span class="literal">-3</span>.<span class="number">2</span><span class="comment"># ssh -T git@github.com</span></span><br><span class="line">Hi DuansgXD! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br></pre></td></tr></table></figure>
 
       
@@ -286,8 +287,8 @@
     </a>
   
   
-    <a href="/2022/08/31/iohty9/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">浅析volatile关键字</div>
+    <a href="/2022/09/01/tapiau/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">浅析JUC同步工具类之CountDownLatch</div>
       <i class="icon-circle-right"></i>
     </a>
   
