@@ -153,6 +153,160 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-qeyg8d" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/08/30/qeyg8d/">浅析Java之Synchronized</a>
+    </h1>
+  
+
+        
+        <a href="/2022/08/30/qeyg8d/" class="archive-article-date">
+  	<time datetime="2022-08-30T15:23:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-08-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/08/30/qeyg8d/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-qgntka" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/08/28/qgntka/">为什么线程中断不了？</a>
+    </h1>
+  
+
+        
+        <a href="/2022/08/28/qgntka/" class="archive-article-date">
+  	<time datetime="2022-08-28T13:49:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-08-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>想必大家都知道 interrupt()函数，从这个单词上【interrupt 英[ˌɪntəˈrʌpt]，美[ˌɪntəˈrʌpt]，desc：打断; 打扰; 插嘴; 打岔; 使暂停; 使中断; 阻断，遮挡】，看起来是中断的含义，那么它真的能让运行到一半的线程中止掉吗？</p>
+<h3 id="Interrupt-函数"><a href="#Interrupt-函数" class="headerlink" title="Interrupt 函数"></a>Interrupt 函数</h3><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.matools.com/file/manual/jdk_api_1.8_google/">https://www.matools.com/file/manual/jdk_api_1.8_google&#x2F;</a></p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661698355595-a8288985-5c34-468c-9626-c75df64c2393.png#clientId=ud5fc64e5-f09a-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=446&id=ue89e1ae0&margin=%5Bobject%20Object%5D&name=image.png&originHeight=892&originWidth=2376&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=295465&status=done&style=none&taskId=u16103294-4a8b-4bab-aafe-400c1c19ce1&title=&width=1188" alt="image.png"><br>据上图根据官方解释，在调用 interrupt 函数以后，收到 InterruptedException 异常的前提是该线程“<strong>阻塞的调用 wait ， sleep ，或 join 的方法</strong>”，那么假设某线程不在其列出的阻塞调用中，是否能使用此方法中止并抛出 InterruptedException 呢？实践出真知，直接操作一把，看能否中断便一目了然。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Duansg</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022-08-28 10:19 下午</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SuppressWarnings(&quot;all&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InterruptMain</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">for</span> (; ; ) &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;exit&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        thread.start();</span><br><span class="line">        thread.interrupt();</span><br><span class="line">        System.out.println(<span class="string">&quot;main stop&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据伪代码执行并不能中止，也不会抛出 InterruptedException，如按官方文档所描述，增加调用阻塞方法即可得到 InterruptedException，【<strong>需要注意的是在阻塞的情况中断，不仅会得到中断异常，还会恢复中断标志位</strong>】但是子线程还是会继续输出“exit”，那么如何中断？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Duansg</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022-08-28 10:19 下午</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SuppressWarnings(&quot;all&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InterruptMain</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">for</span> (; ; ) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    TimeUnit.SECONDS.sleep(<span class="number">1</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    System.out.println(<span class="string">&quot;InterruptedException exit&quot;</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        thread.start();</span><br><span class="line">        thread.interrupt();</span><br><span class="line">        System.out.println(<span class="string">&quot;main stop&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由此上代码，捕获了 InterruptedException，然后手动停止了当前线程，到此不难理解 interrupt 函数向某个线程发送中断请求，这个请求操作是将被请求线程的中断标志位设置为 true，<strong>重要的是它仅仅只是发送中断请求</strong>，至于这个线程能否被中断，这取决于被请求线程是否检查了中断标志位[可以使用 isInterrupted()]或者对中断异常做出对应的响应。</p>
+<h3 id="为什么是轻量级阻塞？"><a href="#为什么是轻量级阻塞？" class="headerlink" title="为什么是轻量级阻塞？"></a>为什么是轻量级阻塞？</h3><blockquote>
+<p>java 线程的状态</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// java.lang.Thread.State</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">State</span> &#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * Thread state for a thread which has not yet started.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        NEW,</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * Thread state for a runnable thread.  A thread in the runnable</span></span><br><span class="line"><span class="comment">         * state is executing in the Java virtual machine but it may</span></span><br><span class="line"><span class="comment">         * be waiting for other resources from the operating system</span></span><br><span class="line"><span class="comment">         * such as processor.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        RUNNABLE,</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * Thread state for a thread blocked waiting for a monitor lock.</span></span><br><span class="line"><span class="comment">         * A thread in the blocked state is waiting for a monitor lock</span></span><br><span class="line"><span class="comment">         * to enter a synchronized block/method or</span></span><br><span class="line"><span class="comment">         * reenter a synchronized block/method after calling</span></span><br><span class="line"><span class="comment">         * &#123;<span class="doctag">@link</span> Object#wait() Object.wait&#125;.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        BLOCKED,</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * Thread state for a waiting thread.</span></span><br><span class="line"><span class="comment">         * A thread is in the waiting state due to calling one of the</span></span><br><span class="line"><span class="comment">         * following methods:</span></span><br><span class="line"><span class="comment">         * &lt;ul&gt;</span></span><br><span class="line"><span class="comment">         *   &lt;li&gt;&#123;<span class="doctag">@link</span> Object#wait() Object.wait&#125; with no timeout&lt;/li&gt;</span></span><br><span class="line"><span class="comment">         *   &lt;li&gt;&#123;<span class="doctag">@link</span> #join() Thread.join&#125; with no timeout&lt;/li&gt;</span></span><br><span class="line"><span class="comment">         *   &lt;li&gt;&#123;<span class="doctag">@link</span> LockSupport#park() LockSupport.park&#125;&lt;/li&gt;</span></span><br><span class="line"><span class="comment">         * &lt;/ul&gt;</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * &lt;p&gt;A thread in the waiting state is waiting for another thread to</span></span><br><span class="line"><span class="comment">         * perform a particular action.</span></span><br><span class="line"><span class="comment">         *</span></span><br><span class="line"><span class="comment">         * For example, a thread that has called &lt;tt&gt;Object.wait()&lt;/tt&gt;</span></span><br><span class="line"><span class="comment">         * on an object is waiting for another thread to call</span></span><br><span class="line"><span class="comment">         * &lt;tt&gt;Object.notify()&lt;/tt&gt; or &lt;tt&gt;Object.notifyAll()&lt;/tt&gt; on</span></span><br><span class="line"><span class="comment">         * that object. A thread that has called &lt;tt&gt;Thread.join()&lt;/tt&gt;</span></span><br><span class="line"><span class="comment">         * is waiting for a specified thread to terminate.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        WAITING,</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * Thread state for a waiting thread with a specified waiting time.</span></span><br><span class="line"><span class="comment">         * A thread is in the timed waiting state due to calling one of</span></span><br><span class="line"><span class="comment">         * the following methods with a specified positive waiting time:</span></span><br><span class="line"><span class="comment">         * &lt;ul&gt;</span></span><br><span class="line"><span class="comment">         *   &lt;li&gt;&#123;<span class="doctag">@link</span> #sleep Thread.sleep&#125;&lt;/li&gt;</span></span><br><span class="line"><span class="comment">         *   &lt;li&gt;&#123;<span class="doctag">@link</span> Object#wait(long) Object.wait&#125; with timeout&lt;/li&gt;</span></span><br><span class="line"><span class="comment">         *   &lt;li&gt;&#123;<span class="doctag">@link</span> #join(long) Thread.join&#125; with timeout&lt;/li&gt;</span></span><br><span class="line"><span class="comment">         *   &lt;li&gt;&#123;<span class="doctag">@link</span> LockSupport#parkNanos LockSupport.parkNanos&#125;&lt;/li&gt;</span></span><br><span class="line"><span class="comment">         *   &lt;li&gt;&#123;<span class="doctag">@link</span> LockSupport#parkUntil LockSupport.parkUntil&#125;&lt;/li&gt;</span></span><br><span class="line"><span class="comment">         * &lt;/ul&gt;</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        TIMED_WAITING,</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * Thread state for a terminated thread.</span></span><br><span class="line"><span class="comment">         * The thread has completed execution.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        TERMINATED;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>java 线程状态的流转过程</p>
+</blockquote>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661700726507-f52278c2-f204-49ab-a717-1910c6b80eb0.png#clientId=ud5fc64e5-f09a-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=457&id=u0d06772c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=914&originWidth=1934&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=592269&status=done&style=none&taskId=u2036984b-7fc4-4c8f-88f1-b6643b21ef1&title=&width=967" alt="image.png"><br>此上我们不难看出如果调用了阻塞函数，线程都会进入 WAITTING&#x2F;TIMED_WAITTING 状态，也只有在这个状态中的线程，我们才可以进行响应中断，所以如果你看到这里，你可以将其 interrupt 函数理解为“<strong>唤醒一个轻量阻塞的线程</strong>”。</p>
+<h3 id="为什么不是重量级阻塞？"><a href="#为什么不是重量级阻塞？" class="headerlink" title="为什么不是重量级阻塞？"></a>为什么不是重量级阻塞？</h3><p>为什么处于 BLOCKED 状态的线程不能响应中断？大家可以去看看 Thread 提供的阻塞函数中，InterruptedException 作为一个检查异常而存在，也就是相当于我们在方法中 throw new InterruptedException();而 synchronized 作为一个关键字，是无法抛出检查异常的。而一个线程排查死锁问题，其不会一致处在 BLOCKED 状态中的，只有等 BLOCKED 恢复到运行状态，通过响应中断进行处理。</p>
+<h3 id="如何检查中断？"><a href="#如何检查中断？" class="headerlink" title="如何检查中断？"></a>如何检查中断？</h3><p>除了可以捕获 InterruptedException 进行响应中断，我们还可以根据提供的两个方法进行检查中断标志位，如下。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1661702003617-e90675d4-ef9e-4aed-bbd5-1af9c0c4346f.png#clientId=ud5fc64e5-f09a-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=602&id=u7551d691&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1204&originWidth=2362&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=258426&status=done&style=none&taskId=u382b7c82-6c09-41c9-b8e9-c16bf571eb4&title=&width=1181" alt="image.png"></p>
+<h3 id="为什么-interrupted-需要清除中断标志"><a href="#为什么-interrupted-需要清除中断标志" class="headerlink" title="为什么 interrupted()需要清除中断标志"></a>为什么 interrupted()需要清除中断标志</h3><p>在大部分场景下，我们一旦检测到中断，会进行响应处理，也就是此次的中断我已经响应并处理了，如果不清除，那么假设线程还在执行，程序上不仅要处理循环检查等问题，还无法判断中断次数，清除本次中断标志，有助于感知下次中断。</p>
+<h3 id="是响应中断异常还是抛出异常？"><a href="#是响应中断异常还是抛出异常？" class="headerlink" title="是响应中断异常还是抛出异常？"></a>是响应中断异常还是抛出异常？</h3><p>这个问题取决于你的逻辑处理，甚至你可以输出摘要日志进行人工补偿，但其处理方式，笔者认为跟其他处理异常方式无差别，当你明确知道如何处理这个异常的时候就可以捕获，如果当前处理不了就抛出或者忽略。</p>
+<h3 id="在谈中断的意义"><a href="#在谈中断的意义" class="headerlink" title="在谈中断的意义"></a>在谈中断的意义</h3><p>中断其目的是为了优雅的停止某个线程，能让线程感知自身已经被列为中断线程，然后进行一些必要逻辑的处理。假设没有响应中断，直接调用 Thread.stop() 方法【已过时】，线程直接被杀掉，那么这个线程可能拥有的资源因为非正常的关闭导致一系列的问题发生。</p>
+<h3 id="本文回顾"><a href="#本文回顾" class="headerlink" title="本文回顾"></a>本文回顾</h3><ul>
+<li>interrupt()方法：中断(“唤醒”)轻量级阻塞线程，仅仅发送请求给线程设置一个中断标志，但是线程依旧会执行。</li>
+<li>interrupted()方法：Thread 类的静态方法。检查当前线程的中断标志，返回一个 boolean 并清除中断状态，其连续两次调用的返回结果不一样，因为第二次调用的时候线程的中断状态已经被清除，会返回一个 false。</li>
+<li>isInterrupted()方法：测试线程是否被中断，不会清除中断状态。</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/08/28/qgntka/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-dc3pmd" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
