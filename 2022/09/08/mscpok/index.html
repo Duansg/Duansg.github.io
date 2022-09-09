@@ -6,15 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Hexo</title>
+  <title>如何设计电商系统的商品规格 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="简介商品模块是电商系统核心模块，本文主要讲解商品模块功能需求、术语概念、功能设计、数据结构、相关功能设计思路。近几年开发了很多电商类系统，将我们一些设计经验整理并分享给大家。 需求分析 电商系统后台可以管理商品（功能需求）； 管理商品包括添加、修改、上下架、删除、审核等动作（操作行为）； 添加修改商品时，每种商品有不同的字段、参数、图片、规格、价格（字段属性）；  术语概念 SPU：Standar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何设计电商系统的商品规格">
+<meta property="og:url" content="http://example.com/2022/09/08/mscpok/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="简介商品模块是电商系统核心模块，本文主要讲解商品模块功能需求、术语概念、功能设计、数据结构、相关功能设计思路。近几年开发了很多电商类系统，将我们一些设计经验整理并分享给大家。 需求分析 电商系统后台可以管理商品（功能需求）； 管理商品包括添加、修改、上下架、删除、审核等动作（操作行为）； 添加修改商品时，每种商品有不同的字段、参数、图片、规格、价格（字段属性）；  术语概念 SPU：Standar">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662651885379-9ec3bb94-0c28-43c4-96f0-cc1bf465a07c.png#clientId=u16f1141b-b9bc-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u5d6d6c4d&margin=%5Bobject%20Object%5D&name=image.png&originHeight=264&originWidth=872&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&size=50437&status=done&style=none&taskId=uf4e1f47f-20c1-489a-9b04-f09e725bd10&title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662651885433-c4d44b39-22ee-4fee-a516-84dd74ae6500.png#clientId=u16f1141b-b9bc-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u23b0b2e3&margin=%5Bobject%20Object%5D&name=image.png&originHeight=228&originWidth=887&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&size=47535&status=done&style=none&taskId=u8d891f69-a583-48e4-bfc1-64a2a4405ea&title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662651885421-ea424ce5-9431-4fe6-8a4a-0b4c93d38d3a.png#clientId=u16f1141b-b9bc-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=ue1276417&margin=%5Bobject%20Object%5D&name=image.png&originHeight=312&originWidth=881&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&size=59719&status=done&style=none&taskId=uaa478ce0-f91f-41b7-976d-bca634c7315&title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662651885432-44ee2d98-0888-4b9e-ab99-00b44a10e88b.png#clientId=u16f1141b-b9bc-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u03c34a82&margin=%5Bobject%20Object%5D&name=image.png&originHeight=103&originWidth=832&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&size=7889&status=done&style=none&taskId=u7492b67d-c3c4-4409-b017-d150f5efd9f&title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662651885387-66cec599-c2d4-4f9b-8e56-888df4015db4.png#clientId=u16f1141b-b9bc-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u0f2b5dbd&margin=%5Bobject%20Object%5D&name=image.png&originHeight=191&originWidth=843&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&size=30218&status=done&style=none&taskId=u2642503e-3907-46a2-b817-91c0c6093cf&title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662651886128-a11d5d0d-8281-499a-8dd9-dc1ff5ca8a0f.png#clientId=u16f1141b-b9bc-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=uedf6e075&margin=%5Bobject%20Object%5D&name=image.png&originHeight=267&originWidth=837&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&size=54628&status=done&style=none&taskId=u6192815a-1c20-440b-ab2c-a6c0a67a577&title=">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662651886262-10de7b01-685c-4f46-a421-835eb3387bbf.png#clientId=u16f1141b-b9bc-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u9bdc524b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=275&originWidth=853&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&size=45539&status=done&style=none&taskId=u938404f9-8ff3-446c-89e3-aff217449b9&title=">
+<meta property="article:published_time" content="2022-09-08T15:44:14.000Z">
+<meta property="article:modified_time" content="2022-09-09T15:38:15.750Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662651885379-9ec3bb94-0c28-43c4-96f0-cc1bf465a07c.png#clientId=u16f1141b-b9bc-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u5d6d6c4d&margin=%5Bobject%20Object%5D&name=image.png&originHeight=264&originWidth=872&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&size=50437&status=done&style=none&taskId=uf4e1f47f-20c1-489a-9b04-f09e725bd10&title=">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -151,374 +163,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-qbrrri" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-mscpok" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/09/qbrrri/">Spring之BeanFacotry与ApplicationContext</a>
-    </h1>
-  
-
-        
-        <a href="/2022/09/09/qbrrri/" class="archive-article-date">
-  	<time datetime="2022-09-08T16:04:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在项目开发中你肯定使用过一行代码，</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/09/qbrrri/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-klgsq5" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/09/klgsq5/">深入理解Spring 事件发布和广播监听</a>
-    </h1>
-  
-
-        
-        <a href="/2022/09/09/klgsq5/" class="archive-article-date">
-  	<time datetime="2022-09-08T16:02:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在项目开发中，</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/09/klgsq5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-brhc6c" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/08/brhc6c/">深入理解设计模式的六大原则</a>
-    </h1>
-  
-
-        
-        <a href="/2022/09/08/brhc6c/" class="archive-article-date">
-  	<time datetime="2022-09-08T15:59:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>软件设计最大的难题就是应对需求的变化，但是纷繁复杂的需求变化又是不可预料的，我们要为不可预料的变化做好准备，这本身是一件非常痛苦的事情，但好在有大师们已经给我们提出了非常好的六大设计原则和 23 种设计模式来“封装”未来的变化。</p>
-<p>因此在学习设计模式之前，我们先回顾六大原则，它们分别是：</p>
-<ul>
-<li>单一职责原则（Single Responsibility Principle）</li>
-<li>开闭原则（Open Closed Principle）</li>
-<li>里氏替换原则（Liskov Substitution Principle）</li>
-<li>迪米特法则（Law of Demeter），又叫“最少知道法则”</li>
-<li>接口隔离原则（Interface Segregation Principle）</li>
-<li>依赖倒置原则（Dependence Inversion Principle）</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652802882-b94c1136-f6d0-4074-915b-0bf5a8e3e64b.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u43822dc4&margin=%5Bobject%20Object%5D&originHeight=32&originWidth=64&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u9fe91cb2-8e8f-4c3b-8560-e86117243c4&title="><br>单一职责原则</p>
-<p><strong>单一职责原则内涵：</strong></p>
-<p>单一职责原则是针对类来说的，即一个类应该只负责一项职责。</p>
-<p><strong>例子 1：</strong><br>如类 T 负责两个不同职责：职责 P1，职责 P2。当职责 P1 需求变更而改变 T 时，可能造成职责 P2 发生故障，所以需要将类 T 的粒度分解为 T1，T2。</p>
-<p>例如，产品经理就是整理需求，程序员就是写代码，分工明确：</p>
-<p>_&#x2F;&#x2F;产品经理_public class ProduceManager {  _&#x2F;&#x2F;…整理需求*}<em>&#x2F;&#x2F;勤奋的程序员</em>public class Coder { *&#x2F;&#x2F;…写代码_}</p>
-<p><strong>大白话：</strong><br>一个类干好自己应该干的事情，别越界而导致业务耦合。</p>
-<p><strong>好处：</strong></p>
-<ol>
-<li>类的复杂性降低，实现什么职责都有清晰明确的定义；</li>
-<li>可读性高，复杂性降低，可读性自然就提高了；</li>
-<li>可维护性提高，可读性提高了，那自然更容易维护了；</li>
-<li>变更引起的风险降低，变更是必不可少的，如果接口的单一职责做得好，一个接口修改只对相应的实现类有影响，对其他的接口无影响，这对系统的扩展性、维护性都有非常大的帮助。</li>
-</ol>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652802894-54eed6d0-cf9e-45f4-941a-c3e41fabc9b1.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=ucceb2fb4&margin=%5Bobject%20Object%5D&originHeight=92&originWidth=160&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=uf47b8ee7-4a34-416d-93cb-f75e46569e1&title="></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652802910-13f26d9c-8e2c-4360-8cd7-fa8dab1884ba.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u1cb3fddb&margin=%5Bobject%20Object%5D&originHeight=32&originWidth=64&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u909349a6-6f39-402b-ba27-3af3fe394d0&title="><br>开闭原则</p>
-<p><strong>开闭原则内涵：</strong><br>一个软件实体，如类、模块和函数应该对扩展开放，对修改关闭。</p>
-<p><strong>例子 2：</strong></p>
-<p>我们的公司里面有许许多多的程序员，无论男女都在认真的写代码。<br>但是有天我们的程序媛们觉得自己有“加工资的需求”。<br>此时，我们可以将这个动作抽象到新的接口里面，然后 FemaleCoder 去实现这个动作以完成拓展。</p>
-<p>&#x2F;&#x2F;公司工作 class Company{ private List<Coder> coders &#x3D; new ArrayList&lt;&gt;(); void working(){ for (Coder code : coders){ code.coding(); } } } &#x2F;&#x2F;程序员写代码 interface Coder{ void coding();}&#x2F;&#x2F;程序媛 class FemaleCoder implements Coder{ @Override public void coding() { &#x2F;&#x2F;… }}&#x2F;&#x2F;程序猿 class MaleCoder implements Coder{ @Override public void coding() { &#x2F;&#x2F;… }}</p>
-<p>新的接口标识“涨工资的需求”：</p>
-<p>&#x2F;&#x2F;待遇福利 interface Salary{ &#x2F;&#x2F;涨工资动作 void raise();}</p>
-<p>修改新增的 FemaleCoder 类：</p>
-<p>&#x2F;&#x2F;程序媛 class FemaleCoder implements Coder, Salary{ @Override public void coding() { &#x2F;&#x2F;… }<br>@Override public void raise() { &#x2F;&#x2F;…我要加薪 }}</p>
-<p><strong>UML 图：</strong></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652802996-2055a34d-2382-4eea-a3a7-6114dda3525d.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u256dd63e&margin=%5Bobject%20Object%5D&originHeight=347&originWidth=822&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u5ba230c5-634d-4833-98be-9b926f7f9f1&title="></p>
-<p><strong>大白话：</strong><br>对增加新功能代码时，尽量保证不修改已有代码，然后将扩展的代码增加到项目中</p>
-<p><strong>好处：</strong></p>
-<ul>
-<li>开闭原则非常著名，只要是做面向对象编程的，在开发时都会提及开闭原则</li>
-<li>开闭原则提高了复用性，以及可维护性</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652802890-6f3eae78-8256-4af6-8098-5ab9cd380f4e.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=ufbf21456&margin=%5Bobject%20Object%5D&originHeight=92&originWidth=160&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u2872c77f-6fe3-437b-a8fd-440e5c23eb2&title="></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652803210-5711ad58-057b-492d-8a41-22b6bde9432f.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=uc5089f40&margin=%5Bobject%20Object%5D&originHeight=32&originWidth=64&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u05068b82-da16-428a-8c23-bbc91834f17&title="><br>里氏替换原则</p>
-<p><strong>里氏替换原则内涵：</strong><br>所有引用基类的地方必须能透明地使用其子类的对象。<br>遵循里氏替换原则，在子类中尽量不要重写和重载父类的方法。</p>
-<p><strong>举例子 3：</strong><br>我们的子类程序猿 (MaleCoder) 和程序媛(FemaleCoder) ，同继承了基类程序员（CoderPeople）。<br>那么凡是程序员使用的地方，无论对于程序员还是程序媛，都应该可以无缝替换。</p>
-<p>&#x2F;&#x2F;写代码的人 class CoderPeople { public void coding(){ &#x2F;&#x2F;… }}&#x2F;&#x2F;程序媛 class FemaleCoder extends CoderPeople{ @Override public void coding() { &#x2F;&#x2F;… }}&#x2F;&#x2F;程序猿 class MaleCoder extends CoderPeople{}</p>
-<p><strong>调用点：</strong></p>
-<p>public class LiskovSubstitutionPrinciple { public static void main(String[] args) {    &#x2F;&#x2F;用  CoderPeople  的子类  FemaleCoder  的实例来替换 CoderPeople 的实例，程序工作正常 working(new FemaleCoder()); } private static void working(CoderPeople shape){ System.out.println(“开始写代码”); shape.coding(); System.out.println(“结束写代码”); }}</p>
-<p><strong>UML：</strong></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652803276-9a3d5541-e6ef-4945-95c0-d90dbfb4f341.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u332c0f0d&margin=%5Bobject%20Object%5D&originHeight=286&originWidth=635&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=ubb7048ce-3d4b-4354-9252-c7d7caf30a4&title="></p>
-<p><strong>大白话：</strong><br>里氏替换原则首先突出的是面向对象的三大特性之一：“继承”。它要求我们去遵守，是因为不遵守导致的代价太大了。<br>使用继承会给程序带来侵入性，程序的可移植性降低，增加对象间的耦合性，如果一个类被其他的类所继承，则当这个类需要修改时，必须考虑到所有的子类，并且父类修改后，所有涉及到子类的功能都有可能产生故障。</p>
-<p><strong>好处：</strong><br>大大降低程序运行出错的概率。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652803251-2e16b5b1-cdb3-4955-a77f-24bd8fc96989.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u399932bb&margin=%5Bobject%20Object%5D&originHeight=92&originWidth=160&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u7c689b3c-5942-4869-bad4-671029317c0&title="></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652803214-e6c71ae3-1b63-45b0-b6b6-8c324fc69d08.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u8c226c0e&margin=%5Bobject%20Object%5D&originHeight=32&originWidth=64&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=ucbafa649-8742-48cb-a5ea-a24805fcb52&title="><br>接口隔离原则</p>
-<p><strong>接口隔离原则内涵：</strong><br>客户端不应该依赖它不需要的接口；一个类对另一个类的依赖应该建立在最小的接口上。（原则中的接口，是一个泛泛而言的接口，不仅仅指 Java 中的接口，还包括其中的抽象类）</p>
-<p>** 举例子 4：**<br>这个图的意思是：类 A 依赖接口 I 中的方法 1，方法 2，方法 3，类 B 是对类 A 依赖的实现；类 C 依赖接口 I 中的方法 1，方法 4，方法 5，类 D 是对类 C 依赖的实现。对于类 B 和类 D 来说，虽然存在用不到的方法（红色标记所示），但由于实现了接口 I，所以也必须要实现这些用不到的方法。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/jpeg/617118/1662652803429-47ec325f-7d37-4e7f-bbf4-35a87241ea04.jpeg#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=ua3c777cb&margin=%5Bobject%20Object%5D&originHeight=337&originWidth=514&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=ucd625f59-672c-4c60-952d-aed6be429de&title="></p>
-<p>如果接口过于臃肿，只要接口中出现的方法，不管对依赖于它的类有没有用处，实现类中都必须去实现这些方法，这显然不是好的设计。<br>如果将这个设计修改为符合接口隔离原则，就必须对接口 I 进行拆分。在这里我们将原有的接口 I 拆分为三个接口，拆分后的设计如图所示：</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/jpeg/617118/1662652803675-26028c81-bec5-4a11-9cb9-61d06af63c6e.jpeg#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u92815b45&margin=%5Bobject%20Object%5D&originHeight=288&originWidth=476&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u3daebcaf-72b3-4dc4-8c21-412d830be9d&title="></p>
-<p><strong>注意：</strong><br>可能会觉得接口隔离原则和之前的单一职责原则很相似，其实不然。</p>
-<ul>
-<li>单一职责注重职责，而接口隔离原则注重对接口依赖的隔离；</li>
-<li>单一职责是约束类，其次是方法，针对的是程序中的实现和细节；而接口隔离原则约束的是接口，针对的是抽象，程序整体框架的构建。</li>
-</ul>
-<p><strong>大白话：</strong><br>定义接口时要权衡考虑是否可拆分多个模块中。<br>使用接口时要权衡考虑是否简化实现的接口列表。</p>
-<p><strong>好处：</strong></p>
-<ul>
-<li>使用多个专门的接口。专门的接口也就是提供给多个模块的接口。</li>
-<li>提供给几个模块就应该有几个接口，而不是建立一个臃肿庞大的接口，所有的模块都可以访问。</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652803514-9a7f38da-6911-4c17-9c60-04378c1e0486.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u7c5d901d&margin=%5Bobject%20Object%5D&originHeight=92&originWidth=160&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u7ebc5c2a-a1b6-4ecc-b3a5-c3753ff63ea&title="></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652803593-4325872b-683a-4b2e-84fe-be5ee7a6bd5b.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u3157d7cd&margin=%5Bobject%20Object%5D&originHeight=32&originWidth=64&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u0473c948-53ce-487e-8be4-5bc14d87978&title="><br>迪米特法则</p>
-<p><strong>迪米特法则内涵：</strong></p>
-<p>一个对象应该对其他对象有最少的了解。<br>迪米特原则核心观念就是：类间解耦，弱耦合。</p>
-<p><strong>举例子 5：</strong></p>
-<p>这个例子中，我们知道 总公司经理 管理 总公司员工，分公司经理 管理 分公司员工。<br>下面的例子是符合迪米特法则的：</p>
-<p>&#x2F;&#x2F;总公司员工 class Employee{ private String id;}&#x2F;&#x2F;分公司员工 class SubEmployee{ private String id;}&#x2F;&#x2F;分公司经理 class SubCompanyManager{ List<SubEmployee> subEmployees &#x3D; new ArrayList<SubEmployee>();}&#x2F;&#x2F;总公司经理 class CompanyManager{ List<Employee> employeeList &#x3D; new ArrayList<Employee>();}</p>
-<p>下面的例子是不符合迪米特法则的，因为分公司员工对于总公司经理来说，是不需要知道的类：</p>
-<p>&#x2F;&#x2F;总公司经理 class CompanyManager{ &#x2F;&#x2F;总公司员工 List<Employee> employeeList &#x3D; new ArrayList<Employee>(); &#x2F;&#x2F;分公司员工 List<SubEmployee> subEmployees &#x3D; new ArrayList<SubEmployee>();}</p>
-<p><strong>UML：</strong></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652803644-121785e6-fb35-49e4-906f-2a013a5ba67d.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u5bf19262&margin=%5Bobject%20Object%5D&originHeight=280&originWidth=688&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u5d1429fe-7dcc-423f-9d2d-5c203f79fcf&title="></p>
-<p><strong>大白话：</strong></p>
-<p>一个类对自己需要耦合或者调用的类知道的最少，你类内部怎么复杂，我不管，那是你的事，我只知道你有提供好的公用方法，我能正常调用即可。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652803744-c5c0471f-c678-4d50-b994-91ebf7dde2cd.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u13378e58&margin=%5Bobject%20Object%5D&originHeight=92&originWidth=160&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u63cf9732-ca8f-4941-9c4e-9ae5a276b4e&title="></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652803809-ae77f84b-e42e-46a5-af88-b17147d1c917.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u48ae1931&margin=%5Bobject%20Object%5D&originHeight=32&originWidth=64&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u3b3d4b8d-2fd4-4de7-a0f3-fddb8022da6&title="><br>依赖倒置原则</p>
-<p><strong>依赖倒置原则内涵：</strong></p>
-<p>高层模块不应该依赖低层模块，二者都应该依赖其抽象；<br>抽象不应该依赖细节，细节应该依赖抽象。<br>核心思想是面向接口编程。</p>
-<p><strong>举例子 6：</strong><br>程序员喜欢搬砖，随着年龄和经验增加，从一开始搬的普通砖头，逐渐变为银砖，到后来慢慢变为金砖…</p>
-<p>那么分析可以知道：程序员是高层模块，而“普通砖头”、“银砖”和“金砖”都视为底层模块。</p>
-<p><strong>底层模块</strong></p>
-<p>&#x2F;&#x2F;砖头 interface Brick{}&#x2F;&#x2F;石头砖头 class StoneBrick implements Brick{}&#x2F;&#x2F;银砖头 class SilverBrick implements Brick{}&#x2F;&#x2F;金砖头 class GoldBrick implements Brick{}<br>**</p>
-<p><strong>高层模块</strong></p>
-<p>&#x2F;&#x2F;搬砖的程序员 class CoderMan{ void movingBrick(Brick brick){ &#x2F;&#x2F;…. }}</p>
-<p>如此一来，不管哪种砖头，程序员都可以搬了。（无论以后怎样扩展 Brick 类，都不需要再修改 CoderMan 类了）<br>CoderMan coderMan &#x3D; new CoderMan(); coderMan.movingBrick(new StoneBrick()); coderMan.movingBrick(new SilverBrick()); coderMan.movingBrick(new GoldBrick());</p>
-<p><strong>UML：</strong></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652803958-72839d4f-3fd2-4604-8235-baab1320a34e.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=ub9dda254&margin=%5Bobject%20Object%5D&originHeight=339&originWidth=818&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u5d0b6fac-a91d-4580-b3ee-6dab718bff4&title="></p>
-<p><strong>大白话：</strong><br>依赖倒置原则的核心就是要我们面向接口编程，理解了面向接口编程，也就理解了依赖倒置。</p>
-<p><strong>好处：</strong></p>
-<ul>
-<li>实际情况中，代表高层模块的 CoderMan 类将负责完成主要的业务逻辑，一旦需要对它进行修改，引入错误的风险极大。</li>
-<li>所以遵循依赖倒置原则可以降低类之间的耦合性，提高系统的稳定性，降低修改程序造成的风险。</li>
-</ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652804013-430849b4-3f42-456e-ae02-be27e23cafb9.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=uc04c927e&margin=%5Bobject%20Object%5D&originHeight=92&originWidth=160&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=ufa3bd280-7622-46cd-89d4-3936384a5ee&title="></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662652804026-834ca574-f541-49ed-a54b-a936fdce3fa0.png#clientId=ub86ade01-133b-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u63a119f2&margin=%5Bobject%20Object%5D&originHeight=32&originWidth=64&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u16682ac4-54d3-4a44-8fed-864baea1bed&title="><br>总结</p>
-<p>文章主要参考书籍有《大话设计模式》和网上一些零散的文章，写出来的目的一方面是自己对这六项原则系统地整理一下，另外也因为设计模式对编程人员来说的确非常重要，笔试面试都会用得到，希望对大家有所帮助。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/08/brhc6c/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-rhklfp" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/08/rhklfp/">如何设计电商系统的商品类目</a>
-    </h1>
-  
-
-        
-        <a href="/2022/09/08/rhklfp/" class="archive-article-date">
-  	<time datetime="2022-09-08T15:45:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>国内的电商平台高速发展了这么多年，服务千千万万个商家与用户，我们可以通过在线上的方式购买各式各样的商品，从早期的虚拟产品到如今的大小家电等等，给人们带来了线上购物的便利。而作为一个电商平台的中的核心角色”商品体系”，就显得尤为重要，它不仅要在第一时间显示用户搜索的不同类型的商品，还要联合订单系统、支付系统等等完成线上一整套的下单操作。</p>
-<blockquote>
-<p>由于笔者能力有限，本篇文章尽可能的从概念分析，到领域模型，再到上层应用，对电商的商品和类目体系进行逐步拆解。</p>
-</blockquote>
-<h3 id="什么是商品？"><a href="#什么是商品？" class="headerlink" title="什么是商品？"></a>什么是商品？</h3><h3 id="商品模型"><a href="#商品模型" class="headerlink" title="商品模型"></a>商品模型</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/08/rhklfp/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-mscpok" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/08/mscpok/">如何设计电商系统的商品规格</a>
+    <h1 class="article-title" itemprop="name">
+      如何设计电商系统的商品规格
     </h1>
   
 
@@ -631,6 +283,27 @@
       
 
       
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
     </div>
     <div class="article-info article-info-index">
       
@@ -638,16 +311,84 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/08/mscpok/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/09/08/mscpok/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2022/09/08/rhklfp/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          如何设计电商系统的商品类目
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2022/09/08/veydvq/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">浅析分布式锁实现方案</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -667,453 +408,15 @@
 
 
 
-
-  
-    <article id="post-veydvq" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/08/veydvq/">浅析分布式锁实现方案</a>
-    </h1>
-  
-
-        
-        <a href="/2022/09/08/veydvq/" class="archive-article-date">
-  	<time datetime="2022-09-07T16:22:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1、为什么要使用分布式锁"><a href="#1、为什么要使用分布式锁" class="headerlink" title="1、为什么要使用分布式锁"></a>1、为什么要使用分布式锁</h1><p>我们在开发应用的时候，如果需要对某一个共享变量进行多线程同步访问的时候，可以使用我们学到的 Java 多线程的 18 般武艺进行处理，并且可以完美的运行，毫无 Bug！但是这是单机的应用，也就是所有的请求都会分配到当前服务器的 JVM 内部，然后映射为操作系统的线程进行处理！而这个共享变量只是在这个 JVM 内部的一块内存空间！<br>后来业务发展，需要做集群，一个应用需要部署到几台机器上然后做负载均衡：<br><img src="https://cdn.nlark.com/yuque/0/2022/jpeg/617118/1662567745833-796a0f05-2587-49d3-be02-1d4b3b808947.jpeg#clientId=uc2052d86-c8fa-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u2dddf17e&margin=%5Bobject%20Object%5D&originHeight=446&originWidth=489&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u8c9ce165-a7e5-483c-9a0b-a8f2d3eb4fe&title="><br>如上图所示，变量 A 存在 JVM1、JVM2、JVM3 三个 JVM 内存中（这个变量 A 主要体现是在一个类中的一个成员变量，是一个有状态的对象，例如：UserController 控制器中的一个整形类型的成员变量），如果不加任何控制的话，变量 A 同时都会在 JVM 分配一块内存，三个请求发过来同时对这个变量操作，操作的结果不对。即使不是同时发过来，三个请求分别操作三个不同 JVM 内存区域的数据，变量 A 之间不存在共享，也不具有可见性，处理的结果也是不对的！</p>
-<h2 id="集群环境中存在各个服务器之间数据不共享、不可见的问题"><a href="#集群环境中存在各个服务器之间数据不共享、不可见的问题" class="headerlink" title="集群环境中存在各个服务器之间数据不共享、不可见的问题"></a>集群环境中存在各个服务器之间数据不共享、不可见的问题</h2><ul>
-<li><strong>单机环境：</strong>为了保证一个方法或属性在高并发情况下的同一时间只能被同一个线程执行，在传统单体应用单机部署的情况下，可以使用 Java 并发处理相关的 API(如 ReentrantLock 或 Synchronized)进行互斥控制。在单机环境中，Java 中提供了很多并发处理相关的 API。</li>
-<li><strong>集群环境：</strong>随着业务发展的需要，原单体单机部署的系统被演化成分布式集群系统后，由于分布式系统多线程、多进程并且分布在不同机器上，这将使原单机部署情况下的并发控制锁策略失效，单纯的 Java API 并不能提供分布式锁的能力。为了解决这个问题就需要一种跨 JVM 的互斥机制来控制共享资源的访问，这就是分布式锁要解决的问题！</li>
-</ul>
-<h1 id="2、分布式锁应该具备哪些条件？"><a href="#2、分布式锁应该具备哪些条件？" class="headerlink" title="2、分布式锁应该具备哪些条件？"></a>2、分布式锁应该具备哪些条件？</h1><ul>
-<li>在分布式系统环境下，一个方法在同一时间只能被一个机器的一个线程执行；</li>
-<li>高可用的获取锁与释放锁；</li>
-<li>高性能的获取锁与释放锁；</li>
-<li>具备可重入特性；</li>
-<li>具备锁失效机制，防止死锁；</li>
-<li>具备非阻塞锁特性，即没有获取到锁将直接返回获取锁失败。</li>
-</ul>
-<h1 id="3、分布式锁的三种实现方式"><a href="#3、分布式锁的三种实现方式" class="headerlink" title="3、分布式锁的三种实现方式"></a>3、分布式锁的三种实现方式</h1><p>在很多场景中，我们为了保证数据的最终一致性，需要很多的技术方案来支持，比如分布式事务、分布式锁等。有的时候，我们需要保证一个方法在同一时间内只能被同一个线程执行。</p>
-<ul>
-<li>基于缓存（Redis 等）实现分布式锁；</li>
-<li>基于数据库实现分布式锁；</li>
-<li>基于 Zookeeper 实现分布式锁。</li>
-</ul>
-<h1 id="4、基于-Redis-的分布式锁"><a href="#4、基于-Redis-的分布式锁" class="headerlink" title="4、基于 Redis 的分布式锁"></a>4、基于 Redis 的分布式锁</h1><h2 id="4-1、利用-SETNX-和-SETEX"><a href="#4-1、利用-SETNX-和-SETEX" class="headerlink" title="4.1、利用 SETNX 和 SETEX"></a>4.1、利用 SETNX 和 SETEX</h2><ul>
-<li><strong>SETNX(SET If Not Exists)：</strong>当且仅当 Key 不存在时，则可以设置，否则不做任何动作；</li>
-<li><strong>SETEX：</strong>可以设置超时时间。</li>
-</ul>
-<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>通过 SETNX 设置 Key-Value 来获得锁，随即进入死循环，每次循环判断，如果存在 Key 则继续循环，如果不存在 Key，则跳出循环，当前任务执行完成后，删除 Key 以释放锁。<br>这种方式可能会导致死锁，为了避免这种情况，需要设置超时时间。</p>
-<h2 id="4-2、实现步骤"><a href="#4-2、实现步骤" class="headerlink" title="4.2、实现步骤"></a>4.2、实现步骤</h2><h3 id="4-2-1、创建一个-Maven-工程，并在-pom-xml-中加入下述依赖："><a href="#4-2-1、创建一个-Maven-工程，并在-pom-xml-中加入下述依赖：" class="headerlink" title="4.2.1、创建一个 Maven 工程，并在 pom.xml 中加入下述依赖："></a>4.2.1、创建一个 Maven 工程，并在 pom.xml 中加入下述依赖：</h3><p>点击查看代码</p>
-<h3 id="4-2-2、添加配置文件-application-yml"><a href="#4-2-2、添加配置文件-application-yml" class="headerlink" title="4.2.2、添加配置文件 application.yml"></a>4.2.2、添加配置文件 application.yml</h3><p>点击查看代码</p>
-<h3 id="4-2-3、创建一个全局锁类-Lock-java"><a href="#4-2-3、创建一个全局锁类-Lock-java" class="headerlink" title="4.2.3、创建一个全局锁类 Lock.java"></a>4.2.3、创建一个全局锁类 Lock.java</h3><p>点击查看代码</p>
-<h3 id="4-2-4、创建分布式锁类-DistributedLockHandler-java"><a href="#4-2-4、创建分布式锁类-DistributedLockHandler-java" class="headerlink" title="4.2.4、创建分布式锁类 DistributedLockHandler.java"></a>4.2.4、创建分布式锁类 DistributedLockHandler.java</h3><p>点击查看代码</p>
-<h3 id="4-2-5、创建-HelloController-来测试分布式锁"><a href="#4-2-5、创建-HelloController-来测试分布式锁" class="headerlink" title="4.2.5、创建 HelloController 来测试分布式锁"></a>4.2.5、创建 HelloController 来测试分布式锁</h3><p>点击查看代码</p>
-<h3 id="4-2-6、测试"><a href="#4-2-6、测试" class="headerlink" title="4.2.6、测试"></a>4.2.6、测试</h3><p>启动项目，并在浏览器输入 <a target="_blank" rel="noopener" href="http://localhost:8080/index%EF%BC%8C%E8%BF%9E%E7%BB%AD%E5%88%B7%E6%96%B0%E7%95%8C%E9%9D%A2%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%9C%A8%E6%89%93%E5%8D%B0%E4%BA%86%E4%B8%80%E6%AC%A1%E2%80%9C%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95%E2%80%9D%EF%BC%8C5">http://localhost:8080/index，连续刷新界面，控制台在打印了一次“执行方法”，5</a> 秒之后再次打印。</p>
-<h2 id="4-3、SETNX-和-SETEX-的缺点"><a href="#4-3、SETNX-和-SETEX-的缺点" class="headerlink" title="4.3、SETNX 和 SETEX 的缺点"></a>4.3、SETNX 和 SETEX 的缺点</h2><ul>
-<li>高并发的情况下，如果两个线程同时进入循环，可能导致加锁失败；</li>
-<li>SETNX 是一个耗时操作，因为它需要判断 Key 是否存在，因为会存在性能问题。</li>
-</ul>
-<h2 id="4-4、红锁（RedLock）"><a href="#4-4、红锁（RedLock）" class="headerlink" title="4.4、红锁（RedLock）"></a>4.4、红锁（RedLock）</h2><h3 id="4-4-1、pom-xml-添加依赖"><a href="#4-4-1、pom-xml-添加依赖" class="headerlink" title="4.4.1、pom.xml 添加依赖"></a>4.4.1、pom.xml 添加依赖</h3><p>点击查看代码</p>
-<h3 id="4-4-2、增加几个类"><a href="#4-4-2、增加几个类" class="headerlink" title="4.4.2、增加几个类"></a>4.4.2、增加几个类</h3><p>点击查看代码</p>
-<h3 id="4-4-3、修改-HelloController"><a href="#4-4-3、修改-HelloController" class="headerlink" title="4.4.3、修改 HelloController"></a>4.4.3、修改 HelloController</h3><p>点击查看代码</p>
-<h3 id="4-4-4、测试"><a href="#4-4-4、测试" class="headerlink" title="4.4.4、测试"></a>4.4.4、测试</h3><p>启动项目，并在浏览器输入 <a target="_blank" rel="noopener" href="http://localhost:8080/index%EF%BC%8C%E8%BF%9E%E7%BB%AD%E5%88%B7%E6%96%B0%E7%95%8C%E9%9D%A2%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%9C%A8%E6%89%93%E5%8D%B0%E4%BA%86%E4%B8%80%E6%AC%A1%E2%80%9C%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95%E2%80%9D%EF%BC%8C5">http://localhost:8080/index，连续刷新界面，控制台在打印了一次“执行方法”，5</a> 秒之后再次打印。</p>
-<h1 id="5、基于数据库的分布式锁"><a href="#5、基于数据库的分布式锁" class="headerlink" title="5、基于数据库的分布式锁"></a>5、基于数据库的分布式锁</h1><h2 id="5-1、基于数据库表"><a href="#5-1、基于数据库表" class="headerlink" title="5.1、基于数据库表"></a>5.1、基于数据库表</h2><p>它的基本原理和 Redis 的 SETNX 类似，其实就是创建一个分布式锁表，加锁后，我们就在表增加一条记录，释放锁即把该数据删掉，具体实现，我这里就不再一一举出。</p>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>没有失效时间，容易导致死锁；</li>
-<li>依赖数据库的可用性，一旦数据库挂掉，锁就马上不可用；</li>
-<li>这把锁只能是非阻塞的，因为数据的 insert 操作，一旦插入失败就会直接报错。没有获得锁的线程并不会进入排队队列，要想再次获得锁就要再次触发获得锁操作；</li>
-<li>这把锁是非重入的，同一个线程在没有释放锁之前无法再次获得该锁。因为数据库中数据已经存在了。</li>
-</ul>
-<h2 id="5-2、乐观锁"><a href="#5-2、乐观锁" class="headerlink" title="5.2、乐观锁"></a>5.2、乐观锁</h2><p>乐观锁一般通过 version 来实现，也就是在数据库表创建一个 version 字段，每次更新成功，则 version + 1，读取数据时，我们将 version 字段一并读出，每次更新时将会对版本号进行比较，如果一致则执行此操作，否则更新失败！</p>
-<h2 id="5-3、悲观锁"><a href="#5-3、悲观锁" class="headerlink" title="5.3、悲观锁"></a>5.3、悲观锁</h2><h3 id="5-3-1、创建一个表"><a href="#5-3-1、创建一个表" class="headerlink" title="5.3.1、创建一个表"></a>5.3.1、创建一个表</h3><p>点击查看代码</p>
-<h3 id="5-3-2、通过数据库的排他锁实现分布式"><a href="#5-3-2、通过数据库的排他锁实现分布式" class="headerlink" title="5.3.2、通过数据库的排他锁实现分布式"></a>5.3.2、通过数据库的排他锁实现分布式</h3><p>基于 Mysql 的 InnoDB 引擎的设计：<br>点击查看代码</p>
-<h3 id="5-3-3、释放锁"><a href="#5-3-3、释放锁" class="headerlink" title="5.3.3、释放锁"></a>5.3.3、释放锁</h3><p>我们可以认为获得排它锁的线程即可获得分布式锁，当获取到锁之后，可以执行方法的业务逻辑，执行完方法之后，再通过以下方法解锁：<br>点击查看代码</p>
-<h1 id="6、基于-Zookeeper-的分布式锁"><a href="#6、基于-Zookeeper-的分布式锁" class="headerlink" title="6、基于 Zookeeper 的分布式锁"></a>6、基于 Zookeeper 的分布式锁</h1><h2 id="6-1、Zookeeper-的简介"><a href="#6-1、Zookeeper-的简介" class="headerlink" title="6.1、Zookeeper 的简介"></a>6.1、Zookeeper 的简介</h2><p>ZooKeeper 是一个分布式的，开放源码的分布式应用程序协调服务，是 Google Chubby 的一个开源实现，是 Hadoop 和 Hbase 的重要组件。它是一个为分布式应用提供一致性服务的软件，提供的功能包括：配置维护、域名服务、分布式同步、组服务等。</p>
-<h2 id="6-2、zk-分布式锁实现的原理"><a href="#6-2、zk-分布式锁实现的原理" class="headerlink" title="6.2、zk 分布式锁实现的原理"></a>6.2、zk 分布式锁实现的原理</h2><ol>
-<li>建立一个节点，假如名为 lock 。节点类型为持久节点（Persistent）；</li>
-<li>每当进程需要访问共享资源时，会调用分布式锁的 lock() 或 tryLock() 方法获得锁，这个时候会在第一步创建的 lock 节点下建立相应的顺序子节点，节点类型为临时顺序节点（EPHEMERAL_SEQUENTIAL），通过组成特定的名字 name+lock+顺序号；</li>
-<li>在建立子节点后，对 lock 下面的所有以 name 开头的子节点进行排序，判断刚刚建立的子节点顺序号是否是最小的节点，假如是最小节点，则获得该锁对资源进行访问；</li>
-<li>假如不是该节点，就获得该节点的上一顺序节点，并监测该节点是否存在注册监听事件。同时在这里阻塞。等待监听事件的发生，获得锁控制权。</li>
-<li>当调用完共享资源后，调用 unlock() 方法，关闭 ZooKeeper，进而可以引发监听事件，释放该锁。</li>
-</ol>
-<h2 id="6-3、代码实现"><a href="#6-3、代码实现" class="headerlink" title="6.3、代码实现"></a>6.3、代码实现</h2><h3 id="6-3-1、创建-DistributedLock-类"><a href="#6-3-1、创建-DistributedLock-类" class="headerlink" title="6.3.1、创建 DistributedLock 类"></a>6.3.1、创建 DistributedLock 类</h3><p>点击查看代码</p>
-<h3 id="6-3-2、修改-HelloController"><a href="#6-3-2、修改-HelloController" class="headerlink" title="6.3.2、修改 HelloController"></a>6.3.2、修改 HelloController</h3><p>点击查看代码</p>
-<h3 id="6-3-3、测试"><a href="#6-3-3、测试" class="headerlink" title="6.3.3、测试"></a>6.3.3、测试</h3><p>启动项目，并在浏览器输入 <a target="_blank" rel="noopener" href="http://localhost:8080/index%EF%BC%8C%E8%BF%9E%E7%BB%AD%E5%88%B7%E6%96%B0%E7%95%8C%E9%9D%A2%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%9C%A8%E6%89%93%E5%8D%B0%E4%BA%86%E4%B8%80%E6%AC%A1%E2%80%9C%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95%E2%80%9D%EF%BC%8C5">http://localhost:8080/index，连续刷新界面，控制台在打印了一次“执行方法”，5</a> 秒之后再次打印。</p>
-<h1 id="7、总结"><a href="#7、总结" class="headerlink" title="7、总结"></a>7、总结</h1><ul>
-<li>通过数据库实现分布式锁是最不可靠的一种方式，对数据库依赖较大，性能较低，不利于处理高并发的场景。</li>
-<li>通过 Redis 的 Redlock 和 ZooKeeper 来加锁，性能有了比较大的提升。</li>
-<li>针对 Redlock，曾经有位大神对其实现的分布式锁提出了质疑，但是 Redis 官方却不认可其说法，所谓公说公有理婆说婆有理，对于分布式锁的解决方案，没有最好，只有最适合的，根据不同的项目采取不同方案才是最合理的。</li>
-</ul>
-<h1 id="Redis、Mysql-和-zk-实现方案的对比"><a href="#Redis、Mysql-和-zk-实现方案的对比" class="headerlink" title="Redis、Mysql 和 zk 实现方案的对比"></a>Redis、Mysql 和 zk 实现方案的对比</h1><ul>
-<li><strong>从理解的难易程度角度（从低到高）：</strong>数据库 &gt; 缓存 &gt; Zookeeper；</li>
-<li><strong>从实现的复杂性角度（从低到高）：</strong>Zookeeper &gt;&#x3D; 缓存 &gt; 数据库；</li>
-<li><strong>从性能角度（从高到低）：</strong>缓存 &gt; Zookeeper &gt;&#x3D; 数据库；</li>
-<li><strong>从可靠性角度（从高到低）：</strong>Zookeeper &gt; 缓存 &gt; 数据库。</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/08/veydvq/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ziv6q1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/08/ziv6q1/">Redis中的SETEX与SETNX</a>
-    </h1>
-  
-
-        
-        <a href="/2022/09/08/ziv6q1/" class="archive-article-date">
-  	<time datetime="2022-09-07T16:02:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><h2 id="SETEX"><a href="#SETEX" class="headerlink" title="SETEX"></a>SETEX</h2><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>将值 value 关联到 key ，并将 key 的过期时间设置为 seconds (以秒为单位)。若给定的 key 已经存在，SETEX 命令将覆盖旧值。set expire 它其实就是将 SET 命令与 EXPIRE 合并为原子性操作，因为如果单独使用 SET&#x2F;EXPIRE 命令，如果 SET 操作成功，但是 EXPIRE 操作失败，就无法保证其操作原子性。</p>
-<h2 id="SETNX"><a href="#SETNX" class="headerlink" title="SETNX"></a>SETNX</h2><h4 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h4><p>如果 key 不存在，将 key 的值设为 value。若给定的 key 已经存在，则 SETNX 不做任何操作，SETNX 则(SET if Not eXists)简写。</p>
-<h4 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h4><ul>
-<li>1 - 当 key 的值成功设置 。</li>
-<li>0 - 当 key 的值未成功设置。</li>
-</ul>
-<h4 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h4><p>通常很多场景下，大部分使用 SETNX 实现分布式锁的逻辑，如果 SETNX 返回 1，说明该进程获得锁，SETNX 将键 lock.foo 的值设置为锁的超时时间（当前时间 + 锁的有效时间）。<br>如果 SETNX 返回 0，说明其他进程已经获得了锁，进程不能进入临界区。进程可以在一个循环中不断地尝试 SETNX 操作，以获得锁。</p>
-<h5 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h5><h5 id="解决死锁"><a href="#解决死锁" class="headerlink" title="解决死锁"></a>解决死锁</h5><p>考虑一种情况，如果进程获得锁后，断开了与 Redis 的连接（可能是进程挂掉，或者网络中断），如果没有有效的释放锁的机制，那么其他进程都会处于一直等待的状态，即出现“死锁”。</p>
-<p>上面在使用 SETNX 获得锁时，我们将键 lock.foo 的值设置为锁的有效时间，进程获得锁后，其他进程还会不断的检测锁是否已超时，如果超时，那么等待的进程也将有机会获得锁。</p>
-<p>然而，锁超时时，我们不能简单地使用 DEL 命令删除键 lock.foo 以释放锁。考虑以下情况，进程 P1 已经首先获得了锁 lock.foo，然后进程 P1 挂掉了。进程 P2，P3 正在不断地检测锁是否已释放或者已超时，执行流程如下：</p>
-<p>P2 和 P3 进程读取键 lock.foo 的值，检测锁是否已超时（通过比较当前时间和键 lock.foo 的值来判断是否超时）<br>P2 和 P3 进程发现锁 lock.foo 已超时<br>P2 执行 DEL lock.foo 命令<br>P2 执行 SETNX lock.foo 命令，并返回 1，即 P2 获得锁<br>P3 执行 DEL lock.foo 命令将 P2 刚刚设置的键 lock.foo 删除（这步是由于 P3 刚才已检测到锁已超时）<br>P3 执行 SETNX lock.foo 命令，并返回 1，即 P3 获得锁<br>P2 和 P3 同时获得了锁<br>从上面的情况可以得知，在检测到锁超时后，进程不能直接简单地执行 DEL 删除键的操作以获得锁。</p>
-<p>为了解决上述算法可能出现的多个进程同时获得锁的问题，我们再来看以下的算法。<br>我们同样假设进程 P1 已经首先获得了锁 lock.foo，然后进程 P1 挂掉了。接下来的情况：</p>
-<p>进程 P4 执行 SETNX lock.foo 以尝试获取锁<br>由于进程 P1 已获得了锁，所以 P4 执行 SETNX lock.foo 返回 0，即获取锁失败<br>P4 执行 GET lock.foo 来检测锁是否已超时，如果没超时，则等待一段时间，再次检测<br>如果 P4 检测到锁已超时，即当前的时间大于键 lock.foo 的值，P4 会执行以下操作<br>GETSET lock.foo &lt;current Unix timestamp + lock timeout + 1&gt;<br>由于 GETSET 操作在设置键的值的同时，还会返回键的旧值，通过比较键 lock.foo 的旧值是否小于当前时间，可以判断进程是否已获得锁<br>假如另一个进程 P5 也检测到锁已超时，并在 P4 之前执行了 GETSET 操作，那么 P4 的 GETSET 操作返回的是一个大于当前时间的时间戳，这样 P4 就不会获得锁而继续等待。注意到，即使 P4 接下来将键 lock.foo 的值设置了比 P5 设置的更大的值也没影响。<br>另外，值得注意的是，在进程释放锁，即执行 DEL lock.foo 操作前，需要先判断锁是否已超时。如果锁已超时，那么锁可能已由其他进程获得，这时直接执行 DEL lock.foo 操作会导致把其他进程已获得的锁释放掉。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/08/ziv6q1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ewodlb" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/05/ewodlb/">无标题文档</a>
-    </h1>
-  
-
-        
-        <a href="/2022/09/05/ewodlb/" class="archive-article-date">
-  	<time datetime="2022-09-05T15:26:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="https://rishavanand.github.io/static/images/greetings.gif#crop=0&crop=0&crop=1&crop=1&id=vUIRU&originHeight=675&originWidth=1200&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&title="></p>
-<h1 id="I’m-Duansg-XiaoDuan"><a href="#I’m-Duansg-XiaoDuan" class="headerlink" title="I’m Duansg(XiaoDuan) "></a>I’m Duansg(XiaoDuan) <img src="https://media.giphy.com/media/12oufCB0MyZ1Go/giphy.gif#crop=0&crop=0&crop=1&crop=1&height=50&id=fxYTs&originHeight=50&originWidth=50&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&title=&width=50"></h1><ul>
-<li>🔭 I’m currently working on <strong>Zcy</strong></li>
-<li>🌱 I’m currently learning <strong>Interesting knowledge</strong></li>
-<li>👯 Currently working in <strong>HangZhou, China</strong></li>
-<li>🤔 I love <strong>Reading, Drinking</strong></li>
-<li>💬 Ask me about Java and my projects</li>
-<li>📫 How to reach me: <a href="mailto:siguoduan@gmail.com"><strong>siguoduan@gmail.com</strong></a></li>
-<li>😄 You may like <a target="_blank" rel="noopener" href="https://duansgxd.github.io/">Blog</a></li>
-<li>⚡ Fun fact: <strong>Movie,Interesting</strong></li>
-</ul>
-<h1 id="About-My-Github"><a href="#About-My-Github" class="headerlink" title="About My Github"></a>About My Github</h1><p>|<img src="https://github-readme-stats.vercel.app/api?username=DuansgXD&&show_icons=true&title_color=ffffff&icon_color=bb2acf&text_color=daf7dc&bg_color=151515#crop=0&crop=0&crop=1&crop=1&id=LElyR&originHeight=195&originWidth=495&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&title=">|</p>
-<table>
-<thead>
-<tr>
-<th><img src="https://github-readme-stats.vercel.app/api/top-langs/?username=DuansgXD&layout=compact&theme=tokyonight&langs_count=10#crop=0&crop=0&crop=1&crop=1&id=cV2x6&originHeight=115&originWidth=350&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&title="></th>
-</tr>
-</thead>
-</table>
-<h2 id="😐-Good-sense-asserted-itself…"><a href="#😐-Good-sense-asserted-itself…" class="headerlink" title="😐 Good sense asserted itself…."></a>😐 Good sense asserted itself….</h2><p><img src="https://raw.githubusercontent.com/younger-1/younger-1/output/github-contribution-grid-snake.svg#crop=0&crop=0&crop=1&crop=1&id=Rvexr&originHeight=192&originWidth=880&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&title="></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/05/ewodlb/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-ih2183" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/05/ih2183/">十大Super Javaer，你认识几个?</a>
-    </h1>
-  
-
-        
-        <a href="/2022/09/05/ih2183/" class="archive-article-date">
-  	<time datetime="2022-09-05T14:41:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>十大人物</p>
-<p>James Gosling : Java 之父<br>文&#x2F;陶文</p>
-<p>作为 Java 之父，James Gosling 的名字可谓是耳熟能详。当人们评论一种编程语言时，总喜欢捎带着把下蛋的母鸡一起带上。Java 做为中国的编程语言学习者餐桌上有限的那么几样餐点中的流行款式，自然是让 James Gosling 风光不已。虽然 James Gosling 现在已经不是领导 Java 发展潮流的领军人物了，做为 Sun 的开发者产品组的 CTO，怎么算来也是身居高位了，俗事缠身吧，但是这并不妨碍其对于 Java 一如既往的爱护，表达着各式各样鲜明的观点，引发一场又一场的争论。<br>James Gosling 是很爱 Java 的——是啊，哪有当父母的不爱自己的孩子的呢。James Gosling 也是很爱 Sun 的——是啊，哪有当领导的不爱自己的公司的呢。于是我们在批评.NET 的安全性的队伍前头，在褒扬 Java 性能的队伍前头，在抨击 SWT 开倒车的队伍前头，在给 NetBeans 大唱赞歌的队伍前头，我们都看到了 James Gosling 的身影。无论对错、偏见或者固执，至少说明了 Gosling 的鲜明个性丝毫没有受到年龄的影响。也许也只有这种天才而偏执的人物才能创造出 Java 这般伟大的语言来吧。</p>
-<p>Bill Joy : 软件业的爱迪生<br>文&#x2F;徐昊</p>
-<p>Joy 生于 1954 年，1982 年与 Vinod Khosla, Scott McNealy 和 Andy Bechtolsheim 一起创建了 Sun Microsystems，并从那时起担任首席科学家，直到 2003 年离开。他是一位令人崇敬的软件天才，他在软件和硬件的历史上留下了无数令人仰止的传奇。<br>在上个世纪 80 年代早期，DARPA 与 BBN 达成协议，准备将 Vinton Cerf 和 Bob Kahn 设计的 TCP&#x2F;IP 协议添加到 Berkeley UNIX 中。Bill Joy 被委派来完成这项任务，然而他却拒绝将 BBN 的 TCP&#x2F;IP 协议栈添加到 BSD 中，因为在他的眼中 BBN 的 TCP&#x2F;IP 实现还远不够好，于是他就写了一个高性能的 TCP&#x2F;IP 协议栈。John Gage 回忆道，“BBN 和 DARPA 签署了巨额合同来实现 TCP&#x2F;IP 协议，然而他们的员工所编写的代码远没有一个研究生所做的好。于是他们邀请 Bill Joy 参加他们的一个会议，这位研究生穿着一件 T-Shirt 就出现了，他们询问他，‘你是如何做到的呢？’Bill 回答说，‘这是非常简单的一件事，你读一下协议然后就可以编码了’”。除了 TCP&#x2F;IP 协议，基于分页的虚拟内存系统最早也是由 Bill Joy 添加到 Berkeley UNIX 内核当中的。同时他还是 vi、csh、早期 Pascal 编译器的作者。<br>关于 Bill Joy 惊人的软件才能流传最广的一个传奇是，据说他在上研究生的时候，想看看自己能不能写一个操作系统出来，于是就在三天里写了一个非常简陋，但是可以使用的 Unix 系统, 传说就是 BSD 的前身。虽然如此夸张的才情令人难以置信，但是考虑到主角是 Bill Joy，还是有一定的可信度的。Bill Joy 硕士毕业之后，决定到工业界发展，于是就到了当时只有一间办公室的 Sun, 他作为主要设计者参与了 SPARC 微处理器的设计，负责设计最为关键的一部分电路。这样兼精软硬件的天才实在是让人不得不佩服啊。1995 年，Sun 发布了轰动世界的 Java 语言。当然，Bill Joy 对 Java 也作出了不少的贡献，首先是 JINI——一种针对分布式服务的基础连接技术。任何可以内嵌 JVM 的电子设备都可以通过 JINI 相互连接； JXTA 是基于 Java 的 P2P 协议，允许互联网上的软件进行点对点交流和协作。<br>这个其貌不扬的瘦高个，有着凌乱的亚麻色头发，被《财富》杂志誉为“网络时代的爱迪生”的技术狂人，在短短的二十年间，创造了无数令人心动的软件。在 MIT 的 BBS 上曾有一个帖子，说微软电话面试有一道题，问“Who do you think is the best coder, and why?”虽然回复的帖子中大家都声明列举的 best coder 排名不分先后，然而大多数人仍把 Bill Joy 列在第一位，或许可以从一个侧面验证 Bill Joy 在广大 Programmer 心目中的地位吧。</p>
-<p>Joshua Bloch : Java 2 元勋<br>文&#x2F;莫映</p>
-<p>早在 1996 年，适逢 Java 刚刚崭露头角，年内好事连连。先是 1 月份发布 JDK 1.0，然后是 5 月底在旧金山召开首届 JavaOne 大会，年末又是 JDK 1.1 紧跟其后。正是在 Java 技术如火如荼、大展拳脚的背景之下，Joshua Bloch 来到了 Sun，开始了他带领 Java 社区步入“迦南美地”的漫长历程。<br>很快，他被从安全组调入核心平台组，从事底层 API 设计。至此以后，每逢 JDK 的重大版本发布，总能在其中见到 Joshua 的“妙笔”。JDK 1.1 中的 java.math、1.4 中的 assertions，还有大家所熟识的 Collections Framework 皆是 Joshua 一手打造。其中的 Collections Framework 还获得了当年的 Jolt 大奖。到了 J2SE 5.0 研发阶段，身为平台组构架师的 Joshua 接掌了 Tiger 大旗，其核心地位已然无人可以替代。作为 Tiger 的代言人和领路人，没有谁比 Joshua 更清楚 Tiger。相信大家一定还记得 Joshua 当年仿效英国诗人 William Blake 所做的咏 Tiger 诗八首，优雅的笔调，透出大师深厚底蕴的同时，也道出了 Tiger 的几大重要特性，这些特性是自 JDK 1.1 引入 Inner Class 以来，Java 最大的语法改进。<br>Java 风雨十年，从 JDK 1.1 到 J2SE 5.0，Joshua 实在功不可没。难怪有人戏言，假如将 James Gosling 比作 Java 之父，那么 Joshua 就是一手将 Java “哺育”成人的 Java 之母。Joshua 对 Java 的贡献还不止于 JDK，提起他的大作《Effective Java》（Addison Wesley, 2001），相信 Java 粉丝们一定耳熟能详。该书荣膺 2002 年度 Jolt 大奖，且备受 James Gosling 推崇。书中 57 条颇具实用价值的经验规则，来自 Joshua 多年来在 JDK 开发工作中，尤其是 Collections Framework 设计中的实践心得，各个有理有据，剖析深入，也足见其深厚功力。该书对 Java 社群的影响，犹如 C++社群中的《Effective C++》。Joshua 对 JCP 的贡献也不小。他是 JSR201 和 JSR175 的领导者，前者包含了 Tiger 四大语言特性，后者则为 Java 提供了元数据支持。此外，他还是 JSR166 的发起人之一（该 JSR 由 Doug Lea 领导），并且是许多其他 JSR 的参与者。Joshua 目前是 JCP 为数不多的几个执行委员会成员之一。<br>Joshua Bloch 给人的印象是谦逊平和，行事低调而不喜抛头露面，一个典型的技术人员和实干家。不过即便如此，也丝毫不会减弱他对 Java 技术的卓越贡献和对 Java 社区的绝对影响力。有人说，如果他能更彰显一些，就很有可能成为 Java 开发者中的领军人物，就有如 Don Box 之于微软社群。<br>2004 年 7 月初，就在 Tiger 发布在即之时，就在 Jusha Bloch 刚刚荣获 Sun“杰出工程师（Distinguished Engineer）”的称号之时，他突然离开 Sun 而去了正值发展态势迅猛的 Google。当他离开 Sun 的消息在 TSS 发布之后，众多拥趸表达了怀念与不舍之情。一年过去了，我们还没有获知 Joshua 的任何近闻，似乎又是他行事低调的一贯作风所致，不知他在 Google 状况如何。希望 Joshua 依然能继续“摩西未尽的事业”，以他的影响力推动 Java 社群继续前行。据称，《Effective Java》的下一版会加入 Java 5.0 的部分，让我们翘首以待吧。</p>
-<p>Bruce Eckel : 功勋卓著的机会主义分子<br>文&#x2F;孟岩</p>
-<p>Bruce Eckel 原本是一位普通的汇编程序员。不知道是什么因缘际会，他转行去写计算机技术图书，却在此大红大紫。他成功的秘诀不外乎两点：超人的表达能力和捕捉机会的能力。他最早的一本书是 1990 年代初期的《C++ Inside &amp; Out》，随后，在 1995 年他写出了改变自己命运的《Thinking in C++》。如果说这本书充分表现了他作为优秀技术作家的一面，那么随后他写作《Thinking in Java》并因此步入顶级技术作家行列，则体现了他作为优秀的机会主义分子善于捕捉机会的另一面。写作中擅长举浅显直接的小例子来说明问题，语言生动，娓娓道来，特别适合于缺乏实践经验的初学者。因此《Thinking in Java》俨然成为天字第一号的 Java 教科书，对 Java 的普及与发展发挥着不可忽略的作用。不过公允地说，Bruce Eckel 的书欠深刻。比如在“Thinking in…”系列中对设计模式的解说就有失大师水准。这一方面是因为书的定位非常清晰，另一方面也是因为 Bruce 太过分心赶潮流，未能深入之故。TIJ 之后，他预言 Python 将火，就匆匆跑去写了半本《Thinking in Python》。后来 Python 并未如期而旺，于是他也就把书稿撂在那里不过问了，机会主义的一面暴露无遗。我们也可以善意的猜测一下，他的下一个投机对象会是什么呢？Ruby？.NET？MDA？总之，是什么我都不奇怪。</p>
-<p>Rickard Oberg :J2EE 奇才<br>文&#x2F;熊节</p>
-<p>Oberg 的作品很多，流行的代码生成工具 XDoclet 和 MVC 框架 WebWork 都出自他的手笔。这两个框架有一个共同的特点，即它们的功能虽然简单，但设计都非常优雅灵活，能够很方便地扩展新功能甚至移植到新环境下使用。优雅的设计源自 Oberg 的过人才华，简单的功能则折射出他玩世不恭的人生态度。正是这两种特质的融合，才造就了这个不世出的奇才。<br>1999 年，JDK 1.3 发布，其中带来了一个重要的新特性：动态代理（Dynamic Proxy）。当所有人都还在对这项新技术的用途感到迷惑时，Oberg 发现用它便可以轻松攻克 EJB 容器实现中的一些难关。这一发现的产物就是一本《Mastering RMI》，以及大名鼎鼎的 JBoss 应用服务器。但 Oberg 很快又让世人见识了他的玩世不恭。由于和总经理 Marc Fleury 在经营理念上不合，Oberg 抱怨“法国的天空总让我感到压抑”，甩手离开了自己一手打造的 JBoss。此后的几年里，他和老友 Hani Suleiman 不断地对 JBoss 的“专业开源”模式和 Marc Fleury 的商人味道冷嘲热讽，让众人为他的孩子气扼腕叹息。<br>2002 年 10 月，微软推出 Petstore 示例应用的.NET 版本，并宣称其性能比 Java Petstore 高出数倍。正是 Oberg 深入分析这个示例应用的源代码，在第一时间指出它大量运用了 SQL Server 专有的特性，性能对比根本不具参考价值。后来 Oberg 又先后关注了 AOP 和 IoC 容器，两者都成为了 J2EE 架构的新宠。</p>
-<p>Doug Lea : 世界上对 Java 影响力最大的个人<br>文&#x2F;KIT</p>
-<p>如果 IT 的历史，是以人为主体串接起来的话，那么肯定少不了 Doug Lea。这个鼻梁挂着眼镜，留着德王威廉二世的胡子，脸上永远挂着谦逊腼腆笑容，服务于纽约州立大学 Oswego 分校计算器科学系的老大爷。<br>说他是这个世界上对 Java 影响力最大的个人，一点也不为过。因为两次 Java 历史上的大变革，他都间接或直接的扮演了举足轻重的脚色。一次是由 JDK 1.1 到 JDK 1.2，JDK1.2 很重要的一项新创举就是 Collections，其 Collection 的概念可以说承袭自 Doug Lea 于 1995 年发布的第一个被广泛应用的 collections；一次是 2004 年所推出的 Tiger。Tiger 广纳了 15 项 JSRs(Java Specification Requests)的语法及标准，其中一项便是 JSR-166。JSR-166 是来自于 Doug 编写的 util.concurrent 包。<br>值得一提的是: Doug Lea 也是 JCP (Java 小区项目)中的一员。<br>Doug 是一个无私的人，他深知分享知识和分享苹果是不一样的，苹果会越分越少，而自己的知识并不会因为给了别人就减少了，知识的分享更能激荡出不一样的火花。《Effective JAVA》这本 Java 经典之作的作者 Joshua Blosh 便在书中特别感谢 Doug 是此书中许多构想的共鸣板，感谢 Doug 大方分享丰富而又宝贵的知识。这位并发编程的大师级人物的下一步，将会带给 Java 怎样的冲击，不禁令人屏息以待。</p>
-<p>Scott McNealy :SUN 十年来的掌舵者<br>文&#x2F;KIT</p>
-<p>McNealy，Sun 的 CEO、总裁兼董事长。他曾经狂傲的说:“摧毁微软是我们每个人的任务。”这位英勇的硅谷英雄，似乎带头起义，试图组织一个反微软阵线联盟，以对抗微软这股庞大的托拉斯恶势力。他时常口出惊人之语，在公开场合大肆的批评微软，并曾经说微软的.NET 是.NOT。<br>Scott McNealy 先后毕业于哈佛大学及史丹佛大学，分别持有经济学学士学位及企管硕士。1982 年 MBA 毕业的他和三个同学共同合伙创建了 Sun，并于 1984 年成为 Sun 的执行官。“要么吞了别人，不然就被别人吞了”是 Scott McNealy 的名言录之一。他擅长以信念带动员工，鼓舞士气。极富自信的他，对于认定的事，总是坚持自己的想法，因此有人形容他是一个刚愎自用的决策者。<br>身为 Sun 这艘船的掌舵者，Scott McNealy 能够看多远，Sun 就能走多远。Scott McNealy 认为将来软件界是一个只有服务，没有产品的世代。他希望打造出 Sun 不是一个纯靠硬件赚钱的公司。从 Open Source 到 Open Solaris，Sun 希望可以成为提供整合性解决方案的服务厂商。Solaris 10 + UltraSPARC 是否可以像 Scott McNealy 希望的是下一匹世纪黑马呢？Sun 是否能以股价来证明华尔街分析师及普罗大众的诽短流长？Scott McNealy 是否能带领着 Sun 成为继微软之后的下一个巨人，一场场 IT 界的争霸战值得我们拭目以待。</p>
-<p>Rod Johnson : 用一本书改变了 Java 世界的人<br>文&#x2F; 刘铁锋</p>
-<p>Rod 在悉尼大学不仅获得了计算机学位，同时还获得了音乐学位。更令人吃惊的是在回到软件开发领域之前，他还获得了音乐学的博士学位。有着相当丰富的 C&#x2F;C++技术背景的 Rod 早在 1996 年就开始了对 Java 服务器端技术的研究。他是一个在保险、电子商务和金融行业有着丰富经验的技术顾问，同时也是 JSR-154（Servlet 2.4）和 JDO 2.0 的规范专家、JCP 的积极成员。<br>真正引起了人们的注意的，是在 2002 年 Rod Johnson 根据多年经验撰写的《Expert One-on-One J2EE Design and Development》。其中对正统 J2EE 架构的臃肿、低效的质疑，引发了人们对正统 J2EE 的反思。这本书也体现了 Rod Johnson 对技术的态度，技术的选择应该基于实证或是自身的经验，而不是任何形式的偶像崇拜或者门户之见。正是这本书真正地改变了 Java 世界。基于这本书的代码，Rod Johnson 创建了轻量级的容器 Spring。Spring 的出现，使得正统 J2EE 架构一统天下的局面被打破。基于 Struts+Hibernate +Spring 的 J2EE 架构也逐渐得到人们的认可，甚至在大型的项目架构中也逐渐开始应用。<br>Rod Johnson 的新作《Expert One-on-one J2EE Development without JEB》则更让人吃惊，单单“Without EJB”一词就会让大多数 J2EE 架构师大跌眼镜了。不过 Rod Johnson 可能仅仅是想通过“Without EJB”一词表明应该放开门户之见。这也是 Rod Johnson 一贯的作风，。也许正是这种思想，促使得 Rod Johnson 创建了 Spring，真正改变了 Java 世界。</p>
-<p>Alan Kay :Java 的精神先锋<br>文&#x2F;徐昊</p>
-<p>Sun 的官方 Java 教材中有一句话，说 Java 是“C++的语法与 Smalltalk 语义的结合”。而 Smalltalk 的创造者就是 Alan Kay。<br>Alan Kay 于 1970 年加入 Xerox 公司的 Palo Alto 研究中心。早在 70 年代初期，Alan Kay 等人开发了世界上第二个面向对象语言 Smalltalk，因此，Alan Kay 被誉为 Smalltalk 之父。2003 年，Alan Key 因为在面向对象程序设计上的杰出贡献，获得了有计算机界的诺贝尔奖之称的 ACM Turing Award。<br>Alan Kay 成名于 Smapltalk 和 OOP，而 Java 虽然在语言上类似于 C，但是在语义上非常接近 Smalltalk，很多 Java 中的设计思想在 Alan Kay 的文献中找到根源，也有些人将 Alan Kay 尊为 Java 思想的先驱。不过遗憾的是似乎 Alan Kay 老先生对 Java 并不买账，反倒攻击说 Java 是存在致命缺陷的编程语言，Java 的成功不是由于 Java 本身的内在价值，而是其商业化的成功。 Alan Kay 欣赏的是 Lisp，他认为 Lisp 是软件的麦克斯韦方程，其中的许多想法是软件工程和计算机科学的一部分。看来拥有 Alan Kay 这样一位重量级的 Java 先驱仍是我们 Java 一厢情愿的单恋吧。</p>
-<p>Kent Beck : 领导的敏捷潮<br>文：刘铁锋</p>
-<p>Beck 全家似乎都弥漫着技术的味道。生长在硅谷, 有着一个对无线电痴迷的祖父，以及一个电器工程师父亲。从小就引导 Kent Beck 成为了业余无线电爱好者。<br>在俄勒冈州大学读本科期间，Kent Beck 就开始研究起模式。然而在他最终拿到计算机学位之前，他却是在计算机和音乐中交替学习。似乎 Java 大师都能够有这样的能耐，另一 Java 大牛 Rod Johnson 同样也拥有音乐学的博士学位。<br>Kent Beck 一直倡导软件开发的模式定义。早在 1993 年，他就和 Grady Booch（UML 之父）发起了一个团队进行这个方面的研究。虽然著有了《Smalltalk Best Practice Patterns》一书，但这可能并不是 Kent Beck 最大的贡献。他于 1996 年在 DaimlerChrysler 启动的关于软件开发的项目，才真正地影响后来的软件开发。这次的杰作就是 XP（极限编程）的方法学。<br>和软件开发大师 Martin Fowler 合著的《Planning Extreme Programming》可谓是关于 XP 的奠基之作。从此，一系列的作品如《Test Driven Development: By Example》，《Extreme Programming Explained: Embrace Change》让更多的人领略到了极限编程的精髓，也逐步导致了极限编程的流行。<br>Kent Beck 的贡献远不仅如此。对于众多的 Java 程序员来说，他和 Erich Gamma 共同打造的 JUnit，意义更加重大。也许正式这个简单而又强大的工具，让众多的程序员更加认可和信赖极限编程，从而引起了 Java 敏捷开发的狂潮吧。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/05/ih2183/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-bkk849" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/04/bkk849/">Git多环境配置</a>
-    </h1>
-  
-
-        
-        <a href="/2022/09/04/bkk849/" class="archive-article-date">
-  	<time datetime="2022-09-04T07:11:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662275911192-654985fa-ecc0-462d-8ef7-803514f99079.png#clientId=u33e08c81-f615-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=400&id=u4efdb33a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=800&originWidth=1600&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=55711&status=done&style=none&taskId=u4bb0766e-c8b7-483d-ac6b-9a233c818cd&title=&width=800" alt="image.png"><br>你是不是曾遇到过这样一个问题，公司仓库往往为了满足公司 git 规范，往往需要全局配置用户名和邮箱，但是我们平时也活跃在男性交友论坛(github)上，这个时候我们个人仓库的用户名和邮箱配置是有区别的，为了能够很好地区分工程上传到不同的远程仓库，我们需要分别处理，保证在不同的工程使用不同的配置信息。
-        
-          <a class="article-more-a" href="/2022/09/04/bkk849/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/04/bkk849/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
-    </nav>
   
 
-<meta name="referrer" content="no-referrer" />
+  
+
+  
+
+  
 
 
           </div>
@@ -1135,8 +438,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
