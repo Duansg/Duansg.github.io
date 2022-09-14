@@ -6,21 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>浅析分布式锁实现方案 | Hexo</title>
+  <title>Archives: 2022/9 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1、为什么要使用分布式锁我们在开发应用的时候，如果需要对某一个共享变量进行多线程同步访问的时候，可以使用我们学到的 Java 多线程的 18 般武艺进行处理，并且可以完美的运行，毫无 Bug！但是这是单机的应用，也就是所有的请求都会分配到当前服务器的 JVM 内部，然后映射为操作系统的线程进行处理！而这个共享变量只是在这个 JVM 内部的一块内存空间！后来业务发展，需要做集群，一个应用需要部署到几">
-<meta property="og:type" content="article">
-<meta property="og:title" content="浅析分布式锁实现方案">
-<meta property="og:url" content="http://example.com/2022/09/08/veydvq/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/archives/2022/09/page/3/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="1、为什么要使用分布式锁我们在开发应用的时候，如果需要对某一个共享变量进行多线程同步访问的时候，可以使用我们学到的 Java 多线程的 18 般武艺进行处理，并且可以完美的运行，毫无 Bug！但是这是单机的应用，也就是所有的请求都会分配到当前服务器的 JVM 内部，然后映射为操作系统的线程进行处理！而这个共享变量只是在这个 JVM 内部的一块内存空间！后来业务发展，需要做集群，一个应用需要部署到几">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/jpeg/617118/1662567745833-796a0f05-2587-49d3-be02-1d4b3b808947.jpeg#clientId=uc2052d86-c8fa-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u2dddf17e&margin=%5Bobject%20Object%5D&originHeight=446&originWidth=489&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u8c9ce165-a7e5-483c-9a0b-a8f2d3eb4fe&title=">
-<meta property="article:published_time" content="2022-09-07T16:22:04.000Z">
-<meta property="article:modified_time" content="2022-09-14T01:56:39.468Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/jpeg/617118/1662567745833-796a0f05-2587-49d3-be02-1d4b3b808947.jpeg#clientId=uc2052d86-c8fa-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u2dddf17e&margin=%5Bobject%20Object%5D&originHeight=446&originWidth=489&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u8c9ce165-a7e5-483c-9a0b-a8f2d3eb4fe&title=">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -157,234 +151,79 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-veydvq" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      浅析分布式锁实现方案
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2022" class="archive-year">2022</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2022/09/01/tapiau/" class="archive-article-date">
+  	<time datetime="2022-08-31T16:36:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-01</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2022/09/01/tapiau/">浅析JUC同步工具类之CountDownLatch</a>
     </h1>
   
 
-        
-        <a href="/2022/09/08/veydvq/" class="archive-article-date">
-  	<time datetime="2022-09-07T16:22:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1、为什么要使用分布式锁"><a href="#1、为什么要使用分布式锁" class="headerlink" title="1、为什么要使用分布式锁"></a>1、为什么要使用分布式锁</h1><p>我们在开发应用的时候，如果需要对某一个共享变量进行多线程同步访问的时候，可以使用我们学到的 Java 多线程的 18 般武艺进行处理，并且可以完美的运行，毫无 Bug！但是这是单机的应用，也就是所有的请求都会分配到当前服务器的 JVM 内部，然后映射为操作系统的线程进行处理！而这个共享变量只是在这个 JVM 内部的一块内存空间！<br>后来业务发展，需要做集群，一个应用需要部署到几台机器上然后做负载均衡：<br><img src="https://cdn.nlark.com/yuque/0/2022/jpeg/617118/1662567745833-796a0f05-2587-49d3-be02-1d4b3b808947.jpeg#clientId=uc2052d86-c8fa-4&crop=0&crop=0&crop=1&crop=1&from=paste&id=u2dddf17e&margin=%5Bobject%20Object%5D&originHeight=446&originWidth=489&originalType=url%E2%88%B6=1&rotation=0&showTitle=false&status=done&style=none&taskId=u8c9ce165-a7e5-483c-9a0b-a8f2d3eb4fe&title="><br>如上图所示，变量 A 存在 JVM1、JVM2、JVM3 三个 JVM 内存中（这个变量 A 主要体现是在一个类中的一个成员变量，是一个有状态的对象，例如：UserController 控制器中的一个整形类型的成员变量），如果不加任何控制的话，变量 A 同时都会在 JVM 分配一块内存，三个请求发过来同时对这个变量操作，操作的结果不对。即使不是同时发过来，三个请求分别操作三个不同 JVM 内存区域的数据，变量 A 之间不存在共享，也不具有可见性，处理的结果也是不对的！</p>
-<h2 id="集群环境中存在各个服务器之间数据不共享、不可见的问题"><a href="#集群环境中存在各个服务器之间数据不共享、不可见的问题" class="headerlink" title="集群环境中存在各个服务器之间数据不共享、不可见的问题"></a>集群环境中存在各个服务器之间数据不共享、不可见的问题</h2><ul>
-<li><strong>单机环境：</strong>为了保证一个方法或属性在高并发情况下的同一时间只能被同一个线程执行，在传统单体应用单机部署的情况下，可以使用 Java 并发处理相关的 API(如 ReentrantLock 或 Synchronized)进行互斥控制。在单机环境中，Java 中提供了很多并发处理相关的 API。</li>
-<li><strong>集群环境：</strong>随着业务发展的需要，原单体单机部署的系统被演化成分布式集群系统后，由于分布式系统多线程、多进程并且分布在不同机器上，这将使原单机部署情况下的并发控制锁策略失效，单纯的 Java API 并不能提供分布式锁的能力。为了解决这个问题就需要一种跨 JVM 的互斥机制来控制共享资源的访问，这就是分布式锁要解决的问题！</li>
-</ul>
-<h1 id="2、分布式锁应该具备哪些条件？"><a href="#2、分布式锁应该具备哪些条件？" class="headerlink" title="2、分布式锁应该具备哪些条件？"></a>2、分布式锁应该具备哪些条件？</h1><ul>
-<li>在分布式系统环境下，一个方法在同一时间只能被一个机器的一个线程执行；</li>
-<li>高可用的获取锁与释放锁；</li>
-<li>高性能的获取锁与释放锁；</li>
-<li>具备可重入特性；</li>
-<li>具备锁失效机制，防止死锁；</li>
-<li>具备非阻塞锁特性，即没有获取到锁将直接返回获取锁失败。</li>
-</ul>
-<h1 id="3、分布式锁的三种实现方式"><a href="#3、分布式锁的三种实现方式" class="headerlink" title="3、分布式锁的三种实现方式"></a>3、分布式锁的三种实现方式</h1><p>在很多场景中，我们为了保证数据的最终一致性，需要很多的技术方案来支持，比如分布式事务、分布式锁等。有的时候，我们需要保证一个方法在同一时间内只能被同一个线程执行。</p>
-<ul>
-<li>基于缓存（Redis 等）实现分布式锁；</li>
-<li>基于数据库实现分布式锁；</li>
-<li>基于 Zookeeper 实现分布式锁。</li>
-</ul>
-<h1 id="4、基于-Redis-的分布式锁"><a href="#4、基于-Redis-的分布式锁" class="headerlink" title="4、基于 Redis 的分布式锁"></a>4、基于 Redis 的分布式锁</h1><h2 id="4-1、利用-SETNX-和-SETEX"><a href="#4-1、利用-SETNX-和-SETEX" class="headerlink" title="4.1、利用 SETNX 和 SETEX"></a>4.1、利用 SETNX 和 SETEX</h2><ul>
-<li><strong>SETNX(SET If Not Exists)：</strong>当且仅当 Key 不存在时，则可以设置，否则不做任何动作；</li>
-<li><strong>SETEX：</strong>可以设置超时时间。</li>
-</ul>
-<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>通过 SETNX 设置 Key-Value 来获得锁，随即进入死循环，每次循环判断，如果存在 Key 则继续循环，如果不存在 Key，则跳出循环，当前任务执行完成后，删除 Key 以释放锁。<br>这种方式可能会导致死锁，为了避免这种情况，需要设置超时时间。</p>
-<h2 id="4-2、实现步骤"><a href="#4-2、实现步骤" class="headerlink" title="4.2、实现步骤"></a>4.2、实现步骤</h2><h3 id="4-2-1、创建一个-Maven-工程，并在-pom-xml-中加入下述依赖："><a href="#4-2-1、创建一个-Maven-工程，并在-pom-xml-中加入下述依赖：" class="headerlink" title="4.2.1、创建一个 Maven 工程，并在 pom.xml 中加入下述依赖："></a>4.2.1、创建一个 Maven 工程，并在 pom.xml 中加入下述依赖：</h3><p>点击查看代码</p>
-<h3 id="4-2-2、添加配置文件-application-yml"><a href="#4-2-2、添加配置文件-application-yml" class="headerlink" title="4.2.2、添加配置文件 application.yml"></a>4.2.2、添加配置文件 application.yml</h3><p>点击查看代码</p>
-<h3 id="4-2-3、创建一个全局锁类-Lock-java"><a href="#4-2-3、创建一个全局锁类-Lock-java" class="headerlink" title="4.2.3、创建一个全局锁类 Lock.java"></a>4.2.3、创建一个全局锁类 Lock.java</h3><p>点击查看代码</p>
-<h3 id="4-2-4、创建分布式锁类-DistributedLockHandler-java"><a href="#4-2-4、创建分布式锁类-DistributedLockHandler-java" class="headerlink" title="4.2.4、创建分布式锁类 DistributedLockHandler.java"></a>4.2.4、创建分布式锁类 DistributedLockHandler.java</h3><p>点击查看代码</p>
-<h3 id="4-2-5、创建-HelloController-来测试分布式锁"><a href="#4-2-5、创建-HelloController-来测试分布式锁" class="headerlink" title="4.2.5、创建 HelloController 来测试分布式锁"></a>4.2.5、创建 HelloController 来测试分布式锁</h3><p>点击查看代码</p>
-<h3 id="4-2-6、测试"><a href="#4-2-6、测试" class="headerlink" title="4.2.6、测试"></a>4.2.6、测试</h3><p>启动项目，并在浏览器输入 <a target="_blank" rel="noopener" href="http://localhost:8080/index%EF%BC%8C%E8%BF%9E%E7%BB%AD%E5%88%B7%E6%96%B0%E7%95%8C%E9%9D%A2%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%9C%A8%E6%89%93%E5%8D%B0%E4%BA%86%E4%B8%80%E6%AC%A1%E2%80%9C%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95%E2%80%9D%EF%BC%8C5">http://localhost:8080/index，连续刷新界面，控制台在打印了一次“执行方法”，5</a> 秒之后再次打印。</p>
-<h2 id="4-3、SETNX-和-SETEX-的缺点"><a href="#4-3、SETNX-和-SETEX-的缺点" class="headerlink" title="4.3、SETNX 和 SETEX 的缺点"></a>4.3、SETNX 和 SETEX 的缺点</h2><ul>
-<li>高并发的情况下，如果两个线程同时进入循环，可能导致加锁失败；</li>
-<li>SETNX 是一个耗时操作，因为它需要判断 Key 是否存在，因为会存在性能问题。</li>
-</ul>
-<h2 id="4-4、红锁（RedLock）"><a href="#4-4、红锁（RedLock）" class="headerlink" title="4.4、红锁（RedLock）"></a>4.4、红锁（RedLock）</h2><h3 id="4-4-1、pom-xml-添加依赖"><a href="#4-4-1、pom-xml-添加依赖" class="headerlink" title="4.4.1、pom.xml 添加依赖"></a>4.4.1、pom.xml 添加依赖</h3><p>点击查看代码</p>
-<h3 id="4-4-2、增加几个类"><a href="#4-4-2、增加几个类" class="headerlink" title="4.4.2、增加几个类"></a>4.4.2、增加几个类</h3><p>点击查看代码</p>
-<h3 id="4-4-3、修改-HelloController"><a href="#4-4-3、修改-HelloController" class="headerlink" title="4.4.3、修改 HelloController"></a>4.4.3、修改 HelloController</h3><p>点击查看代码</p>
-<h3 id="4-4-4、测试"><a href="#4-4-4、测试" class="headerlink" title="4.4.4、测试"></a>4.4.4、测试</h3><p>启动项目，并在浏览器输入 <a target="_blank" rel="noopener" href="http://localhost:8080/index%EF%BC%8C%E8%BF%9E%E7%BB%AD%E5%88%B7%E6%96%B0%E7%95%8C%E9%9D%A2%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%9C%A8%E6%89%93%E5%8D%B0%E4%BA%86%E4%B8%80%E6%AC%A1%E2%80%9C%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95%E2%80%9D%EF%BC%8C5">http://localhost:8080/index，连续刷新界面，控制台在打印了一次“执行方法”，5</a> 秒之后再次打印。</p>
-<h1 id="5、基于数据库的分布式锁"><a href="#5、基于数据库的分布式锁" class="headerlink" title="5、基于数据库的分布式锁"></a>5、基于数据库的分布式锁</h1><h2 id="5-1、基于数据库表"><a href="#5-1、基于数据库表" class="headerlink" title="5.1、基于数据库表"></a>5.1、基于数据库表</h2><p>它的基本原理和 Redis 的 SETNX 类似，其实就是创建一个分布式锁表，加锁后，我们就在表增加一条记录，释放锁即把该数据删掉，具体实现，我这里就不再一一举出。</p>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ul>
-<li>没有失效时间，容易导致死锁；</li>
-<li>依赖数据库的可用性，一旦数据库挂掉，锁就马上不可用；</li>
-<li>这把锁只能是非阻塞的，因为数据的 insert 操作，一旦插入失败就会直接报错。没有获得锁的线程并不会进入排队队列，要想再次获得锁就要再次触发获得锁操作；</li>
-<li>这把锁是非重入的，同一个线程在没有释放锁之前无法再次获得该锁。因为数据库中数据已经存在了。</li>
-</ul>
-<h2 id="5-2、乐观锁"><a href="#5-2、乐观锁" class="headerlink" title="5.2、乐观锁"></a>5.2、乐观锁</h2><p>乐观锁一般通过 version 来实现，也就是在数据库表创建一个 version 字段，每次更新成功，则 version + 1，读取数据时，我们将 version 字段一并读出，每次更新时将会对版本号进行比较，如果一致则执行此操作，否则更新失败！</p>
-<h2 id="5-3、悲观锁"><a href="#5-3、悲观锁" class="headerlink" title="5.3、悲观锁"></a>5.3、悲观锁</h2><h3 id="5-3-1、创建一个表"><a href="#5-3-1、创建一个表" class="headerlink" title="5.3.1、创建一个表"></a>5.3.1、创建一个表</h3><p>点击查看代码</p>
-<h3 id="5-3-2、通过数据库的排他锁实现分布式"><a href="#5-3-2、通过数据库的排他锁实现分布式" class="headerlink" title="5.3.2、通过数据库的排他锁实现分布式"></a>5.3.2、通过数据库的排他锁实现分布式</h3><p>基于 Mysql 的 InnoDB 引擎的设计：<br>点击查看代码</p>
-<h3 id="5-3-3、释放锁"><a href="#5-3-3、释放锁" class="headerlink" title="5.3.3、释放锁"></a>5.3.3、释放锁</h3><p>我们可以认为获得排它锁的线程即可获得分布式锁，当获取到锁之后，可以执行方法的业务逻辑，执行完方法之后，再通过以下方法解锁：<br>点击查看代码</p>
-<h1 id="6、基于-Zookeeper-的分布式锁"><a href="#6、基于-Zookeeper-的分布式锁" class="headerlink" title="6、基于 Zookeeper 的分布式锁"></a>6、基于 Zookeeper 的分布式锁</h1><h2 id="6-1、Zookeeper-的简介"><a href="#6-1、Zookeeper-的简介" class="headerlink" title="6.1、Zookeeper 的简介"></a>6.1、Zookeeper 的简介</h2><p>ZooKeeper 是一个分布式的，开放源码的分布式应用程序协调服务，是 Google Chubby 的一个开源实现，是 Hadoop 和 Hbase 的重要组件。它是一个为分布式应用提供一致性服务的软件，提供的功能包括：配置维护、域名服务、分布式同步、组服务等。</p>
-<h2 id="6-2、zk-分布式锁实现的原理"><a href="#6-2、zk-分布式锁实现的原理" class="headerlink" title="6.2、zk 分布式锁实现的原理"></a>6.2、zk 分布式锁实现的原理</h2><ol>
-<li>建立一个节点，假如名为 lock 。节点类型为持久节点（Persistent）；</li>
-<li>每当进程需要访问共享资源时，会调用分布式锁的 lock() 或 tryLock() 方法获得锁，这个时候会在第一步创建的 lock 节点下建立相应的顺序子节点，节点类型为临时顺序节点（EPHEMERAL_SEQUENTIAL），通过组成特定的名字 name+lock+顺序号；</li>
-<li>在建立子节点后，对 lock 下面的所有以 name 开头的子节点进行排序，判断刚刚建立的子节点顺序号是否是最小的节点，假如是最小节点，则获得该锁对资源进行访问；</li>
-<li>假如不是该节点，就获得该节点的上一顺序节点，并监测该节点是否存在注册监听事件。同时在这里阻塞。等待监听事件的发生，获得锁控制权。</li>
-<li>当调用完共享资源后，调用 unlock() 方法，关闭 ZooKeeper，进而可以引发监听事件，释放该锁。</li>
-</ol>
-<h2 id="6-3、代码实现"><a href="#6-3、代码实现" class="headerlink" title="6.3、代码实现"></a>6.3、代码实现</h2><h3 id="6-3-1、创建-DistributedLock-类"><a href="#6-3-1、创建-DistributedLock-类" class="headerlink" title="6.3.1、创建 DistributedLock 类"></a>6.3.1、创建 DistributedLock 类</h3><p>点击查看代码</p>
-<h3 id="6-3-2、修改-HelloController"><a href="#6-3-2、修改-HelloController" class="headerlink" title="6.3.2、修改 HelloController"></a>6.3.2、修改 HelloController</h3><p>点击查看代码</p>
-<h3 id="6-3-3、测试"><a href="#6-3-3、测试" class="headerlink" title="6.3.3、测试"></a>6.3.3、测试</h3><p>启动项目，并在浏览器输入 <a target="_blank" rel="noopener" href="http://localhost:8080/index%EF%BC%8C%E8%BF%9E%E7%BB%AD%E5%88%B7%E6%96%B0%E7%95%8C%E9%9D%A2%EF%BC%8C%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%9C%A8%E6%89%93%E5%8D%B0%E4%BA%86%E4%B8%80%E6%AC%A1%E2%80%9C%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95%E2%80%9D%EF%BC%8C5">http://localhost:8080/index，连续刷新界面，控制台在打印了一次“执行方法”，5</a> 秒之后再次打印。</p>
-<h1 id="7、总结"><a href="#7、总结" class="headerlink" title="7、总结"></a>7、总结</h1><ul>
-<li>通过数据库实现分布式锁是最不可靠的一种方式，对数据库依赖较大，性能较低，不利于处理高并发的场景。</li>
-<li>通过 Redis 的 Redlock 和 ZooKeeper 来加锁，性能有了比较大的提升。</li>
-<li>针对 Redlock，曾经有位大神对其实现的分布式锁提出了质疑，但是 Redis 官方却不认可其说法，所谓公说公有理婆说婆有理，对于分布式锁的解决方案，没有最好，只有最适合的，根据不同的项目采取不同方案才是最合理的。</li>
-</ul>
-<h1 id="Redis、Mysql-和-zk-实现方案的对比"><a href="#Redis、Mysql-和-zk-实现方案的对比" class="headerlink" title="Redis、Mysql 和 zk 实现方案的对比"></a>Redis、Mysql 和 zk 实现方案的对比</h1><ul>
-<li><strong>从理解的难易程度角度（从低到高）：</strong>数据库 &gt; 缓存 &gt; Zookeeper；</li>
-<li><strong>从实现的复杂性角度（从低到高）：</strong>Zookeeper &gt;&#x3D; 缓存 &gt; 数据库；</li>
-<li><strong>从性能角度（从高到低）：</strong>缓存 &gt; Zookeeper &gt;&#x3D; 数据库；</li>
-<li><strong>从可靠性角度（从高到低）：</strong>Zookeeper &gt; 缓存 &gt; 数据库。</li>
-</ul>
+        <div class="article-info info-on-right">
+          
+          
 
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
         </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
-        </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/09/08/veydvq/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
   
-<nav id="article-nav">
-  
-    <a href="/2022/09/08/mscpok/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          如何设计电商系统的商品规格
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2022/09/08/ziv6q1/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Redis中的SETEX与SETNX</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
+    
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2022/09/01/dlyxe3/" class="archive-article-date">
+  	<time datetime="2022-08-31T16:35:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-01</time>
+</a>
         </div>
-        
-        
-    </div>
-</aside>
-
-
-
+    	 
   
-  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2022/09/01/dlyxe3/">理解AQS（AbstractQueuedSynchronizer）</a>
+    </h1>
   
 
+        <div class="article-info info-on-right">
+          
+          
+
+        </div>
+        <div class="clearfix"></div>
+    </header>
+  </div>
+</article>
+  
+  
+    </div></section>
   
 
-  
-
+    
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/archives/2022/09/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/archives/2022/09/">1</a><a class="page-number" href="/archives/2022/09/page/2/">2</a><span class="page-number current">3</span>
+    </nav>
   
 
 
@@ -408,8 +247,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
-		isArchive: false,
+		isPost: false,
+		isArchive: true,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
