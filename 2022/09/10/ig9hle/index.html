@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="http://example.com">
   <title>深入理解商品体系中的SPU与CSPU | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言现在的电商平台百花齐放， 如何判断是同类商品?在商品信息电子化过程中，商品的特性可以由多个“属性|属性值对”进行描述。“属性|属性值对”完全相同的商品，可以抽象成为一个 SPU。另一方面，这些“属性|属性值对”在 SPU 中固化下来，逐步标准化。基于 SPU 的商品信息结构，可以实现丰富的应用，比如商品信息与资讯、评论、以及其它 SPU 的整合。 SPU(Standard Product Un">
+  <meta name="description" content="前言现在的电商平台百花齐放，https:&#x2F;&#x2F;www.woshipm.com&#x2F;pd&#x2F;4369061.html 如何判断是同类商品?在商品信息电子化过程中，商品的特性可以由多个“属性|属性值对”进行描述。“属性|属性值对”完全相同的商品，可以抽象成为一个 SPU。另一方面，这些“属性|属性值对”在 SPU 中固化下来，逐步标准化。基于 SPU 的商品信息结构，可以实现丰富的应用，比如商品信息与资讯、评">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入理解商品体系中的SPU与CSPU">
 <meta property="og:url" content="http://example.com/2022/09/10/ig9hle/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="前言现在的电商平台百花齐放， 如何判断是同类商品?在商品信息电子化过程中，商品的特性可以由多个“属性|属性值对”进行描述。“属性|属性值对”完全相同的商品，可以抽象成为一个 SPU。另一方面，这些“属性|属性值对”在 SPU 中固化下来，逐步标准化。基于 SPU 的商品信息结构，可以实现丰富的应用，比如商品信息与资讯、评论、以及其它 SPU 的整合。 SPU(Standard Product Un">
+<meta property="og:description" content="前言现在的电商平台百花齐放，https:&#x2F;&#x2F;www.woshipm.com&#x2F;pd&#x2F;4369061.html 如何判断是同类商品?在商品信息电子化过程中，商品的特性可以由多个“属性|属性值对”进行描述。“属性|属性值对”完全相同的商品，可以抽象成为一个 SPU。另一方面，这些“属性|属性值对”在 SPU 中固化下来，逐步标准化。基于 SPU 的商品信息结构，可以实现丰富的应用，比如商品信息与资讯、评">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662739729803-5f0fcd91-2041-443d-808d-37ab8d4f914d.png#clientId=u65e2336a-7b2c-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=556&id=u246743b1&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1112&originWidth=2092&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=332851&status=done&style=none&taskId=uad8e9fe4-1ec0-4704-976f-75f8bc3884b&title=&width=1046">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662739729803-5f0fcd91-2041-443d-808d-37ab8d4f914d.png#clientId=u65e2336a-7b2c-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=556&id=u246743b1&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1112&originWidth=2092&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=332851&status=error&style=none&taskId=uad8e9fe4-1ec0-4704-976f-75f8bc3884b&title=&width=1046">
 <meta property="article:published_time" content="2022-09-09T16:03:55.000Z">
-<meta property="article:modified_time" content="2022-09-17T16:11:07.213Z">
+<meta property="article:modified_time" content="2022-10-10T03:36:04.695Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662739729803-5f0fcd91-2041-443d-808d-37ab8d4f914d.png#clientId=u65e2336a-7b2c-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=556&id=u246743b1&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1112&originWidth=2092&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=332851&status=done&style=none&taskId=uad8e9fe4-1ec0-4704-976f-75f8bc3884b&title=&width=1046">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1662739729803-5f0fcd91-2041-443d-808d-37ab8d4f914d.png#clientId=u65e2336a-7b2c-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=556&id=u246743b1&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1112&originWidth=2092&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=332851&status=error&style=none&taskId=uad8e9fe4-1ec0-4704-976f-75f8bc3884b&title=&width=1046">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -177,9 +177,9 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>现在的电商平台百花齐放，</p>
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>现在的电商平台百花齐放，<br><a target="_blank" rel="noopener" href="https://www.woshipm.com/pd/4369061.html">https://www.woshipm.com/pd/4369061.html</a></p>
 <h3 id="如何判断是同类商品"><a href="#如何判断是同类商品" class="headerlink" title="如何判断是同类商品?"></a>如何判断是同类商品?</h3><p>在商品信息电子化过程中，商品的特性可以由多个“属性|属性值对”进行描述。“属性|属性值对”完全相同的商品，可以抽象成为一个 SPU。<br>另一方面，这些“属性|属性值对”在 SPU 中固化下来，逐步标准化。<br>基于 SPU 的商品信息结构，可以实现丰富的应用，比如商品信息与资讯、评论、以及其它 SPU 的整合。</p>
-<h3 id="SPU-Standard-Product-Unit"><a href="#SPU-Standard-Product-Unit" class="headerlink" title="SPU(Standard Product Unit)"></a>SPU(Standard Product Unit)</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662739729803-5f0fcd91-2041-443d-808d-37ab8d4f914d.png#clientId=u65e2336a-7b2c-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=556&id=u246743b1&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1112&originWidth=2092&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=332851&status=done&style=none&taskId=uad8e9fe4-1ec0-4704-976f-75f8bc3884b&title=&width=1046" alt="image.png"><br>SPU 的全称为[Standard Product Unit]，也叫标准化产品单元，它是商品信息聚合的最小单位，是一组可复用、易检索的标准化信息的集合，该集合描述了一个产品的特性。通俗点讲，属性值、特性相同的商品就可以称为一个 SPU。</p>
+<h3 id="SPU-Standard-Product-Unit"><a href="#SPU-Standard-Product-Unit" class="headerlink" title="SPU(Standard Product Unit)"></a>SPU(Standard Product Unit)</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662739729803-5f0fcd91-2041-443d-808d-37ab8d4f914d.png#clientId=u65e2336a-7b2c-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=556&id=u246743b1&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1112&originWidth=2092&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=332851&status=error&style=none&taskId=uad8e9fe4-1ec0-4704-976f-75f8bc3884b&title=&width=1046" alt="image.png"><br>SPU 的全称为[Standard Product Unit]，也叫标准化产品单元，它是商品信息聚合的最小单位，是一组可复用、易检索的标准化信息的集合，该集合描述了一个产品的特性。通俗点讲，属性值、特性相同的商品就可以称为一个 SPU。</p>
 
       
 

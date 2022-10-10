@@ -16,7 +16,7 @@
 <meta property="og:description" content="前言SETEX概述将值 value 关联到 key ，并将 key 的过期时间设置为 seconds (以秒为单位)。若给定的 key 已经存在，SETEX 命令将覆盖旧值。set expire 它其实就是将 SET 命令与 EXPIRE 合并为原子性操作，因为如果单独使用 SET&#x2F;EXPIRE 命令，如果 SET 操作成功，但是 EXPIRE 操作失败，就无法保证其操作原子性。 SET">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-09-07T16:02:44.000Z">
-<meta property="article:modified_time" content="2022-09-17T16:11:07.213Z">
+<meta property="article:modified_time" content="2022-10-10T03:36:04.695Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -188,6 +188,62 @@
 <p>P2 和 P3 进程读取键 lock.foo 的值，检测锁是否已超时（通过比较当前时间和键 lock.foo 的值来判断是否超时）<br>P2 和 P3 进程发现锁 lock.foo 已超时<br>P2 执行 DEL lock.foo 命令<br>P2 执行 SETNX lock.foo 命令，并返回 1，即 P2 获得锁<br>P3 执行 DEL lock.foo 命令将 P2 刚刚设置的键 lock.foo 删除（这步是由于 P3 刚才已检测到锁已超时）<br>P3 执行 SETNX lock.foo 命令，并返回 1，即 P3 获得锁<br>P2 和 P3 同时获得了锁<br>从上面的情况可以得知，在检测到锁超时后，进程不能直接简单地执行 DEL 删除键的操作以获得锁。</p>
 <p>为了解决上述算法可能出现的多个进程同时获得锁的问题，我们再来看以下的算法。<br>我们同样假设进程 P1 已经首先获得了锁 lock.foo，然后进程 P1 挂掉了。接下来的情况：</p>
 <p>进程 P4 执行 SETNX lock.foo 以尝试获取锁<br>由于进程 P1 已获得了锁，所以 P4 执行 SETNX lock.foo 返回 0，即获取锁失败<br>P4 执行 GET lock.foo 来检测锁是否已超时，如果没超时，则等待一段时间，再次检测<br>如果 P4 检测到锁已超时，即当前的时间大于键 lock.foo 的值，P4 会执行以下操作<br>GETSET lock.foo &lt;current Unix timestamp + lock timeout + 1&gt;<br>由于 GETSET 操作在设置键的值的同时，还会返回键的旧值，通过比较键 lock.foo 的旧值是否小于当前时间，可以判断进程是否已获得锁<br>假如另一个进程 P5 也检测到锁已超时，并在 P4 之前执行了 GETSET 操作，那么 P4 的 GETSET 操作返回的是一个大于当前时间的时间戳，这样 P4 就不会获得锁而继续等待。注意到，即使 P4 接下来将键 lock.foo 的值设置了比 P5 设置的更大的值也没影响。<br>另外，值得注意的是，在进程释放锁，即执行 DEL lock.foo 操作前，需要先判断锁是否已超时。如果锁已超时，那么锁可能已由其他进程获得，这时直接执行 DEL lock.foo 操作会导致把其他进程已获得的锁释放掉。</p>
+<p>比如说：某个查询数据库的接口，因为调用量比较大，所以加了缓存，并设定缓存过期后刷新，问题是当并发量比较大的时候，如果没有锁机制，那么缓存过期的瞬间，大量并发请求会穿透缓存直接查询数据库，造成雪崩效应，如果有锁机制，那么就可以控制只有一个请求去更新缓存，其它的请求视情况要么等待，要么使用过期的缓存。</p>
+<pre><code>下面以目前PHP社区里最流行的PHPRedis扩展为例，实现一段演示代码：
+</code></pre>
+<?php
+ 
+$ok = $redis->setNX($key, $value);
+ 
+if ($ok) {
+    $cache->update();
+    $redis->del($key);
+}
+    缓存过期时，通过SetNX获取锁，如果成功了，那么更新缓存，然后删除锁。看上去逻辑非常简单，可惜有问题：如果请求执行因为某些原因意外退出了，导致创建了锁但是没有删除锁，那么这个锁将一直存在，以至于以后缓存再也得不到更新。于是乎我们需要给锁加一个过期时间以防不测：
+
+<?php
+ 
+$redis->multi();
+$redis->setNX($key, $value);
+$redis->expire($key, $ttl);
+$redis->exec();
+    因为SetNX不具备设置过期时间的功能，所以我们需要借助Expire来设置，同时我们需要把两者用Multi/Exec包裹起来以确保请求的原子性，以免SetNX成功了Expire却失败了。可惜还有问题：当多个请求到达时，虽然只有一个请求的SetNX可以成功，但是任何一个请求的Expire却都可以成功，如此就意味着即便获取不到锁，也可以刷新过期时间，如果请求比较密集的话，那么过期时间会一直被刷新，导致锁一直有效。于是乎我们需要在保证原子性的同时，有条件的执行Expire，接着便有了如下Lua代码：
+
+local key   = KEYS[1]
+local value = KEYS[2]
+local ttl   = KEYS[3]
+ 
+local ok = redis.call('setnx', key, value)
+ 
+if ok == 1 then
+  redis.call('expire', key, ttl)
+end
+ 
+return ok
+    没想到实现一个看起来很简单的功能还要用到Lua脚本，着实有些麻烦。其实Redis已经考虑到了大家的疾苦，从2.6.12起，SET涵盖了SETEX的功能，并且SET本身已经包含了设置过期时间的功能，也就是说，我们前面需要的功能只用SET就可以实现。
+
+<?php
+ 
+$ok = $redis->set($key, $value, array('nx', 'ex' => $ttl));
+ 
+if ($ok) {
+    $cache->update();
+    $redis->del($key);
+}
+    如上代码是完美的吗？答案是还差一点！设想一下，如果一个请求更新缓存的时间比较长，甚至比锁的有效期还要长，导致在缓存更新过程中，锁就失效了，此时另一个请求会获取锁，但前一个请求在缓存更新完毕的时候，如果不加以判断直接删除锁，就会出现误删除其它请求创建的锁的情况，所以我们在创建锁的时候需要引入一个随机值：
+
+<?php
+ 
+$ok = $redis->set($key, $random, array('nx', 'ex' => $ttl));
+ 
+if ($ok) {
+    $cache->update();
+ 
+    if ($redis->get($key) == $random) {
+        $redis->del($key);
+    }
+}
+    如此基本实现了单机锁，假如要实现分布锁，请参考：Distributed locks with Redis，这里就不深入讨论了，总结：避免掉入SETNX陷阱的最好方法就是永远不要使用它！
 
       
 

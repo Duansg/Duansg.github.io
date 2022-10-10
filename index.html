@@ -153,28 +153,30 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-ogbt05" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-gg28bd" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/12/ogbt05/">深入浅出Mybatis拦截器</a>
+      <a class="article-title" href="/2022/10/08/gg28bd/">如何打造属于自己的图床?</a>
     </h1>
   
 
         
-        <a href="/2022/09/12/ogbt05/" class="archive-article-date">
-  	<time datetime="2022-09-12T11:50:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-12</time>
+        <a href="/2022/10/08/gg28bd/" class="archive-article-date">
+  	<time datetime="2022-10-08T05:52:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-10-08</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在正式使用拦截器之前，首先要抛出几个问题，拦截器与过滤器什么区别？我们在使用 ORM 框架的时候，如果想动态的改写 Sql 如何实现？例如在多租户的系统中，需要依据当前的线程上下文中的请求租户类别，动态的改写 Sql 添加租户信息。</p>
-<h3 id="拦截器与过滤器"><a href="#拦截器与过滤器" class="headerlink" title="拦截器与过滤器"></a>拦截器与过滤器</h3><h3 id="拦截器应用场景"><a href="#拦截器应用场景" class="headerlink" title="拦截器应用场景"></a>拦截器应用场景</h3><p>1、分页查询<br>2、<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%A4%9A%E7%A7%9F%E6%88%B7&spm=1001.2101.3001.7020">多租户</a>添加条件过滤<br>3、对返回结果，过滤掉审计字段，敏感字段<br>4、对返回结果中的加密数据进行解密<br>5、对新增数据自动添加创建人，创建时间，更新时间，更新人 ，对更新数据自动新增更新时间，更新人</p>
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>作为开发者的你，平时肯定会有很多自己的笔记，记录着许多工作问题、学习记录、种子存放目录记录等等。近年来有很多支持在线编辑的平台，例如 wolai、语雀等等，它们或多或少的都支持在线的 markdown 的编辑，也支持导入导出等功能。但是对笔者来说，这些平台虽然功能繁多，但因个人习惯不同，笔者还是习惯了 Typora 的简约的风格，也便于存放，但是你可以会遇到图片上传的问题，在发布到公众号等平台的时候比较还需要上传一次，这个时候图床就派上用场了。</p>
+<h3 id="PicGo"><a href="#PicGo" class="headerlink" title="PicGo"></a>PicGo</h3><p><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/PicGo">https://github.com/Molunerfinn/PicGo</a><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209030788-02ccc241-005f-496c-8134-ba0bec2d0856.png#clientId=u6d15fba5-f0ab-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=579&id=u4f3cb7a3&margin=%5Bobject%20Object%5D&name=image.png&originHeight=926&originWidth=1662&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=451008&status=error&style=none&taskId=u9a42fa1e-b5c0-4f6b-8a2c-248a7d901c5&title=&width=1038.749984521419" alt="image.png"><br>它一个用于快速上传图片并获取图片 URL 链接的工具，PicGo 本体支持如下图床：七牛图床、腾讯云、又拍云、GitHub、SM.MS 、阿里云 OSS 、Imgur</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209257644-6a012b41-ef4e-4ed0-97e7-5b44b57b206a.png#clientId=u6d15fba5-f0ab-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=1026&id=uc152d2b2&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1642&originWidth=3072&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=362492&status=error&style=none&taskId=ubda85486-69ae-4071-ae1d-7de04ec886c&title=&width=1919.999971389771" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209274099-c3b73792-a3e3-49df-bad1-2e40019584e9.png#clientId=u6d15fba5-f0ab-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=819&id=u42315053&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1310&originWidth=2994&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=297361&status=error&style=none&taskId=u76be42a5-016e-4eba-bddd-021008e53a4&title=&width=1871.2499721162026" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209345356-b06be7e9-b8ee-43c5-8afe-e6ae061cd0ec.png#clientId=u6d15fba5-f0ab-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=715&id=ubb187d1c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1144&originWidth=3066&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=230320&status=error&style=none&taskId=u69e8b5c9-5c96-4c21-b34a-1cb3d6bc69a&title=&width=1916.2499714456503" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209404571-cef6d7aa-3136-49d5-b1c6-7270c53e0f2d.png#clientId=u6d15fba5-f0ab-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=709&id=u537f70ab&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1134&originWidth=3066&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=228356&status=error&style=none&taskId=ud2490c3a-ac81-47e4-baf8-dd595a5be49&title=&width=1916.2499714456503" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209484104-18791f2a-0fee-4ed2-9918-5260546ae85c.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=842&id=ua98518ca&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1348&originWidth=3088&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=288310&status=done&style=none&taskId=u140503f1-df2b-4cf9-8e09-a6bde516385&title=&width=1929.9999712407594" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209558447-260b2658-06db-47fc-988e-4c1dba892a02.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=840&id=uabee30d6&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1344&originWidth=3086&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=338401&status=done&style=none&taskId=u83977480-48ff-4ed5-b85f-29525bd01d1&title=&width=1928.7499712593858" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209575934-cc9cd8a2-5006-4c6c-96fb-ae8d5724c8b6.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=856&id=u4e1d3638&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1370&originWidth=3082&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=805941&status=done&style=none&taskId=u6649cf6c-61c9-4847-a185-6eac461ff05&title=&width=1926.2499712966387" alt="image.png"><br><a target="_blank" rel="noopener" href="https://www.aliyun.com/product/oss">https://www.aliyun.com/product/oss</a> 或者如下<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209620133-efe942d5-0143-468f-a5db-de3396b45882.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=384&id=u6f42265c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=614&originWidth=3094&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=533939&status=done&style=none&taskId=u072a23f9-3411-4c4e-acd4-84dab3f16fc&title=&width=1933.74997118488" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209709018-0c0e3fd6-bd80-43e6-8aaa-ae401ef73699.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=539&id=u5b159a99&margin=%5Bobject%20Object%5D&name=image.png&originHeight=862&originWidth=2838&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=135181&status=done&style=none&taskId=u76a20ea1-e5d0-42a4-b1e7-4d9b426ee64&title=&width=1773.7499735690658" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209761143-cbdb7912-9f3b-429d-9e03-970881c586d5.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=702&id=u61c7caa0&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1124&originWidth=2730&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=225996&status=done&style=none&taskId=ufec6bd5c-7495-4d83-a098-238756fedee&title=&width=1706.2499745748942" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665209925336-75a6cb63-324a-49b0-90ef-2a4992ef1fc1.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=1074&id=u718b4f6d&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1718&originWidth=3074&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=476427&status=done&style=none&taskId=u58cacb9f-95ba-4006-a973-9b9a6d7f25b&title=&width=1921.2499713711445" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665211043679-47a06607-f5e3-4dc0-bf1b-de769183f214.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=809&id=u16fe2d3c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1294&originWidth=3050&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=216045&status=done&style=none&taskId=u1c8783df-7ee4-4d39-8d47-407368e06fb&title=&width=1906.249971594662" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665211242870-05bf600e-6ae0-4215-bf3f-844d6ff4aa52.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=607&id=u6f3fd906&margin=%5Bobject%20Object%5D&name=image.png&originHeight=972&originWidth=1672&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=174621&status=done&style=none&taskId=uebfac9d8-0055-4a03-9331-a3276a43732&title=&width=1044.9999844282868" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665211310722-e1756920-2745-48f7-9049-7817d453a86f.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=607&id=u3b31edd3&margin=%5Bobject%20Object%5D&name=image.png&originHeight=972&originWidth=1672&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=133099&status=done&style=none&taskId=u3ebeae8c-0230-4c6c-aa61-d56c58bc4ff&title=&width=1044.9999844282868" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665211330193-737b6f13-09e4-420d-8093-2253bbc0ea54.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=511&id=u53c14dff&margin=%5Bobject%20Object%5D&name=image.png&originHeight=818&originWidth=3020&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=163259&status=done&style=none&taskId=uc2edae0a-78e9-4d0f-adc0-cfb222bdff7&title=&width=1887.4999718740587" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665211650035-512734c9-7132-47c0-8380-fcd05dfde280.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=1117&id=udb313466&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1788&originWidth=3068&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=495776&status=done&style=none&taskId=u88c6a392-b9a8-4aea-b9de-9ecf0bba946&title=&width=1917.4999714270239" alt="image.png"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665212075703-baaebb15-f9da-478b-8222-c2493e62b2d9.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=645&id=u490a5b79&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1032&originWidth=1512&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=141866&status=done&style=none&taskId=ueb43ea4d-8c23-42fd-971e-eb282b8cace&title=&width=944.9999859184029" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665212113484-83c5f51d-fd74-40f6-8b25-dfc603862750.png#clientId=u5a60ea59-0762-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=844&id=uad5f6d4e&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1350&originWidth=2486&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=481047&status=done&style=none&taskId=u7e38b7fa-c2c1-41af-812e-f51a8e6bfc7&title=&width=1553.7499768473212" alt="image.png"></p>
 
       
 
@@ -187,7 +189,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/12/ogbt05/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/10/08/gg28bd/">展开全文 >></a>
         </p>
       
 
@@ -217,28 +219,28 @@
 
 
   
-    <article id="post-ht5y7z" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-lh56xh" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/12/ht5y7z/">浅析MAT(Memory Analyer Tool)</a>
+      <a class="article-title" href="/2022/10/03/lh56xh/">SqlSessionTemplate是如何保证MyBatis中SqlSession的线程安全的？</a>
     </h1>
   
 
         
-        <a href="/2022/09/12/ht5y7z/" class="archive-article-date">
-  	<time datetime="2022-09-12T06:44:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-12</time>
+        <a href="/2022/10/03/lh56xh/" class="archive-article-date">
+  	<time datetime="2022-10-03T14:21:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-10-03</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>MAT（Memory Analyer Tool），它是一个快速、功能丰富的 Java Heap 的分析工具，它可以帮助我们查找内存泄漏和排查问题，而且还有丰富的报表统计等等。我们可以通过插件的形式运行还可以单独下载。官方地址：<a target="_blank" rel="noopener" href="https://www.eclipse.org/mat/">https://www.eclipse.org/mat/</a></p>
-<h3 id="MAT-用法"><a href="#MAT-用法" class="headerlink" title="MAT 用法"></a>MAT 用法</h3>
+        <p><a target="_blank" rel="noopener" href="https://xuliugen.blog.csdn.net/article/details/79438676?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-1-79438676-blog-113568774.pc_relevant_aa&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-1-79438676-blog-113568774.pc_relevant_aa&utm_relevant_index=2">https://xuliugen.blog.csdn.net/article/details/79438676?spm=1001.2101.3001.6650.1&utm_medium&#x3D;distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-79438676-blog-113568774.pc_relevant_aa&amp;depth_1-utm_source&#x3D;distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-79438676-blog-113568774.pc_relevant_aa&amp;utm_relevant_index&#x3D;2</a></p>
+
       
 
       
@@ -250,7 +252,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/12/ht5y7z/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/10/03/lh56xh/">展开全文 >></a>
         </p>
       
 
@@ -280,27 +282,28 @@
 
 
   
-    <article id="post-xm8cwc" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-pugzsr" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/12/xm8cwc/">Docker爱之初体验</a>
+      <a class="article-title" href="/2022/10/02/pugzsr/">源码解析Mybatis的SqlSession如何创建的？</a>
     </h1>
   
 
         
-        <a href="/2022/09/12/xm8cwc/" class="archive-article-date">
-  	<time datetime="2022-09-12T06:43:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-12</time>
+        <a href="/2022/10/02/pugzsr/" class="archive-article-date">
+  	<time datetime="2022-10-02T14:34:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-10-02</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>SqlSession 作为 MyBatis 提供的面向开发者的核心顶层 API，其表示和数据库交互时的会话对象，是 MyBatis 执行持久化操作的关键对象，它的底层封装了 JDBC 连接，用于完成数据库的增删改查功能，本文将对 SqlSession 的创建过程进行剖析。<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_50545075/article/details/126876340">https://blog.csdn.net/weixin_50545075&#x2F;article&#x2F;details&#x2F;126876340</a></p>
+
       
 
       
@@ -312,7 +315,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/12/xm8cwc/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/10/02/pugzsr/">展开全文 >></a>
         </p>
       
 
@@ -342,179 +345,64 @@
 
 
   
-    <article id="post-gtkgwz" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-rv1zko" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/12/gtkgwz/">必须理解的JavaSPI机制</a>
+      <a class="article-title" href="/2022/10/02/rv1zko/">动态代理之Proxy.newProxyInstance</a>
     </h1>
   
 
         
-        <a href="/2022/09/12/gtkgwz/" class="archive-article-date">
-  	<time datetime="2022-09-12T06:39:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-12</time>
+        <a href="/2022/10/02/rv1zko/" class="archive-article-date">
+  	<time datetime="2022-10-02T14:12:29.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-10-02</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在开源的框架、项目中，会有很多地方使用到了 JavaSPI 的机制，例如数据库驱动、Dubbo、日志框架等等，这种可扩展的编程机制，不仅方便服务的扩展，还可以实现插拔式的替换组件。</p>
-<h3 id="什么是-JavaSPI"><a href="#什么是-JavaSPI" class="headerlink" title="什么是 JavaSPI?"></a>什么是 JavaSPI?</h3><p>SPI 的全名为 Service Provider Interface，英文不错的童鞋可以去官方看一下(<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html">https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html)</a>)，用白话文去说就是(基于接口编程+策略模式+配置文件)，其实这种机制，在某种层度上类似于 java.util.Collections 中的 sort 等方法，我们传入的除了数据集合，还有实现了 Comparator 接口的具体排序规则方法，这种情况下就实现了针对接口定制化开发实现，并动态可插拔的思想。但是不同的是，JavaSPI 规定了在提供了服务接口的实现之后，在静态资源目录下创建 services 目录，(META-INF&#x2F;services&#x2F;)，其中 services 目录里同时创建一个以服务接口命名的文件，文件内容为服务实现类的全路径。</p>
-<p>39894d1bcd98458af914a101ac1d7f76&amp;chksm&#x3D;fa6ee509cd196c1f17a9aab846074dacf39edd8f02b22d42624b9cd2ba48fdd5cbb7eb4513e0&amp;token&#x3D;1343734771⟨&#x3D;zh_CN#rd</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/12/gtkgwz/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-bdv5bs" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/12/bdv5bs/">浅析SpringMVC请求的流转过程</a>
-    </h1>
-  
-
-        
-        <a href="/2022/09/12/bdv5bs/" class="archive-article-date">
-  	<time datetime="2022-09-12T06:26:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>我们都知道 Spring MVC 框架使用了其”模型-视图-控制器”( Model-View-Controller )架构方式，用于开发灵活且松散耦合的 Web 应用程序。我们在初学的时候都使用过 SpringMVC 来处理信息，并渲染视图到 Browser。但需要注意的是，在现在的架构中，大都采用了前后端分离的情况，而我们在使用 SpringMVC 的时候，只需要关注 M(Model)，C(Controller)这两个部分，而视图渲染的部分则交给了前端。</p>
-<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964040264-d600bdff-9f95-4d3d-bcbf-ec01393c3e9c.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=364&id=ub569c42c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=423&originWidth=832&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=69453&status=done&style=none&taskId=ud94f9a5c-57df-47b4-b48f-776726de855&title=&width=715" alt="image.png"></p>
-<h3 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h3><p>(1):用户向服务发送 HTTP 请求，DispatcherServlet 捕获请求。<br>(2):DispatcherServlet 根据 URL，调用 HandlerMapping 获得该 Handler 对象以及所对应的拦截器，其返回的是 HandlerExecutionChain 对象，这个对象中就包含了 Handler 对象以及这个 Handler 所对应的拦截器。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964096402-2f9ea8c1-7565-4117-9620-b362ccf6bd06.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=142&id=ue7feea4e&margin=%5Bobject%20Object%5D&name=image.png&originHeight=284&originWidth=732&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=61501&status=done&style=none&taskId=ue3b8dc27-6ae8-4415-870d-b71dca2a0e2&title=&width=366" alt="image.png"><br>(3):DispatcherServlet 根据获得的 Handler，选择一个合适的 HandlerAdapter 。（附注：如果成功获得 HandlerAdapter 后，此时将开始执行拦截器的 preHandler 方法），然后获取 Request 请求数据，填充 Handler，执行 Handler。<br>(4):上一步获取到 HandlerAdapter 后，会执行 Handler，并返回 ModelAndView<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964115923-78c47ace-5d68-4895-be26-0a2707c25ae0.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=280&id=u0a5226f3&margin=%5Bobject%20Object%5D&name=image.png&originHeight=559&originWidth=710&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=371678&status=done&style=none&taskId=u44f0b884-24f8-4dfa-93b9-9685012e215&title=&width=355" alt="image.png"><br>(5):根据返回的 ModelAndView ，选择一个适合的 ViewResolver（必须是已经注册到 Spring 容器中的 ViewResolver),解析出 View 对象,然后返回给 DispatcherServlet。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964136903-c680f8b9-177c-4a17-9806-78a72441f8b2.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=58&id=u4670c79b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=116&originWidth=772&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=36824&status=done&style=none&taskId=u745a0418-b4fe-4ceb-ac96-3f10287dfba&title=&width=386" alt="image.png"><br>(6):ViewResolver 通过 render()方法结合 Model 和 View，来渲染视图。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964154140-62bb9e05-2fb9-4bc2-9afa-4ac60ef68d8b.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=70&id=u791ae9dd&margin=%5Bobject%20Object%5D&name=image.png&originHeight=139&originWidth=484&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=22739&status=done&style=none&taskId=uc8137a99-4a8e-47eb-90a9-297376b2167&title=&width=242" alt="image.png"><br>(7):ViewResolver 通过 render()方法写回给 Browser。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964173411-00406043-93ba-41d1-bfb4-8ccdd561983a.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=43&id=uce85f28b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=85&originWidth=485&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=17228&status=done&style=none&taskId=u66e0bfda-8feb-4b04-a5aa-9254231e362&title=&width=242.5" alt="image.png"></p>
-<h3 id="流程详解"><a href="#流程详解" class="headerlink" title="流程详解"></a>流程详解</h3><p>看完以上没有看过源码的童靴可能会一脸懵逼，此上也是围绕流程图进行了部分截取，方便大家理解，下面我们来搭建一个测试 Demo 来进一步了解。</p>
-<p>(1):测试 Controller(模拟用户真实情况)<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964201983-c9e67118-89a6-488d-bc46-5c498cd35b7e.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=202&id=u20d1cf2c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=403&originWidth=657&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=63729&status=done&style=none&taskId=u8a1f823b-3584-4178-b007-6aa0c82dbf1&title=&width=328.5" alt="image.png"><br>(2):在解析 DispatcherServlet 之前，我们先来看一下 DispatcherServlet 的父类 FrameworkServlet。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964219031-f6de759f-9d4e-4cbe-ad8b-bb9fcc57d1eb.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=369&id=uf4b92cee&margin=%5Bobject%20Object%5D&name=image.png&originHeight=737&originWidth=540&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=509649&status=done&style=none&taskId=u085abba1-4342-494f-b75f-bc462a6359f&title=&width=270" alt="image.png"><br>(3):通过上图我们不难看到一些敏感内容，如 doGet(…)、doPost(…)、doPut(…)、doDelete(…)等等，我们通过这些方法可以看到，这些方法都指向了同一个方法，processRequest(…)<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964239505-a3a40fcc-608d-4cc3-8746-ec3b2bae6bd2.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=115&id=u09eb047b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=230&originWidth=995&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=236466&status=done&style=none&taskId=u00d29a6e-e940-4f04-afc6-cf590ea42ab&title=&width=497.5" alt="image.png"><br>(4):我们来看一下 FrameworkServlet 的 service(…)方法。</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">    String method = request.getMethod();//获取请求方法</span><br><span class="line">    <span class="keyword">if</span> (method.equalsIgnoreCase(RequestMethod.PATCH.name())) &#123;//判断请求方法</span><br><span class="line">        this.processRequest(request, response);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        super.service(request, response);//调用父类的service(…)方法</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>(5):我们来看一下父类 HttpServlet 所包含的方法。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964271884-3d203c41-71a6-471f-b012-c7e266f9a5e0.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=369&id=u228a619e&margin=%5Bobject%20Object%5D&name=image.png&originHeight=737&originWidth=540&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=328224&status=done&style=none&taskId=u36ad7d72-542c-40a4-ba6f-888374b279e&title=&width=270" alt="image.png"><br>(6):通过 service(…)我们可以看出，此方法是根据方法类型，分发请求的。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964279416-3eaaf7e8-ea39-4fd2-9bd5-28aba87170e6.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=287&id=ua071c1de&margin=%5Bobject%20Object%5D&name=image.png&originHeight=574&originWidth=800&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=358753&status=done&style=none&taskId=ua0e8be8b-e6ae-4dcf-86bc-d2e85e9f05a&title=&width=400" alt="image.png"><br>(7):我们继续跟进方法，就不难发现这些请求处理的方法就回到了(3)中所示。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964319528-10dd9e40-a882-4859-baa1-49566cc18a77.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=115&id=u2aa9d366&margin=%5Bobject%20Object%5D&name=image.png&originHeight=230&originWidth=995&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=236466&status=done&style=none&taskId=uc07aa5b2-a84d-417a-aae0-78562c3b2f3&title=&width=497.5" alt="image.png"><br>(8):我们重点关注一下，processRequest(…)方法，(代码已作删减)</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">protected final void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        //线程绑定</span><br><span class="line">        /**</span><br><span class="line">         *封装Locale对象、属性到LocaleContextHolder</span><br><span class="line">         *封装Locale对象、属性到RequestContextHolder</span><br><span class="line">         */</span><br><span class="line">         …</span><br><span class="line">        this.doService(request, response);//请求处理</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ServletException var17) &#123;</span><br><span class="line">        failureCause = var17;</span><br><span class="line">        <span class="keyword">throw</span> var17;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException var18) &#123;</span><br><span class="line">        failureCause = var18;</span><br><span class="line">        <span class="keyword">throw</span> var18;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable var19) &#123;</span><br><span class="line">        failureCause = var19;</span><br><span class="line">        <span class="keyword">throw</span> new NestedServletException(<span class="string">&quot;Request processing failed&quot;</span>, var19);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        //解除绑定</span><br><span class="line">        //……</span><br><span class="line">        this.publishRequestHandledEvent(request, response, startTime, (Throwable)failureCause);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>(9):通过上述代码，请求处理 doService(…)方法。我们可以看到父类中是一个抽象方法，Spring 中很多地方运用了这种方法，由父类抽象流程，交由子类在实现具体的方法，看到这里也就明白了，这个地方就是 DispatcherServlet 的入口方法，<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662964369326-a45b022e-66f3-4b2e-83ad-a88a8789022c.png#clientId=u6c298f0e-31ff-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=26&id=ue6b5e365&margin=%5Bobject%20Object%5D&name=image.png&originHeight=51&originWidth=836&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=17728&status=done&style=none&taskId=u575510fd-4069-4fbd-8ba4-c9f8276ddc4&title=&width=418" alt="image.png"><br>(10):DispatcherServlet 中 doService(…)方法</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">protected void doService(HttpServletRequest request, HttpServletResponse response) throws Exception &#123;</span><br><span class="line">    //DEBUG日志输出</span><br><span class="line">    //封装属性</span><br><span class="line">    //…</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        this.doDispatch(request, response);//请求处理分发</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!WebAsyncUtils.getAsyncManager(request).isConcurrentHandlingStarted() &amp;&amp; attributesSnapshot != null) &#123;</span><br><span class="line">            this.restoreAttributesAfterInclude(request, attributesSnapshot);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>(11):请求处理，DispatcherServlet 核心方法。</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception &#123;</span><br><span class="line">    HttpServletRequest processedRequest = request;</span><br><span class="line">    //核心对象，包含处理器，以及拦截器数组等等。</span><br><span class="line">    HandlerExecutionChain mappedHandler = null;</span><br><span class="line">    boolean multipartRequestParsed = false;</span><br><span class="line">    WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ModelAndView <span class="built_in">mv</span> = null;</span><br><span class="line">            Exception dispatchException = null;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                //校验是否是文件上传请求</span><br><span class="line">                processedRequest = this.checkMultipart(request);</span><br><span class="line">                multipartRequestParsed = processedRequest != request;</span><br><span class="line">                //获取处理器、拦截器数组对象。</span><br><span class="line">                mappedHandler = this.getHandler(processedRequest);</span><br><span class="line">                <span class="keyword">if</span> (mappedHandler == null || mappedHandler.getHandler() == null) &#123;</span><br><span class="line">                    //获取不到，异常处理。</span><br><span class="line">                    this.noHandlerFound(processedRequest, response);</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                //获取当前处理器所对应的HandlerAdapter对象。</span><br><span class="line">                HandlerAdapter ha = this.getHandlerAdapter(mappedHandler.getHandler());//获取</span><br><span class="line">                String method = request.getMethod();</span><br><span class="line">                boolean isGet = <span class="string">&quot;GET&quot;</span>.equals(method);</span><br><span class="line">                <span class="keyword">if</span> (isGet || <span class="string">&quot;HEAD&quot;</span>.equals(method)) &#123;</span><br><span class="line">                    long lastModified = ha.getLastModified(request, mappedHandler.getHandler());</span><br><span class="line">                    <span class="keyword">if</span> (this.logger.isDebugEnabled()) &#123;</span><br><span class="line">                        this.logger.debug(<span class="string">&quot;Last-Modified value for [&quot;</span> + getRequestUri(request) + <span class="string">&quot;] is: &quot;</span> + lastModified);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> ((new ServletWebRequest(request, response)).checkNotModified(lastModified) &amp;&amp; isGet) &#123;</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (!mappedHandler.applyPreHandle(processedRequest, response)) &#123;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                //调用处理器目标方法，并返回视图对象。</span><br><span class="line">                <span class="built_in">mv</span> = ha.handle(processedRequest, response, mappedHandler.getHandler());</span><br><span class="line">                <span class="keyword">if</span> (asyncManager.isConcurrentHandlingStarted()) &#123;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                //如果有视图，则从响应中获取视图，如果没有，则使用默认视图</span><br><span class="line">                this.applyDefaultViewName(processedRequest, <span class="built_in">mv</span>);</span><br><span class="line">                mappedHandler.applyPostHandle(processedRequest, response, <span class="built_in">mv</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception var19) &#123;</span><br><span class="line">                dispatchException = var19;</span><br><span class="line">            &#125;</span><br><span class="line">            //处理结果(包括异常）,渲染视图等等，</span><br><span class="line">            this.processDispatchResult(processedRequest, response, mappedHandler, <span class="built_in">mv</span>, dispatchException);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception var20) &#123;</span><br><span class="line">            this.triggerAfterCompletion(processedRequest, response, mappedHandler, var20);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Error var21) &#123;</span><br><span class="line">            this.triggerAfterCompletionWithError(processedRequest, response, mappedHandler, var21);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (asyncManager.isConcurrentHandlingStarted()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (mappedHandler != null) &#123;</span><br><span class="line">                mappedHandler.applyAfterConcurrentHandlingStarted(processedRequest, response);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (multipartRequestParsed) &#123;</span><br><span class="line">            this.cleanupMultipart(processedRequest);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/12/bdv5bs/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-bk3qpn" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/12/bk3qpn/">CPU100%居然找不到问题?</a>
-    </h1>
-  
-
-        
-        <a href="/2022/09/12/bk3qpn/" class="archive-article-date">
-  	<time datetime="2022-09-12T06:03:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-12</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在线上环境中你一定遇到过 java 程序停顿、CPU100%、死锁等疑难杂症，作为一名 java 外科手术师，怎么分析问题成了关键，就跟去医院看病一样，如何给 java 程序拍个 X 光片呢?</p>
-<h3 id="Java-线程状态机"><a href="#Java-线程状态机" class="headerlink" title="Java 线程状态机"></a>Java 线程状态机</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662963638390-4516066e-ad78-4cd8-9311-245c9f7b956a.png#clientId=u1223001e-885e-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=355&id=u4568e5f5&margin=%5Bobject%20Object%5D&name=image.png&originHeight=709&originWidth=1500&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=396140&status=done&style=none&taskId=u91704778-59f5-4bb0-82aa-c244b9a805c&title=&width=750" alt="image.png"></p>
-<h3 id="jstack-概述"><a href="#jstack-概述" class="headerlink" title="jstack 概述"></a>jstack 概述</h3><p>jstack 用于生成 JVM 当前时刻的线程快照。线程快照是当前 java 虚拟机内每一条线程正在执行的方法堆栈的集合，生成线程快照的主要目的是定位线程出现长时间停顿的原因，如线程间死锁、死循环、请求外部资源导致的长时间等待等。线程出现停顿的时候可以通过 jstack 来查看各个线程的调用堆栈，就可以知道没有响应的线程到底在后台做什么事情，或者等待什么资源。</p>
-<h3 id="jstack-用法"><a href="#jstack-用法" class="headerlink" title="jstack 用法"></a>jstack 用法</h3><p>jstack [ option ] PID</p>
-<h4 id="基本参数："><a href="#基本参数：" class="headerlink" title="基本参数："></a>基本参数：</h4><ul>
-<li>-F 当 jstack [-l] PID 没有响应的时候强制打印栈信息。</li>
-<li>-l 长列表，打印关于锁的附加信息,例如属于 java.util.concurrent 的 ownable synchronizers 列表。</li>
-<li>-m 打印 java 和 native c&#x2F;c++框架的所有栈信息， -h | -help 打印帮助信息</li>
-<li>PID 需要被打印配置信息的 java 进程 id，可以用 jps 工具查询。</li>
+        <p>动态代理（dynamic proxy）<br>利用 Java 的反射技术(Java Reflection)，在运行时创建一个实现某些给定接口的新类（也称“动态代理类”）及其实例（对象）,代理的是接口(Interfaces)，不是类(Class)，也不是抽象类。在运行时才知道具体的实现，spring aop 就是此原理。</p>
+<p>public static Object newProxyInstance(ClassLoader loader,<br>Class&lt;?&gt;[] interfaces,<br>InvocationHandler h)<br>throws IllegalArgumentException<br>newProxyInstance，方法有三个参数：</p>
+<p>loader: 用哪个类加载器去加载代理对象</p>
+<p>interfaces:动态代理类需要实现的接口</p>
+<p>h:动态代理方法在执行时，会调用 h 里面的 invoke 方法去执行</p>
+<p>定义一个接口：</p>
+<p>package com.xhx.java;</p>
+<p>&#x2F;**</p>
+<ul>
+<li>xuhaixing</li>
+<li>2018&#x2F;7&#x2F;30 21:32<br>**&#x2F;<br>public interface IVehical {<br>void run();<br>}<br>要扩展的类：</li>
 </ul>
-<h3 id="arthas"><a href="#arthas" class="headerlink" title="arthas"></a>arthas</h3>
+<p>package com.xhx.java;</p>
+<p>&#x2F;**</p>
+<ul>
+<li>xuhaixing</li>
+<li>2018&#x2F;7&#x2F;30 21:33<br>**&#x2F;<br>public class Car implements IVehical {<br>public void run() {<br>System.out.println(“Car 会跑”);<br>}<br>}<br>调用处理类 invocationhandler</li>
+</ul>
+<p>package com.xhx.java;</p>
+<p>import java.lang.reflect.InvocationHandler;<br>import java.lang.reflect.Method;</p>
+<p>&#x2F;**</p>
+<ul>
+<li>xuhaixing</li>
+<li>2018&#x2F;7&#x2F;30 21:38<br>**&#x2F;<br>public class VehicalInvacationHandler implements InvocationHandler {<br>private final IVehical vehical;<br>public VehicalInvacationHandler(IVehical vehical){<br>    this.vehical &#x3D; vehical;<br>}<br><br>public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {<br>    System.out.println(“———before——-“);<br>    Object invoke &#x3D; method.invoke(vehical, args);<br>    System.out.println(“———after——-“);<br><br>    return invoke;<br>}<br>}<br>invoke 三个参数：</li>
+</ul>
+<p>proxy：就是代理对象，newProxyInstance 方法的返回对象</p>
+<p>method：调用的方法</p>
+<p>args: 方法中的参数</p>
+<p>package com.xhx.java;</p>
+<p>import java.lang.reflect.Proxy;</p>
+<p>&#x2F;**</p>
+<ul>
+<li>xuhaixing</li>
+<li>2018&#x2F;7&#x2F;30 21:30<br>**&#x2F;<br>public class App {<br>public static void main(String[] args) {<br>IVehical car &#x3D; new Car();<br>    IVehical vehical &#x3D; (IVehical)Proxy.newProxyInstance(car.getClass().getClassLoader(), Car.class.getInterfaces(), new VehicalInvacationHandler(car));<br>    vehical.run();<br>}<br>}<br>上面代码中，代理 car 对象，调用 run 方法时，自动执行 invocationhandler 中的 invoke 方法。</li>
+</ul>
+<p>可以打印一下：</p>
+<p>System.out.println(vehical.getClass());</p>
+
       
 
       
@@ -526,7 +414,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/12/bk3qpn/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/10/02/rv1zko/">展开全文 >></a>
         </p>
       
 
@@ -556,29 +444,29 @@
 
 
   
-    <article id="post-ig9hle" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-btf9v3" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/10/ig9hle/">深入理解商品体系中的SPU与CSPU</a>
+      <a class="article-title" href="/2022/09/29/btf9v3/">MySQL 的 MDL 锁解惑</a>
     </h1>
   
 
         
-        <a href="/2022/09/10/ig9hle/" class="archive-article-date">
-  	<time datetime="2022-09-09T16:03:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-10</time>
+        <a href="/2022/09/29/btf9v3/" class="archive-article-date">
+  	<time datetime="2022-09-29T13:59:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-29</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>现在的电商平台百花齐放，</p>
-<h3 id="如何判断是同类商品"><a href="#如何判断是同类商品" class="headerlink" title="如何判断是同类商品?"></a>如何判断是同类商品?</h3><p>在商品信息电子化过程中，商品的特性可以由多个“属性|属性值对”进行描述。“属性|属性值对”完全相同的商品，可以抽象成为一个 SPU。<br>另一方面，这些“属性|属性值对”在 SPU 中固化下来，逐步标准化。<br>基于 SPU 的商品信息结构，可以实现丰富的应用，比如商品信息与资讯、评论、以及其它 SPU 的整合。</p>
-<h3 id="SPU-Standard-Product-Unit"><a href="#SPU-Standard-Product-Unit" class="headerlink" title="SPU(Standard Product Unit)"></a>SPU(Standard Product Unit)</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1662739729803-5f0fcd91-2041-443d-808d-37ab8d4f914d.png#clientId=u65e2336a-7b2c-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=556&id=u246743b1&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1112&originWidth=2092&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=332851&status=done&style=none&taskId=uad8e9fe4-1ec0-4704-976f-75f8bc3884b&title=&width=1046" alt="image.png"><br>SPU 的全称为[Standard Product Unit]，也叫标准化产品单元，它是商品信息聚合的最小单位，是一组可复用、易检索的标准化信息的集合，该集合描述了一个产品的特性。通俗点讲，属性值、特性相同的商品就可以称为一个 SPU。</p>
+        <p><a target="_blank" rel="noopener" href="https://opensource.actionsky.com/20220426-mysql/">https://opensource.actionsky.com/20220426-mysql/</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/fu_huo_1993/article/details/121713019">https://blog.csdn.net/fu_huo_1993&#x2F;article&#x2F;details&#x2F;121713019</a></p>
+<p>online ddl<br><a target="_blank" rel="noopener" href="https://opensource.actionsky.com/20200916-ddl/">https://opensource.actionsky.com/20200916-ddl/</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1843985">https://cloud.tencent.com/developer/article/1843985</a><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664460115794-ac4fa292-9f61-4993-8168-c30949420248.png#clientId=u85a96a43-12f9-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=1090&id=u06c9a968&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1744&originWidth=2248&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=423133&status=done&style=none&taskId=uf330972a-8691-4415-99de-9c1cd3d86aa&title=&width=1404.9999790638688" alt="image.png"></p>
 
       
 
@@ -591,7 +479,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/10/ig9hle/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/09/29/btf9v3/">展开全文 >></a>
         </p>
       
 
@@ -621,27 +509,52 @@
 
 
   
-    <article id="post-cb6xwi" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-ggdqn3" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/09/cb6xwi/">深入理解类目、类目属性、SKU、SPU</a>
+      <a class="article-title" href="/2022/09/29/ggdqn3/">Mysql ALTER TABLE 加字段的时候到底锁不锁表？</a>
     </h1>
   
 
         
-        <a href="/2022/09/09/cb6xwi/" class="archive-article-date">
-  	<time datetime="2022-09-09T15:56:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-09</time>
+        <a href="/2022/09/29/ggdqn3/" class="archive-article-date">
+  	<time datetime="2022-09-29T12:26:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-29</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3>
+        <h2 id="Mysql5-6-版本之前"><a href="#Mysql5-6-版本之前" class="headerlink" title="Mysql5.6 版本之前"></a>Mysql5.6 版本之前</h2><p>更新步骤</p>
+<ol>
+<li>对原始表加写锁</li>
+<li>按照原始表和执行语句的定义，重新定义一个空的临时表。</li>
+<li>对临时表进行添加索引（如果有）。</li>
+<li>再将原始表中的数据逐条 Copy 到临时表中。</li>
+<li>当原始表中的所有记录都被 Copy 临时表后，将原始表进行删除。再将临时表命名为原始表表名。</li>
+</ol>
+<p>UPDATE <code>table_name</code> SET new_col &#x3D; [默认值] WHERE TRUE 复制代码<br><strong>这样的话整个 DDL 过程的就是全程锁表的。</strong></p>
+<h2 id="Mysql5-6-版本之后"><a href="#Mysql5-6-版本之后" class="headerlink" title="Mysql5.6 版本之后"></a>Mysql5.6 版本之后</h2><p>更新步骤</p>
+<ol>
+<li>对原始表加写锁</li>
+<li>按照原始表和执行语句的定义，重新定义一个空的临时表。并申请 rowlog 的空间。</li>
+<li>拷贝原表数据到临时表，此时的表数据修改操作（增删改）都会存放在 rowlog 中。此时该表客户端可以进行操作的。</li>
+<li>原始表数据全部拷贝完成后，会将 rowlog 中的改动全部同步到临时表，这个过程客户端是不能操作的。</li>
+<li>当原始表中的所有记录都被 Copy 临时表，并且 Copy 期间客户端的所有增删改操作都同步到临时表。再将临时表命名为原始表表名。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>ALTER TABLE 加字段会加锁</strong>。只是 Mysql5.6 版本之后新增了 ONLINE DDL 的功能，可以使该表不能使用的时间大大缩短。</p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>ALTER TABLE 加字段的时候。如果该表的数据量非常大。不要设置 default 值。<br>比如，当前有 2000 万以上数据量的表。如果加字段加了 default 值。Mysql 会执行在执行 Online DDL 之后，对整个表的数据进行更新默认值的操作，即<br>这样就相当于是更新了 2000w+的数据，而且是在同一个事务里。也就是说这个事务会把整个表都锁住，直到所有的数据记录都更新完默认值以后，才会提交。<br>这个时间非常长，而且由于会锁全表的记录，所以该表不可用的时间会非常长。</p>
+<hr>
+<p>笔者实验过 16 核，32G，Mysql 默认配置。500w 的数据量加一个字段。</p>
+<ul>
+<li>不加 default 值，整个 DDL 更新过程是 66 秒。而且整个更新过程，该表的查询、修改、新增操作都是可用的。几乎对该表的可用性没有任何影响。</li>
+<li>加 default 值，整个 DDL 更新过程是 213 秒。经过测试，大约在 100 秒之后，该表的查询、修改、新增操作都会陷入等待状态。</li>
+</ul>
+
       
 
       
@@ -653,7 +566,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/09/cb6xwi/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/09/29/ggdqn3/">展开全文 >></a>
         </p>
       
 
@@ -683,27 +596,58 @@
 
 
   
-    <article id="post-onvp75" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-viaf7e" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/09/onvp75/">浅析COLA应用架构</a>
+      <a class="article-title" href="/2022/09/28/viaf7e/">Dubbo调用拦截扩展</a>
     </h1>
   
 
         
-        <a href="/2022/09/09/onvp75/" class="archive-article-date">
-  	<time datetime="2022-09-09T15:39:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-09</time>
+        <a href="/2022/09/28/viaf7e/" class="archive-article-date">
+  	<time datetime="2022-09-28T13:30:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-28</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664774846804-ac357ea1-e474-4d93-8ff8-09b84b4584bb.png#clientId=u31bd12ae-d69b-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=705&id=Vqetw&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1128&originWidth=2372&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=364062&status=done&style=none&taskId=u38069cb9-682b-4a67-bede-262490a0c5d&title=&width=1482.4999779090288" alt="image.png">前言</h3><p>日常在使用 Dubbo 的情况下，我们通常有许多功能，例如：限制请求的白名单、统一日志处理、Trace 传递、统一异常处理等等，这些功能我们可以通过 Dubbo 的调用拦截扩展来实现，它其实也是 DubboSPI 的扩展实现，下文概述如何使用这种机制。</p>
+<h3 id="调用拦截扩展"><a href="#调用拦截扩展" class="headerlink" title="调用拦截扩展"></a>调用拦截扩展</h3><p>服务提供方和服务消费方调用过程拦截，Dubbo 本身的大多功能均基于此扩展点实现，每次远程方法执行，该拦截都会被执行，请注意对性能的影响。详见：<a target="_blank" rel="noopener" href="https://dubbo.apache.org/zh/docs3-v2/java-sdk/reference-manual/spi/description/filter/">https://dubbo.apache.org/zh/docs3-v2/java-sdk/reference-manual/spi/description/filter/</a></p>
+<h3 id="约定"><a href="#约定" class="headerlink" title="约定"></a>约定</h3><ul>
+<li>用户自定义 filter 默认在内置 filter 之后。</li>
+<li>特殊值 default，表示缺省扩展点插入的位置。比如：filter&#x3D;”xxx,default,yyy”，表示 xxx 在缺省 filter 之前，yyy 在缺省 filter 之后。</li>
+<li>特殊符号 -，表示剔除。比如：filter&#x3D;”-foo1”，剔除添加缺省扩展点 foo1。比如：filter&#x3D;”-default”，剔除添加所有缺省扩展点。</li>
+<li>provider 和 service 同时配置的 filter 时，累加所有 filter，而不是覆盖。比如：&lt;dubbo:provider filter&#x3D;”xxx,yyy”&#x2F;&gt; 和 &lt;dubbo:service filter&#x3D;”aaa,bbb” &#x2F;&gt;，则 xxx,yyy,aaa,bbb 均会生效。如果要覆盖，需配置：&lt;dubbo:service filter&#x3D;”-xxx,-yyy,aaa,bbb” &#x2F;&gt;</li>
+</ul>
+<h3 id="使用要点"><a href="#使用要点" class="headerlink" title="使用要点"></a>使用要点</h3><ol>
+<li>若要使 filter 生效，必须在 META-INF&#x2F;dubbo&#x2F;org.apache.dubbo.rpc.Filter 声明 Filter，可以在当前项目中，也可以在一个单独的 jar 中。dubbo 会尝试获取 classpath 中的所有 META-INF&#x2F;dubbo&#x2F;org.apache.dubbo.rpc.Filter 文件</li>
+<li>Filter 使用了 @Activate 注解，或者 xml 配置文件中进行配置</li>
+</ol>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;!<span class="literal">--</span> 消费方调用过程拦截 <span class="literal">--</span>&gt;</span><br><span class="line">&lt;dubbo:reference <span class="keyword">filter</span>=<span class="string">&quot;xxx,yyy&quot;</span> /&gt;</span><br><span class="line">&lt;!<span class="literal">--</span> 消费方调用过程缺省拦截器，将拦截所有reference <span class="literal">--</span>&gt;</span><br><span class="line">&lt;dubbo:consumer <span class="keyword">filter</span>=<span class="string">&quot;xxx,yyy&quot;</span>/&gt;</span><br><span class="line">&lt;!<span class="literal">--</span> 提供方调用过程拦截 <span class="literal">--</span>&gt;</span><br><span class="line">&lt;dubbo:service <span class="keyword">filter</span>=<span class="string">&quot;xxx,yyy&quot;</span> /&gt;</span><br><span class="line">&lt;!<span class="literal">--</span> 提供方调用过程缺省拦截器，将拦截所有service <span class="literal">--</span>&gt;</span><br><span class="line">&lt;dubbo:provider <span class="keyword">filter</span>=<span class="string">&quot;xxx,yyy&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>使用 telnet 进行接口测试时，过滤器不生效</li>
+<li>RPC 调用和泛化调用，过滤器都会生效</li>
+<li>@Activate 注解中的 order 值越小，优先级越高，越早执行，越晚结束</li>
+</ol>
+<h2 id="默认的过滤器"><a href="#默认的过滤器" class="headerlink" title="默认的过滤器"></a>默认的过滤器</h2><p>在 dubbo 源码中，META-INF&#x2F;dubbo&#x2F;internal&#x2F;org.apache.dubbo.rpc.Filter 配置了默认的过滤器：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">cache=org.apache.dubbo.cache.filter.CacheFilter</span><br><span class="line">validation=org.apache.dubbo.validation.filter.ValidationFilter</span><br><span class="line"><span class="built_in">echo</span>=org.apache.dubbo.rpc.filter.EchoFilter</span><br><span class="line">generic=org.apache.dubbo.rpc.filter.GenericFilter</span><br><span class="line">genericimpl=org.apache.dubbo.rpc.filter.GenericImplFilter</span><br><span class="line">token=org.apache.dubbo.rpc.filter.TokenFilter</span><br><span class="line">accesslog=org.apache.dubbo.rpc.filter.AccessLogFilter</span><br><span class="line">activelimit=org.apache.dubbo.rpc.filter.ActiveLimitFilter</span><br><span class="line">classloader=org.apache.dubbo.rpc.filter.ClassLoaderFilter</span><br><span class="line">context=org.apache.dubbo.rpc.filter.ContextFilter</span><br><span class="line">consumercontext=org.apache.dubbo.rpc.filter.ConsumerContextFilter</span><br><span class="line">exception=org.apache.dubbo.rpc.filter.ExceptionFilter</span><br><span class="line">executelimit=org.apache.dubbo.rpc.filter.ExecuteLimitFilter</span><br><span class="line">deprecated=org.apache.dubbo.rpc.filter.DeprecatedFilter</span><br><span class="line">compatible=org.apache.dubbo.rpc.filter.CompatibleFilter</span><br><span class="line">timeout=org.apache.dubbo.rpc.filter.TimeoutFilter</span><br><span class="line">trace=org.apache.dubbo.rpc.protocol.dubbo.filter.TraceFilter</span><br><span class="line">future=org.apache.dubbo.rpc.protocol.dubbo.filter.FutureFilter</span><br><span class="line">monitor=org.apache.dubbo.monitor.support.MonitorFilter</span><br><span class="line">metrics=org.apache.dubbo.monitor.support.MetricsFilter</span><br></pre></td></tr></table></figure>
+
+<p>有一些过滤器使用了@Activate 注解，所以默认会生效。<br>有些过滤器会在 consumer 端生效，有些是在 provider 生效，有些是两端都生效，有些还需要其他的一些条件才生效。<br>这些过滤器统称为 default。</p>
+<h2 id="入门示例"><a href="#入门示例" class="headerlink" title="入门示例"></a>入门示例</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Activate(<span class="built_in">group</span> = &#123;Constants.PROVIDER&#125;)  // 服务端生效</span><br><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">CustomFilter01</span> <span class="title">implements</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">dubbo</span>.<span class="title">rpc</span>.<span class="title">Filter</span></span> &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public Result invoke(Invoker&lt;?&gt; invoker, Invocation invocation) throws RpcException &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;CustomFilter01 开始&quot;</span>);</span><br><span class="line">        Result result = invoker.invoke(invocation);</span><br><span class="line">        System.out.println(<span class="string">&quot;CustomFilter01 结束&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>META-INF&#x2F;dubbo&#x2F;org.apache.dubbo.rpc.Filter 文件中内容如下：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">customFilter01=filter.CustomFilter01</span><br></pre></td></tr></table></figure>
+
+<h2 id="去掉默认的过滤器"><a href="#去掉默认的过滤器" class="headerlink" title="去掉默认的过滤器"></a>去掉默认的过滤器</h2><h4 id="lt-dubbo-service-filter-x3D-”xxx-yyy”-x2F-gt-未声明默认过滤器时，默认过滤器生效吗？"><a href="#lt-dubbo-service-filter-x3D-”xxx-yyy”-x2F-gt-未声明默认过滤器时，默认过滤器生效吗？" class="headerlink" title="&lt;dubbo:service filter&#x3D;”xxx,yyy” &#x2F;&gt; 未声明默认过滤器时，默认过滤器生效吗？"></a>&lt;dubbo:service filter&#x3D;”xxx,yyy” &#x2F;&gt; 未声明默认过滤器时，默认过滤器生效吗？</h4><p>有一些默认过滤器使用了@Activate 注解，所以默认会生效。</p>
+<h4 id="Activate-注解声明了服务端生效，这种过滤器可以给消费端用吗？"><a href="#Activate-注解声明了服务端生效，这种过滤器可以给消费端用吗？" class="headerlink" title="@Activate 注解声明了服务端生效，这种过滤器可以给消费端用吗？"></a>@Activate 注解声明了服务端生效，这种过滤器可以给消费端用吗？</h4><p>可以。在 xml 中配置即可。</p>
+<h4 id="Activate-配置了-order，-xml-配置文件中配置了-filter，执行顺序以哪个为准？"><a href="#Activate-配置了-order，-xml-配置文件中配置了-filter，执行顺序以哪个为准？" class="headerlink" title="@Activate 配置了 order， xml 配置文件中配置了 filter，执行顺序以哪个为准？"></a>@Activate 配置了 order， xml 配置文件中配置了 filter，执行顺序以哪个为准？</h4><p>以配置文件为准。</p>
+
       
 
       
@@ -715,7 +659,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/09/onvp75/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/09/28/viaf7e/">展开全文 >></a>
         </p>
       
 
@@ -745,27 +689,75 @@
 
 
   
-    <article id="post-qbrrri" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-piigg1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/09/09/qbrrri/">Spring之BeanFacotry与ApplicationContext</a>
+      <a class="article-title" href="/2022/09/28/piigg1/">InnoDB表快速修改字段名方案</a>
     </h1>
   
 
         
-        <a href="/2022/09/09/qbrrri/" class="archive-article-date">
-  	<time datetime="2022-09-08T16:04:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-09</time>
+        <a href="/2022/09/28/piigg1/" class="archive-article-date">
+  	<time datetime="2022-09-28T00:56:35.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-28</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在项目开发中你肯定使用过一行代码，</p>
+        <p>最近被问到一个问题，InnoDB 表，只修改一个字段的名字，定义不修改，是否有快速方案。<br>这个需求的意义来源于，在表设计初期可以预留一些字段，但在预留字段投入使用时，最好能够赋予一个有意义的名字以方便使用。<br><strong>复现</strong><br>以下实验基于 5.1.48 版本。<br>创建一个简单表</p>
+<p>| CREATE TABLE <code>t</code> (<br><code>c1</code> int(11) DEFAULT NULL,<br><code>c2</code> int(11) DEFAULT NULL</p>
+<table>
+<thead>
+<tr>
+<th>) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;gbk;</th>
+</tr>
+</thead>
+</table>
+<p>插入 10w 条数据。将字段 c2 改名为 c3.</p>
+<p>| mysql&gt; alter table t change c2 c3 int(11) default null;<br>Query OK, 100000 rows affected (4.29 sec)</p>
+<table>
+<thead>
+<tr>
+<th>Records: 100000 Duplicates: 0 Warnings: 0</th>
+</tr>
+</thead>
+</table>
+<p>可以看到，虽然只是简单修改了字段名，在实验机器上耗时达到 4.2s，显然重做了所有数据。由于这个表没有索引，数据量也比较小，如果对于更大数据的表，则需要更长的操作时间。<br><strong>分析</strong><br>我们知道，在<br>Innodb_file_per_table 参数下，每个 InnoDB 表有两个文件 t.frm 和 t.ibd. 实际上，表字段信息只保存于 t.frm。这个文件保存了表的定义信息，只有 8k。 仅修改字段名，实际上不需要重作数据，如果能够只对 t.frm 做修改，则可以加快上面这个 alter 语句的执行速度。<br><strong>源码相关</strong><br>可以想象 MySQL 框架中应该是调用了 InnoDB 引擎的某个函数，用于判断是否需要重做数据。<br>我们追踪一下 alter table 语句的执行流程，在 mysql_alter_table（sql_table.cc）函数中，我们看到这个局部变量 need_copy_table，它有三个可能的取值。<br>ALTER_TABLE_METADATA_ONLY&#x3D; 0,<br>ALTER_TABLE_DATA_CHANGED&#x3D; 1,<br>ALTER_TABLE_INDEX_CHANGED&#x3D; 2<br>显然这个取值的判断结果，决定了后面的执行流程。<br>mysql_alter_table 中调用了 compare_tables 用于判断 alter 前后的表做了多大的改动，后者在这个语句中修改了 need_copy_table 的值。</p>
+<p>| &#x2F;_ Check if changes are compatible with current handler without a copy _&#x2F;<br>if (table-&gt;file-&gt;check_if_incompatible_data(create_info, changes))<br>{<br>*need_copy_table&#x3D; ALTER_TABLE_DATA_CHANGED;<br>DBUG_RETURN(0);</p>
+<table>
+<thead>
+<tr>
+<th>}</th>
+</tr>
+</thead>
+</table>
+<p>这个 check_if_incompatitble_table 的函数实现在 handler&#x2F;ha_innodb.cc 中。这个函数的返回值可能是 COMPATIBLE_DATA_NO 表示表改动前后不兼容（需要重做数据）或 COMPATIBLE_DATA_YES 兼容（不需要重做）。<br>该函数有如下片段</p>
+<p>| if (check_column_being_renamed(table, NULL)) {<br>return COMPATIBLE_DATA_NO;</p>
+<table>
+<thead>
+<tr>
+<th>}</th>
+</tr>
+</thead>
+</table>
+<p>其实现逻辑是，如果有任何一个字段名被修改，则返回 COMPATIBLE_DATA_NO。<br><strong>简单修改</strong><br>有了上述分析，要做到快速修改表字段名，只需要把调用 check_column_being_renamed 的这三行注释掉即可。重新编译发布后，执行结果如下。</p>
+<p>| mysql&gt; alter table t change c2 c3 int(11) default null;<br>Query OK, 0 rows affected (0.01 sec)</p>
+<table>
+<thead>
+<tr>
+<th>Records: 0 Duplicates: 0 Warnings: 0</th>
+</tr>
+</thead>
+</table>
+<p>可以看到，这回执行基本不需要时间. 对比修改前后的 t.ibd 的 MD5，没有修改，而 t.frm 中只是将 c2 的字段名改为 c3，其他不变。<br><strong>问题！！</strong><br>这里的问题是，这个修改，是否会有副作用？虽然我们知道修改字段名应该是对数据时没有影响的，但 MySQL 就是这么实现了。<br>更深入的调查带来了“坏消息“。 在 MySQL 5.1.45 版本中，就没有这个字段名的判断，也就是说在 5.1.45 中仅修改字段名是只修改 frm 文件的。<br><strong>在新版本中特别加入的判断，是否有什么原因？这是撰写本文的意图。若有与此相关的 bug 或者文章说明，请回复或站内私信我。</strong><br><strong>延伸</strong><br>实际上，关于这个问题，还可以继续深入，这里抛砖引玉。</p>
+<ol>
+<li>如果上述修改有副作用，副作用是什么，是否可以通过简单修改 ibd 文件，仍达到快速修改的目的?</li>
+</ol>
 
       
 
@@ -778,7 +770,202 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/09/09/qbrrri/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/09/28/piigg1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-xp5axk" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/09/27/xp5axk/">MacM1安装MAT全流程解析(已收录)</a>
+    </h1>
+  
+
+        
+        <a href="/2022/09/27/xp5axk/" class="archive-article-date">
+  	<time datetime="2022-09-27T02:34:10.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-27</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1665334257606-053e41d8-5998-4726-be7d-90ae560c335f.png#clientId=u84615843-0ac1-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=497&id=u5d34c550&margin=%5Bobject%20Object%5D&name=image.png&originHeight=796&originWidth=1718&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=213710&status=done&style=none&taskId=ud4fb035f-9948-4e87-a90c-4d8f2cef0fe&title=&width=1073.7499839998784" alt="image.png">前言</h3><p>MAT 作为开发者分析堆栈快照信息的常用工具，本文介绍了在 MBP M1 中安装指南。</p>
+<h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p>首先去<a target="_blank" rel="noopener" href="https://www.eclipse.org/mat/downloads.php">https://www.eclipse.org/mat/downloads.php</a>下载 MAT 的安装包<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664246137389-875f8523-7a0b-44cc-9c75-b2f7e4b34365.png#clientId=u0d1da9cc-e0b9-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=895&id=u6f49a40a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1432&originWidth=2510&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=437089&status=error&style=none&taskId=uc5e630d0-681e-4cf8-bee4-3bb81024187&title=&width=1568.7499766238038" alt="image.png"></p>
+<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p>下载完打开会出现错误提示，如果没有异常，可以跳过。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664246183139-8ad219ad-a7fc-411e-8256-8edb54a2abf2.png#clientId=u0d1da9cc-e0b9-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=411&id=uef6074a4&margin=%5Bobject%20Object%5D&name=image.png&originHeight=658&originWidth=1394&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=212243&status=error&style=none&taskId=u940918f2-9ed5-48ed-9783-3bdfc4bebb7&title=&width=871.2499870173635" alt="image.png"></p>
+<h3 id="安装-jdk11"><a href="#安装-jdk11" class="headerlink" title="安装 jdk11"></a>安装 jdk11</h3><p>在<a target="_blank" rel="noopener" href="https://www.azul.com/downloads/?package=jdk#download-openjdk">https://www.azul.com/downloads/?package=jdk#download-openjdk</a>下载 jdk11<br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664246271707-be95b9a0-8fbc-42e2-9b9a-6a343120c466.png#clientId=u0d1da9cc-e0b9-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=1040&id=uc28f552a&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1664&originWidth=3054&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=719616&status=error&style=none&taskId=u24e7fd07-2e03-45ba-9192-76f8a863516&title=&width=1908.749971557409" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664246314059-db9be1a0-1640-4182-96d3-86fcb438d792.png#clientId=u0d1da9cc-e0b9-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=1039&id=u87ce2f20&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1662&originWidth=3062&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=395011&status=error&style=none&taskId=u47cc4f28-b9fb-4fd3-9efd-f93792a3ccf&title=&width=1913.7499714829032" alt="image.png"><br><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664246367502-4721dfc3-63da-4b34-9d63-c5e47f6a2c5e.png#clientId=u0d1da9cc-e0b9-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=712&id=ue0b68a5d&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1140&originWidth=2594&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=1092234&status=error&style=none&taskId=ud87df6ec-5113-4d48-8eb0-2d4b0c6a915&title=&width=1621.2499758414929" alt="image.png"></p>
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">duansg@DuansiguodeMacBook<span class="literal">-Pro</span> zulu<span class="literal">-8</span>.jdk % java <span class="literal">-version</span></span><br><span class="line">openjdk version <span class="string">&quot;11.0.16.1&quot;</span> <span class="number">2022</span><span class="literal">-07-19</span> LTS</span><br><span class="line">OpenJDK Runtime Environment Zulu11.<span class="number">58</span>+<span class="number">23</span><span class="literal">-CA</span> (build <span class="number">11.0</span>.<span class="number">16.1</span>+<span class="number">1</span><span class="literal">-LTS</span>)</span><br><span class="line">OpenJDK <span class="number">64</span><span class="literal">-Bit</span> Server VM Zulu11.<span class="number">58</span>+<span class="number">23</span><span class="literal">-CA</span> (build <span class="number">11.0</span>.<span class="number">16.1</span>+<span class="number">1</span><span class="literal">-LTS</span>, mixed mode)</span><br></pre></td></tr></table></figure>
+
+<h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编辑配置文件</span></span><br><span class="line">vim ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置JDK路径</span></span><br><span class="line">export JAVA_8_HOME=/Library/Java/JavaVirtualMachines/zulu<span class="literal">-8</span>.jdk/Contents/Home</span><br><span class="line">export JAVA_11_HOME=/Library/Java/JavaVirtualMachines/zulu<span class="literal">-11</span>.jdk/Contents/Home</span><br><span class="line">export JAVA_17_HOME=/Library/Java/JavaVirtualMachines/jdk<span class="literal">-17</span>.<span class="number">0.1</span>.jdk/Contents/Home</span><br><span class="line"></span><br><span class="line">CLASSPATH=<span class="variable">$JAVA_HOME</span>/lib/tools.jar:<span class="variable">$JAVA_HOME</span>/lib/dt.jar:.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置默认JDK版本</span></span><br><span class="line">export JAVA_HOME=<span class="variable">$JAVA_11_HOME</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置alias命令可以动态切换JDK版本</span></span><br><span class="line">alias jdk8=<span class="string">&quot;export JAVA_HOME=<span class="variable">$JAVA_8_HOME</span>&quot;</span></span><br><span class="line">alias jdk11=<span class="string">&quot;export JAVA_HOME=<span class="variable">$JAVA_11_HOME</span>&quot;</span></span><br><span class="line">alias jdk17=<span class="string">&quot;export JAVA_HOME=<span class="variable">$JAVA_17_HOME</span>&quot;</span></span><br><span class="line"></span><br><span class="line">export JAVA_HOME</span><br><span class="line">export PATH</span><br><span class="line">export CLASSPATH</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># maven配置</span></span><br><span class="line">export MAVEN_HOME=/Users/itzhuzhu/Desktop/Java/maven/apache<span class="literal">-maven-3</span>.<span class="number">8.4</span></span><br><span class="line">export PATH=<span class="variable">$PATH:</span><span class="variable">$MAVEN_HOME</span>/bin</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="验证环境"><a href="#验证环境" class="headerlink" title="验证环境"></a>验证环境</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">duansg@DuansiguodeMacBook<span class="literal">-Pro</span> JavaVirtualMachines % java <span class="literal">-version</span></span><br><span class="line">openjdk version <span class="string">&quot;1.8.0_312&quot;</span></span><br><span class="line">OpenJDK Runtime Environment (Zulu <span class="number">8.58</span>.<span class="number">0.13</span><span class="literal">-CA-macos-aarch64</span>) (build <span class="number">1.8</span>.<span class="number">0</span>_312<span class="literal">-b07</span>)</span><br><span class="line">OpenJDK <span class="number">64</span><span class="literal">-Bit</span> Server VM (Zulu <span class="number">8.58</span>.<span class="number">0.13</span><span class="literal">-CA-macos-aarch64</span>) (build <span class="number">25.312</span><span class="literal">-b07</span>, mixed mode)</span><br><span class="line">duansg@DuansiguodeMacBook<span class="literal">-Pro</span> JavaVirtualMachines % jdk11</span><br><span class="line">duansg@DuansiguodeMacBook<span class="literal">-Pro</span> JavaVirtualMachines % java <span class="literal">-version</span></span><br><span class="line">openjdk version <span class="string">&quot;11.0.16.1&quot;</span> <span class="number">2022</span><span class="literal">-07-19</span> LTS</span><br><span class="line">OpenJDK Runtime Environment Zulu11.<span class="number">58</span>+<span class="number">23</span><span class="literal">-CA</span> (build <span class="number">11.0</span>.<span class="number">16.1</span>+<span class="number">1</span><span class="literal">-LTS</span>)</span><br><span class="line">OpenJDK <span class="number">64</span><span class="literal">-Bit</span> Server VM Zulu11.<span class="number">58</span>+<span class="number">23</span><span class="literal">-CA</span> (build <span class="number">11.0</span>.<span class="number">16.1</span>+<span class="number">1</span><span class="literal">-LTS</span>, mixed mode)</span><br><span class="line">duansg@DuansiguodeMacBook<span class="literal">-Pro</span> JavaVirtualMachines % jdk8</span><br><span class="line">duansg@DuansiguodeMacBook<span class="literal">-Pro</span> JavaVirtualMachines % java <span class="literal">-version</span></span><br><span class="line">openjdk version <span class="string">&quot;1.8.0_312&quot;</span></span><br><span class="line">OpenJDK Runtime Environment (Zulu <span class="number">8.58</span>.<span class="number">0.13</span><span class="literal">-CA-macos-aarch64</span>) (build <span class="number">1.8</span>.<span class="number">0</span>_312<span class="literal">-b07</span>)</span><br><span class="line">OpenJDK <span class="number">64</span><span class="literal">-Bit</span> Server VM (Zulu <span class="number">8.58</span>.<span class="number">0.13</span><span class="literal">-CA-macos-aarch64</span>) (build <span class="number">25.312</span><span class="literal">-b07</span>, mixed mode)</span><br><span class="line">duansg@DuansiguodeMacBook<span class="literal">-Pro</span> JavaVirtualMachines %</span><br></pre></td></tr></table></figure>
+
+<h3 id="MAT-配置修改"><a href="#MAT-配置修改" class="headerlink" title="MAT 配置修改"></a>MAT 配置修改</h3><p>在 MAT 包的目录下找到 MemoryAnalyzer.ini，编辑 MemoryAnalyzer.ini</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">-vm</span></span><br><span class="line">/Library/Java/JavaVirtualMachines/zulu<span class="literal">-11</span>.jdk/Contents/Home/bin</span><br><span class="line"><span class="literal">-startup</span></span><br><span class="line">../Eclipse/plugins/org.eclipse.equinox.launcher_1.<span class="number">6.400</span>.v20210924<span class="literal">-0641</span>.jar</span><br><span class="line"><span class="literal">--launcher</span>.library</span><br><span class="line">../Eclipse/plugins/org.eclipse.equinox.launcher.cocoa.macosx_1.<span class="number">2.400</span>.v20211117<span class="literal">-0650</span></span><br><span class="line"><span class="literal">-vmargs</span></span><br><span class="line"><span class="literal">-Xmx1024m</span></span><br><span class="line"><span class="literal">-Dorg</span>.eclipse.swt.internal.carbon.smallFonts</span><br><span class="line"><span class="literal">-XstartOnFirstThread</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="验证-MAT"><a href="#验证-MAT" class="headerlink" title="验证 MAT"></a>验证 MAT</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664247345849-7c5045c6-5c42-4af3-86b4-d2c8b7c24c34.png#clientId=u0d1da9cc-e0b9-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=1225&id=u925bcd40&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1960&originWidth=3096&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=326724&status=error&style=none&taskId=ueba24c17-e97c-4a38-b3fb-42dcc6cbb6f&title=&width=1934.9999711662535" alt="image.png"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/09/27/xp5axk/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-kx42fy" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/09/23/kx42fy/">浅析Mybatis核心组件(已收录)</a>
+    </h1>
+  
+
+        
+        <a href="/2022/09/23/kx42fy/" class="archive-article-date">
+  	<time datetime="2022-09-23T08:06:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664027303231-11a8a7b3-7f4c-4682-99f5-5d598f47b350.png#clientId=u004c00e1-38c4-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=419&id=ucdc796fe&margin=%5Bobject%20Object%5D&name=image.png&originHeight=730&originWidth=1236&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=176974&status=error&style=none&taskId=u4eebe0e7-0c79-4c72-8505-0905bae8dba&title=&width=710" alt="image.png"></p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>Mybaits 作为国内大流行的“伪”ORM 框架，它也是不少大厂的“御用框架”，可想而知其地位举足轻重。究其原因，国内很多互联网公司早期大部分都是基于面向数据库(表)编程，而 java 对象只是作为数据的载体，数据模型的 CRUD 都设计在一张表上，而业务逻辑就是不同表的 CRUD 集合。所以开发者需要它做的就是将 SQL 自动封装映射成 java 对象，没有其他花里胡哨的功能，这也是它流行原因之一。</p>
+<h3 id="Mybaits-组件简要流程图"><a href="#Mybaits-组件简要流程图" class="headerlink" title="Mybaits 组件简要流程图"></a>Mybaits 组件简要流程图</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664824750904-1a2e60fc-0771-468d-8279-791ca3b8d1a8.png#clientId=u000ffa7e-8964-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=1006&id=ud1e7701c&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1610&originWidth=2032&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=340373&status=error&style=none&taskId=u9cbcb726-895e-42be-9114-71cf8ad9d3a&title=&width=1269.9999810755255" alt="image.png"></p>
+<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664460328614-4ff0097d-e843-454e-9553-7790cd02546a.png#clientId=u4d14fe9a-b39c-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=419&id=uc3876e4b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=670&originWidth=1832&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=302576&status=error&style=none&taskId=u94d85479-d1cf-4ff8-9c23-ea391c3aeb6&title=&width=1144.9999829381707" alt="image.png"></p>
+<ul>
+<li><strong>Configuration</strong>：MyBatis 所有的主配置信息都在 Configuration 里面，MyBatis 通过 Configuration 对象获取各种配置，例如：启动加载的 MappedStatement、TypeHandler、类型别名、插件等等。</li>
+<li><strong>MappedStatement</strong>：它封装了就是大家经常编写的 XxxxMapper.xml 文件里面<select>、<update>、<delete>、<insert>节点。</li>
+</ul>
+<h3 id="SqlSession"><a href="#SqlSession" class="headerlink" title="SqlSession"></a>SqlSession</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664719864411-c6a81ce8-0ebe-4264-a5a3-6e0f931e918e.png#clientId=u4d14fe9a-b39c-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=881&id=u7776597b&margin=%5Bobject%20Object%5D&name=image.png&originHeight=1410&originWidth=2064&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=228370&status=error&style=none&taskId=uff66e4d2-e33b-4ebb-9591-e200a527e0d&title=&width=1289.9999807775023" alt="image.png"></p>
+<ul>
+<li><strong>SqlSession</strong>：它作为 MyBatis 提供的面向开发者的核心顶层 API，表示和数据库交互时的会话对象，是 MyBatis 执行持久化操作的关键对象，它的底层封装了 JDBC 连接，用于完成数据库的增删改查功能。还有一点需要注意的是它不是线程安全的。</li>
+<li><strong>SqlSessionFactory</strong>：它是一个接口，它的定义就是创建 SqlSession 的工厂，Mybatis 底层可以通过 SqlSessionFactoryBuilder 对象，加载 xml 配置文件或一个预设定的 Configuration 的实例构建出具体的工厂类的实例。</li>
+<li><strong>DefaultSqlSessionFactory</strong>：它是 SqlSessionFactory 默认实现类。它通过 Configuration 来创建，其重载了很多 openSession 方法(根据 Configuration、执行器、自动提交创建等等)来创建 SqlSession。</li>
+<li><strong>Configuration</strong>：主配置信息，详情见第一小节。</li>
+<li><strong>DefaultSqlSession</strong>：它是 SqlSession 接口的默认实现类，它不仅实现了 SqlSession 的核心方法，还维护主配置信息与执行器(Executor)信息。它的类注释上标注了此类不是一个线程安全的，为什么线程不安全？其实也很好理解，因为 SqlSession 的最终执行只会产生一次 Connection，假设在两个线程通过同一个 SqlSession 来执行操作，那么就有可能，A 线程开始执行，但是由于 B 线程执行操作比较快，B 线程先关闭了链接，从而造成 A 线程的逻辑不被成功执行。</li>
+<li><strong>SqlSessionManager</strong>：可以看出 SqlSessionManager 既实现了 SqlSessionFactory，也实现了 SqlSession。所以它具备生产 SqlSession 的能力，也具备 SqlSession 的能力，SqlSession 的作用是执行具体的 Sql 语句。但是需要说明的是，SqlSessionManager 是线程安全的，因为它内部维护了一个 sqlSessionProxy，其重写的 SqlSession 的方法，都是通过 sqlSessionProxy 来执行的，而 sqlSessionProxy 是一个动态代理的对象，其 SqlSession 是通过 localSqlSession 来获取的，这个属性其实就是一个 ThreadLocal 类，到这其实也就明白了，它为每一个线程分配一个副本对象，保证了 Connection 对象线程的安全性。</li>
+<li><strong>Executor</strong>：详情见下一小节。</li>
+</ul>
+<h3 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664378889991-215d4b46-2f35-4595-92be-c4448edb4967.png#clientId=u47287623-494d-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=441&id=u712660da&margin=%5Bobject%20Object%5D&name=image.png&originHeight=706&originWidth=1570&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=124968&status=error&style=none&taskId=u3e14ea1b-b20f-4786-b5fc-4211eeb66a7&title=&width=981.2499853782358" alt="image.png"></p>
+<ul>
+<li>Executor：通过上面几个关系图，不难看出一个 SqlSession 对应一个 Executor 对象，而 Executor 是 MyBatis 的内部 SQL 执行器，它负责调用 StatementHandler 操作数据库进行增删改查的具体操作，并把结果集通过 ResultSetHandler 进行自动映射。</li>
+<li>BaseExecutor：BaseExecutor 是一个抽象类，它采用模板方法的方式实现了 Exeutor 接口，除了默认实现的方法之外，它提供了额外的抽象方法由不同功能的实现类实现不同的功能，其中它的实现类有 SimpleExecutor、ReuseExecutor、BatchExecutor、ClosedExecutor，需要额外说明的是 Mybatis 的一级缓存的功能也是其实现的。</li>
+<li>CachingExecutor：它其实是 Executor 的装饰器，它内部维护了一个 Executor 的属性，并为这个属性增加了二级缓存的功能。因为这个属性的类型是 Executor，所以这个属性可以是 BaseExeutor 具体实现的执行器的任何一个，它的处理逻辑可以大致列为：它先从缓存中查询结果，如果存在则就返回。倘若不存在，则交由 BaseExecutor 的具体的实现类去进行操作，并把结果缓存起来。</li>
+<li>SimpleExecutor：从它的名字也能看出它是一个简单的执行器，其核心的方法都在其父类 BaseExecutor 中，它与其他执行器的区别是，它每执行一次，就创建一个 Statement 对象，用完立刻关闭 Statement 对象。</li>
+<li>BatchExecutor：专门用于执行批量 sql 操作。它维护了多个 Statement，通过 Statement.addBatch()添加到批处理，当所有参数都设置完，通过 Statement.executeBatch()方法执行操作。</li>
+<li>ClosedExecutor：它是一个内部类，外部无法使用，调用其方法会抛出异常。它是一个表示已经关闭的执行器，并没有实际的功能。</li>
+<li>ReuseExecutor：它是可复用的执行器，它会重用 Statement 执行 sql 操作，在执行操作的时候，会以 sql 作为 key 去查找 Statement，有就使用，没有就创建，使用完不会关闭，会暂存起来，以供下次使用。</li>
+</ul>
+<h3 id="StatementHandler"><a href="#StatementHandler" class="headerlink" title="StatementHandler"></a>StatementHandler</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664733654533-6070c000-6c27-4baf-a950-b20e37ecfca0.png#clientId=u482021ad-1858-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=511&id=u673335a2&margin=%5Bobject%20Object%5D&name=image.png&originHeight=818&originWidth=1788&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=131782&status=error&style=none&taskId=udb038100-e29c-4d2a-93a4-8c1f4c8304a&title=&width=1117.4999833479526" alt="image.png"></p>
+<ul>
+<li><strong>StatementHandler</strong>：它是 MyBatis 操作数据库执行 sql 脚本的对象，也叫 sql 语法构建处理器，sql 它封装了对 JDBC 的 Statement 对象的操作，其作用是：sql 声明、填参、执行、获取结果。需要额外说明的是它的填参和获取结果的过程，因为它涉及参数映射、结果集映射、1 对 N、循环引用等复杂逻辑的处理。对于这种复杂性 MyBatis 做法就是使用参数处理器(ParameterHandler)、结果集处理器(ResultSetHandler)分别实现处理的。</li>
+<li><strong>BaseStatementHandler</strong>：它是 StatementHandler 的默认实现类，它也是一个抽象的基类，它有点类似于 Executor，它同样采用模板方法的方式实现了 StatementHandler 接口，除了默认实现的方法之外，它提供了额外的抽象方法由不同功能的实现类实现不同的功能。</li>
+<li><strong>RoutingStatementHandler</strong>：它通过静态代理的模式，实现了“路由器”的功能，它主要功能是实现了此下三个处理器的路由，它没有实际操作处理，只是负责 BaseStatementHandler 相关具体的实现 StatementHandler 的创建及调用。</li>
+<li><strong>SimpleStatementHandler</strong>：它是一个简单的处理器，它对应着 JDBC Statement 对象的处理，处理不带动态参数运行的 sql。</li>
+<li><strong>PrepareStatementHandler</strong>：它是能够解决 sql 注入的一种推荐处理器，它同样也对应 java.sql.PrepareStatement 对象的处理，负责处理 sql 中的占位符动态参数赋值操作预编译 SQL 的接口处理器。</li>
+<li><strong>CallableStatementHandler</strong>：它实际就是使用 CallableStatement 来执行 SQL 语句，只不过它执行的是存储过程。</li>
+</ul>
+<h3 id="ParameterHandler"><a href="#ParameterHandler" class="headerlink" title="ParameterHandler"></a>ParameterHandler</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664733762555-d496c47d-2b5d-444f-8e46-2e6cc46686c4.png#clientId=u482021ad-1858-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=355&id=ucdb23636&margin=%5Bobject%20Object%5D&name=image.png&originHeight=568&originWidth=1428&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=58464&status=error&style=none&taskId=u6a52ffeb-2bcb-42ee-8862-74e27f52647&title=&width=892.4999867007139" alt="image.png"></p>
+<ul>
+<li><strong>ParameterHandler</strong>：它是 Mybatis 的 sql 实参处理器，它主要负责将传递的参数转换成 JDBC 的 Statement 所需要的参数，它是 MyBatis 实现 sql 参数设置的接口对象。</li>
+<li><strong>DefaultParameterHandler</strong>：它是 ParameterHandler 的默认实现类，它主要是给 PreparedStatement 设置参数，将传入的 BoundSql 语句中的”?”占位符进行实参替换。MyBatis 在解析 xml 文件中 sql 标签节点时，会将#{}参数解析为 ParameterMapping 对象，通过它就可以知道参数的名称、JavaType、JdbcType 等等信息。再根据参数名称去 ParamMap 中解析出参数值，根据参数的 JavaType 找到对应的 TypeHandler，再通过 TypeHandler 去设置对应类型的参数，</li>
+</ul>
+<h3 id="ResultSetHandler"><a href="#ResultSetHandler" class="headerlink" title="ResultSetHandler"></a>ResultSetHandler</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664733716353-def7c232-2d0a-4d87-96c2-ddb18bc7a571.png#clientId=u482021ad-1858-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=325&id=u98ac67e1&margin=%5Bobject%20Object%5D&name=image.png&originHeight=520&originWidth=1236&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=54848&status=error&style=none&taskId=u18b6d0da-7f6f-4ac0-a08a-616f3c7b527&title=&width=772.4999884888532" alt="image.png"></p>
+<ul>
+<li><strong>ResultSetHandler</strong>：它封装了将 JDBC 返回的 ResultSet 结果集对象的操作。当执行 SQL 类型为 SELECT 语句时，ResultSetHandler 用于将查询结果转换成 Java 对象。（ResultSet 接口是 JDBC-API 中比较重要的组件，提供了检索和操作 sql 执行结果的方法）</li>
+<li><strong>DefaultResultSetHandler</strong>：它是 ResultSetHandler 的默认实现类，它具体的作用就是将 Statement 执行后的结果集，按照 Mapper 文件中定义返回结果的 ResultType&#x2F;ResultMap 来封装成对应的对象，最后将封装的对象返回。</li>
+</ul>
+<h3 id="TypeHandler"><a href="#TypeHandler" class="headerlink" title="TypeHandler"></a>TypeHandler</h3><p><img src="https://cdn.nlark.com/yuque/0/2022/png/617118/1664807596978-fcd8c3e9-640e-4b5c-8ab9-d942465b6cd2.png#clientId=u000ffa7e-8964-4&crop=0&crop=0&crop=1&crop=1&errorMessage=unknown%20error&from=paste&height=419&id=u8e182430&margin=%5Bobject%20Object%5D&name=image.png&originHeight=670&originWidth=1470&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=96351&status=error&style=none&taskId=u8bd157d1-bb69-4741-a394-0f0b00cbb7b&title=&width=918.7499863095584" alt="image.png"></p>
+<ul>
+<li><strong>TypeHandler</strong>：它是 MyBatis 中的类型处理器，它负责 java 数据类型和 JDBC 数据类型之间的映射和转换，它的作用主要是能够根据 java 类型，在 StatementHandler 调用 ParameterHandler 或 ResultSetHandler 时，为对应的 set&#x2F;get 方法为对象设值。</li>
+<li><strong>BaseTypeHandler</strong>：它是 TypeHandler 接口的默认实现类，它提供了 4 个抽象方法由具体的子类去实现相关的转换功能，而我们在实现自定义的转换器的时候，可以通过继承它实现相关功能。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Sqlsession 作为 Mybaits 开发者层面的顶层 API，实际上是 Executor 组件的门面接口，其主要目的是为了提供更友好的数据库操作接口，这也是设计模式中外观模式的典型应用。真正执行 sql 操作的是 Executor 的 sql 执行器，它会通过 StatementHandler 组件对 JDBC 的 Statement 对象进行操作，它通过 ParameterHandler 组件对 sql 参数占位符赋值。ParameterHandler 组件中会根据 java 类型找到对应的 TypeHandler 对象，TypeHandler 中会通过 Statement 对象提供的 set()方法为 Statement 对象中的参数占位符设置值。同样，当 StatementHandler 组件完成与数据库交互后，在通过 ResultSetHandler 组件从 Statement 对象中获取 ResultSet 对象，然后将 ResultSet 对象转换为对应的 java 对象。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/09/23/kx42fy/">展开全文 >></a>
         </p>
       
 
@@ -810,7 +997,7 @@
   
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
     </nav>
   
 
