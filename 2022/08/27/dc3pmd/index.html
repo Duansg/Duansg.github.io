@@ -6,11 +6,11 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>如何优雅的关闭线程池？ | Hexo</title>
+  <title>如何优雅的关闭线程池？(已收录) | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="前言使用自创建的线程跟使用线程池有啥区别?提到线程池是不是脑海中闪现了创建线程池的那几个核心参数、工作流程、线程池的复用、拒绝机制、缓冲机制等，这些理论知识点想必也牢记许久了。虽然线程池支持在虚拟机进程接受到退出命令后可以进行 shutdown。那么 shutdown 跟线程中断又有什么区别？在运行中的线程能否直接 kill 掉？我们能否监听关闭事件进行补偿？ 为什么线程中断不了？回答这个问题之前">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何优雅的关闭线程池？">
+<meta property="og:title" content="如何优雅的关闭线程池？(已收录)">
 <meta property="og:url" content="http://example.com/2022/08/27/dc3pmd/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="前言使用自创建的线程跟使用线程池有啥区别?提到线程池是不是脑海中闪现了创建线程池的那几个核心参数、工作流程、线程池的复用、拒绝机制、缓冲机制等，这些理论知识点想必也牢记许久了。虽然线程池支持在虚拟机进程接受到退出命令后可以进行 shutdown。那么 shutdown 跟线程中断又有什么区别？在运行中的线程能否直接 kill 掉？我们能否监听关闭事件进行补偿？ 为什么线程中断不了？回答这个问题之前">
@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661610417697-16249649-a02a-4944-a943-7c10f6d00c20.png#clientId=u986abd14-26ac-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=314&id=uff205d22&margin=%5Bobject%20Object%5D&name=image.png&originHeight=627&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=213369&status=done&style=none&taskId=uf1e8ec43-cfb0-4021-99ee-552e3adf513&title=&width=540">
 <meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661610576013-fa4e90cf-a691-4501-90fc-fddd484c1f29.png#clientId=uc3f951bc-24fc-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=183&id=u6c1287be&margin=%5Bobject%20Object%5D&name=image.png&originHeight=366&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=243612&status=done&style=none&taskId=u92ef85c4-e9b3-47f8-848c-c159bce00e5&title=&width=540">
 <meta property="article:published_time" content="2022-08-27T04:08:46.000Z">
-<meta property="article:modified_time" content="2022-10-10T03:36:04.694Z">
+<meta property="article:modified_time" content="2022-10-11T15:37:51.461Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/617118/1661604849996-a5621b5a-d4d5-48ba-9e1b-db028b963424.png#clientId=u986abd14-26ac-4&crop=0&crop=0&crop=1&crop=1&from=paste&height=258&id=u56a69e37&margin=%5Bobject%20Object%5D&name=image.png&originHeight=374&originWidth=1080&originalType=binary%E2%88%B6=1&rotation=0&showTitle=false&size=56459&status=done&style=none&taskId=ue456f4db-c505-4e1a-a3ee-92a66158c56&title=&width=744">
@@ -167,7 +167,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      如何优雅的关闭线程池？
+      如何优雅的关闭线程池？(已收录)
     </h1>
   
 
@@ -323,7 +323,7 @@
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          为什么线程中断不了？
+          为什么线程中断不了？(已收录)
         
       </div>
     </a>
